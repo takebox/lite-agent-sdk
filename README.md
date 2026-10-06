@@ -6,17 +6,17 @@
 [![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
 [![Docs](https://img.shields.io/badge/docs-nelsonyong.github.io%2Flite--agent--sdk-blueviolet.svg)](https://nelsonyong.github.io/lite-agent-sdk/)
 
-A pluggable, lightweight **agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable **strategy** interfaces + an onion **middleware** pipeline + a typed **event** stream. Its public API is shaped after [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript) (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs.
+A pluggable, lightweight **agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable **strategy** interfaces + an onion **middleware** pipeline + a typed **event** stream. Its public API is shaped after [`@takebox-ai/haijun-agent-sdk`]() (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs.
 
 ## Packages
 
 | Package | Description |
 | --- | --- |
 | [`@lite-agent/local`](./packages/local) | Strict single-host runtime: local models, SQLite, mandatory sandbox, managed permissions, resource limits, and local audit logs. |
-| [`@lite-agent/sdk`](./packages/sdk) | Batteries-included agent: tools, skills, subagents, tasks, sessions, system prompt — `query()` / `createLiteAgent()` / `tool()`. |
+| [`@lite-agent/sdk`](./packages/sdk) | Batteries-included agent: tools, tracks, subagents, tasks, sessions, system prompt — `query()` / `createLiteAgent()` / `tool()`. |
 | [`@lite-agent/core`](./packages/core) | The kernel: strategy interfaces, middleware pipeline, normalized types, codecs, permission, sandbox, checkpointer primitives. |
-| [`@lite-agent/provider`](./packages/provider) | Model providers — Anthropic Messages API + OpenAI Chat Completions (also OpenAI-compatible / local endpoints). |
-| [`@lite-agent/sandbox-anthropic`](./packages/sandbox-anthropic) | OS-level `Sandbox` adapter (macOS Seatbelt / Linux bubblewrap). |
+| [`@lite-agent/provider`](./packages/provider) | Model providers — Takebox AI Messages API + OpenAI Chat Completions (also OpenAI-compatible / local endpoints). |
+| [`@lite-agent/sandbox-Takebox AI`](./packages/sandbox-Takebox AI) | OS-level `Sandbox` adapter (macOS Seatbelt / Linux bubblewrap). |
 | [`@lite-agent/checkpoint-sqlite`](./packages/checkpoint-sqlite) | SQLite (WAL) `Checkpointer` — single-host, multi-process session persistence. |
 
 Plus [`examples/cli`](./examples/cli) — an interactive REPL demo wiring the full stack.
@@ -29,12 +29,12 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "List the files here and summarize what this project does.",
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);

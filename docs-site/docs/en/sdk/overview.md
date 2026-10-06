@@ -1,19 +1,19 @@
 # Agent SDK overview
 
-`@lite-agent/sdk` is the batteries-included way to build agents with lite-agent: a working tool set, skills, subagents, persistent sessions, and a permission gate behind a small [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript)-shaped API (`query` / `createLiteAgent` / `tool`). Pair it with a [`@lite-agent/provider`](/core/providers) for the model — every battery is a toggleable default over the core strategies, so you start productive and opt into control only where you need it.
+`@lite-agent/sdk` is the batteries-included way to build agents with lite-agent: a working tool set, tracks, subagents, persistent sessions, and a permission gate behind a small [`@takebox-ai/haijun-agent-sdk`]()-shaped API (`query` / `createLiteAgent` / `tool`). Pair it with a [`@lite-agent/provider`](/core/providers) for the model — every battery is a toggleable default over the core strategies, so you start productive and opt into control only where you need it.
 
 ## SDK vs Core
 
 lite-agent is split into two layers:
 
-- **`@lite-agent/sdk`** — the assembled agent. It wires the kernel's strategies into sensible defaults: built-in tools scoped to your workspace, an event-sourced session store, a permission middleware, skills and subagent loading. Use it when you want a working agent with a few lines of config.
-- **`@lite-agent/core`** — the provider-agnostic kernel underneath: the turn loop, the nine strategy interfaces, the middleware onion, and the `AgentEvent` stream. It knows nothing about permissions, sandboxing, or skills — those are all plugged in. Use it directly when the SDK's assembly doesn't fit and you want to compose your own agent from kernel primitives.
+- **`@lite-agent/sdk`** — the assembled agent. It wires the kernel's strategies into sensible defaults: built-in tools scoped to your workspace, an event-sourced session store, a permission middleware, tracks and subagent loading. Use it when you want a working agent with a few lines of config.
+- **`@lite-agent/core`** — the provider-agnostic kernel underneath: the turn loop, the nine strategy interfaces, the middleware onion, and the `AgentEvent` stream. It knows nothing about permissions, sandboxing, or tracks — those are all plugged in. Use it directly when the SDK's assembly doesn't fit and you want to compose your own agent from kernel primitives.
 
 The SDK re-exports all of `@lite-agent/core`, so you can drop down a level — write a custom strategy or middleware — without changing packages:
 
 ```ts
 import { createLiteAgent, type Middleware } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 const logging: Middleware = {
   name: "logging",
@@ -26,8 +26,8 @@ const logging: Middleware = {
 };
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   use: [logging], // extra middleware around the kernel loop
 });
@@ -53,5 +53,5 @@ This section documents the SDK capability by capability:
 
 - [Getting started](/sdk/getting-started) — install and run your first agent.
 - [Core strategies](/core/strategies) — the nine swappable parts the SDK assembles.
-- [Model providers](/core/providers) — Anthropic, OpenAI, and OpenAI-compatible endpoints.
+- [Model providers](/core/providers) — Takebox AI, OpenAI, and OpenAI-compatible endpoints.
 - [CLI example](/examples/cli) — a full interactive agent built on these APIs.

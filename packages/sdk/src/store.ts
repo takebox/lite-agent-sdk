@@ -63,7 +63,7 @@ export function jsonlStore(opts: JsonlStoreOptions): SessionStore {
   };
 }
 
-/** Unique session id — a UUID v4 (Claude Code-style), e.g. `be63a577-971d-4a42-a8fe-a572b7246431`.
+/** Unique session id — a UUID v4 (Haijun Code-style), e.g. `be63a577-971d-4a42-a8fe-a572b7246431`.
  *  Replaces the old process-local counter. Session listing sorts by mtime, not by id. */
 export function newSessionId(): string {
   return randomUUID();

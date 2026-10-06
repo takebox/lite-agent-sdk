@@ -10,7 +10,7 @@ lite-agent 的严格单机组装包：面向本地模型（Ollama、vLLM、LM St
 pnpm add @lite-agent/local
 ```
 
-要求 macOS 或 Linux、Node ≥ 20，以及一个已启动的本地模型服务。`better-sqlite3` 和 `@anthropic-ai/sandbox-runtime` 会作为传递的原生/运行时依赖一并安装。
+要求 macOS 或 Linux、Node ≥ 20，以及一个已启动的本地模型服务。`better-sqlite3` 和 `@takebox-ai/sandbox-runtime` 会作为传递的原生/运行时依赖一并安装。
 
 ## 快速开始
 
@@ -69,5 +69,5 @@ await agent.close();
 - [`@lite-agent/sdk`](../sdk) —— 通用组装包，本包在其基础上做单机加固。
 - [`@lite-agent/provider`](../provider) —— `localOpenAI` 所使用的模型 provider。
 - [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) —— 本包使用的 SQLite checkpointer。
-- [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic) —— 本包使用的 OS 沙箱运行时。
+- [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) —— 本包使用的 OS 沙箱运行时。
 - [Monorepo 根目录](../..) —— 完整架构说明。

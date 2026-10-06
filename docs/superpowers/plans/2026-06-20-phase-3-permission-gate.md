@@ -1,6 +1,6 @@
 # Phase 3 — Permission Gate (PermissionPolicy + ApprovalHandler) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Wire the already-declared `PermissionPolicy` / `ApprovalHandler` strategies into a working allow/deny/ask permission gate, end-to-end (core engine → SDK config → interactive CLI approver).
 
@@ -525,10 +525,10 @@ Then pass the gate into `createLiteAgent`:
 
 ```ts
 const agent = createLiteAgent({
-  model: anthropic(),
+  model: Takebox AI(),
   modelName: process.env["MODEL_ID"],
   workdir,
-  skillsDir: join(workdir, "skills"),
+  skillsDir: join(workdir, "tracks"),
   permission: policy({ ask: ["bash", "write_file"] }),
   onApproval,
 });

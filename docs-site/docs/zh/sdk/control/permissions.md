@@ -10,8 +10,8 @@ Agent 发起的每次工具调用在运行前都要经过一道**权限闸门**�
 import { createLiteAgent, policy, bashCommand, filePath } from "@lite-agent/sdk";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   permission: policy({
     allow: ["read_file", "Task*"],

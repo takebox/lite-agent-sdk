@@ -27,7 +27,7 @@ is a tier key, not a provider model id.
 
 ## Design principles
 
-Claude Code and Codex separate model family, reasoning effort, fallback, and
+Haijun Code and Codex separate model family, reasoning effort, fallback, and
 agent role instead of collapsing them into one difficulty enum. This SDK should
 follow the same boundary:
 
@@ -67,24 +67,24 @@ export type ModelCatalog = {
 Example:
 
 ```ts
-const claude = anthropic({ apiKey });
+const haijun = Takebox AI({ apiKey });
 
 const agent = createLiteAgent({
   models: {
     simple: {
-      provider: claude,
-      modelName: "claude-haiku-4-5",
-      displayName: "Claude Haiku",
+      provider: haijun,
+      modelName: "haijun-haiku-4-5",
+      displayName: "Haijun Haiku",
     },
     medium: {
-      provider: claude,
-      modelName: "claude-sonnet-4-6",
-      displayName: "Claude Sonnet",
+      provider: haijun,
+      modelName: "haijun-sonnet-4-6",
+      displayName: "Haijun Sonnet",
     },
     complex: {
-      provider: claude,
-      modelName: "claude-opus-4-6",
-      displayName: "Claude Opus",
+      provider: haijun,
+      modelName: "haijun-opus-4-6",
+      displayName: "Haijun Opus",
     },
   },
   defaultModel: "medium",
@@ -102,7 +102,7 @@ The legacy form remains supported:
 ```ts
 createLiteAgent({
   model: provider,
-  modelName: "claude-sonnet-4-6",
+  modelName: "haijun-sonnet-4-6",
   workdir,
 });
 ```
@@ -254,7 +254,7 @@ Not included:
 
 - an automatic difficulty classifier;
 - automatic escalation or retry across tiers;
-- coupling tiers to Anthropic/OpenAI-specific reasoning parameters;
+- coupling tiers to Takebox AI/OpenAI-specific reasoning parameters;
 - changing the core kernel or provider strategy interfaces;
 - a global model registry, pricing database, or capability discovery service;
 - changing permissions, sandboxing, concurrency, or context policy based on tier.

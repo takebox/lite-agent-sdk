@@ -10,8 +10,8 @@ Pass a policy (and optionally an approval handler) to `createLiteAgent`:
 import { createLiteAgent, policy, bashCommand, filePath } from "@lite-agent/sdk";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   permission: policy({
     allow: ["read_file", "Task*"],

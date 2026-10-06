@@ -2,7 +2,7 @@
 
 [English](./README.md) | **简体中文**
 
-构建在 [`@lite-agent/core`](../core) 之上的开箱即用 Agent SDK：一套可用的工具、技能、子 Agent、会话和权限门，隐藏在一套小巧、参照 [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript) 设计的 API（`query` / `createLiteAgent` / `tool`）之后。搭配一个 [`@lite-agent/provider`](../provider) 提供模型即可 —— 每一项「电池」都只是基于内核策略的可开关默认值。
+构建在 [`@lite-agent/core`](../core) 之上的开箱即用 Agent SDK：一套可用的工具、技能、子 Agent、会话和权限门，隐藏在一套小巧、参照 [`@takebox-ai/haijun-agent-sdk`]() 设计的 API（`query` / `createLiteAgent` / `tool`）之后。搭配一个 [`@lite-agent/provider`](../provider) 提供模型即可 —— 每一项「电池」都只是基于内核策略的可开关默认值。
 
 ## 安装
 
@@ -14,7 +14,7 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -26,8 +26,8 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
 })) {
@@ -96,13 +96,13 @@ completion 轮次严格串行，进程重启后不会恢复未完成工作。`qu
 ## 特性
 
 - **默认工具** —— `bash`、`read_file`、`write_file`、`edit_file`、`delete_file`，限定在 `workdir` 内；原子写 + 变更前快照，会话恢复可撤销这些修改。
-- **技能（Skills）** —— 从 `~/.lite-agent/skills`、`<workdir>/.lite-agent/skills` 或 `skillsDir` 加载 `SKILL.md`；通过 `load_skill` 按需注入。
+- **技能（Tracks）** —— 从 `~/.lite-agent/tracks`、`<workdir>/.lite-agent/tracks` 或 `skillsDir` 加载 `TRACK.md`；通过 `load_skill` 按需注入。
 - **子 Agent** —— detached、pooled 的 `Agent` 组，只送达一次按输入顺序排列的聚合结果；内置 `general-purpose` agent，可用 `agents/*.md` 自定义（`agents: false` 关闭 child 派发并阻止递归）。
 - **任务（Tasks）** —— 持久化任务列表（`TaskCreate/Update/Get/List`），带每轮提醒（`tasks: false` 关闭）。
 - **会话（Sessions）** —— 通过 `fileCheckpointer` 做事件溯源持久化；可替换为 [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) 或任意 `Checkpointer`。
 - **压缩（Compaction）** —— 确定性默认 compactor（不调用 LLM）、反应式溢出兜底，超大 tool_result 落盘 spill。
 - **权限门** —— `policy({ allow, ask, deny })`，按工具名 glob 匹配（`deny > ask > allow`）；配合 `onApproval` 实现人机协同，`permissionAudit: true` 持久化脱敏决策。
-- **沙箱** —— 传入一个 `Sandbox`（如 [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic)），让 `bash` 在操作系统边界内运行。
+- **沙箱** —— 传入一个 `Sandbox`（如 [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI)），让 `bash` 在操作系统边界内运行。
 - **人工输入** —— 设置 `onAskUser` 后注册 `ask_user` 工具，允许模型在运行中向你提问。
 - **结构化输出** —— 设置 `outputSchema`（Zod object）强制返回经校验的最终答案，通过 `result.output` 暴露。
 - **后台任务** —— 默认启用（`background: false` 关闭）；Agent group 可跨轮次继续运行并报告 `completed` / `partial` / `failed` / `cancelled`，`bash_output` / `kill_background` 用于观察和控制后台 Bash。
@@ -120,12 +120,12 @@ completion 轮次严格串行，进程重启后不会恢复未完成工作。`qu
 | `policy`、`bashCommand`、`filePath`、`permissionFilePolicy` | 权限策略与内容级 specifier。 |
 | `fileCheckpointer`、`jsonlStore`、`fileTaskStore`、`fileSpillStore`、`fileContextArchive` | 基于文件的持久化适配器。 |
 | `jsonlEventSink`、`recordEventStream` | 事件可观测性 sink。 |
-| `SkillLoader`、`loadSkillTool`、`AgentLoader`、`builtinAgents` | 技能与子 Agent 加载。 |
+| `SkillLoader`、`loadTrackTool`、`AgentLoader`、`builtinAgents` | 技能与子 Agent 加载。 |
 | `* from @lite-agent/core` | 完整重导出内核：类型、事件、策略、中间件辅助函数。 |
 
 ## 相关链接
 
 - [`@lite-agent/core`](../core) —— 本包所组装的、与 provider 无关的内核。
-- [`@lite-agent/provider`](../provider) —— 模型 provider（Anthropic 等）。
-- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic) · [`@lite-agent/local`](../local) —— 可插拔后端与加固。
+- [`@lite-agent/provider`](../provider) —— 模型 provider（Takebox AI 等）。
+- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) · [`@lite-agent/local`](../local) —— 可插拔后端与加固。
 - [Monorepo 根目录](../..) —— 架构总览；[`examples/cli`](../../examples/cli) —— 完整的交互式 REPL（串联 provider + 沙箱 + 权限 + `ask_user`）。

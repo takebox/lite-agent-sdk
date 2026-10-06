@@ -2,9 +2,9 @@
 
 **English** | [简体中文](./README.zh-CN.md)
 
-The pluggable, event-driven agent kernel for lite-agent: a lean, provider-agnostic core built from swappable strategy interfaces, an onion middleware pipeline, and a typed event stream. Use it to build your own agent from primitives — for a batteries-included setup (tools, skills, subagents, sessions), use [`@lite-agent/sdk`](../sdk) instead.
+The pluggable, event-driven agent kernel for lite-agent: a lean, provider-agnostic core built from swappable strategy interfaces, an onion middleware pipeline, and a typed event stream. Use it to build your own agent from primitives — for a batteries-included setup (tools, tracks, subagents, sessions), use [`@lite-agent/sdk`](../sdk) instead.
 
-Its public API is shaped after [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript), but the kernel is self-built, so it can also drive local small models via pluggable tool-call codecs.
+Its public API is shaped after [`@takebox-ai/haijun-agent-sdk`](), but the kernel is self-built, so it can also drive local small models via pluggable tool-call codecs.
 
 ## Install
 
@@ -34,7 +34,7 @@ const result = await agent.send("hello");
 console.log(result.text);
 ```
 
-`fakeProvider` is a built-in test double. For a real model, pass a `ModelProvider` from [`@lite-agent/provider`](../provider) (`anthropic()` / `openai()`).
+`fakeProvider` is a built-in test double. For a real model, pass a `ModelProvider` from [`@lite-agent/provider`](../provider) (`Takebox AI()` / `openai()`).
 
 ## Features
 
@@ -46,7 +46,7 @@ console.log(result.text);
 - **Event-sourced checkpoints** — session persistence and time-travel via the `Checkpointer` interface; in-memory implementation included, durable backends in sibling packages.
 - **Permission middleware** — composable policies with rule matching and sensitive-data redaction.
 - **Steering & background tasks** — inject input mid-run with `SteerController`, spawn joinable or detached work with `createBackgroundTasks`, and report authoritative `BackgroundStatus` (`completed` / `partial` / `failed` / `cancelled`) through structured completions.
-- **Pluggable sandbox** — default `noopSandbox`; an OS-level boundary lives in [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic).
+- **Pluggable sandbox** — default `noopSandbox`; an OS-level boundary lives in [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI).
 - **Testing utilities** — `fakeProvider` plus conformance suites for providers and checkpointers.
 
 ### Background completion contract
@@ -80,9 +80,9 @@ notification omits `status` for `completed`, maps `partial` to
 
 ## Related
 
-- [`@lite-agent/sdk`](../sdk) — batteries-included agent composed from this core (tools, skills, subagents, sessions, permission gate).
-- [`@lite-agent/provider`](../provider) — `ModelProvider` implementations (`anthropic()`, `openai()`).
+- [`@lite-agent/sdk`](../sdk) — batteries-included agent composed from this core (tools, tracks, subagents, sessions, permission gate).
+- [`@lite-agent/provider`](../provider) — `ModelProvider` implementations (`Takebox AI()`, `openai()`).
 - [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) — durable `Checkpointer` backend.
-- [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic) — OS-level sandbox boundary.
+- [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) — OS-level sandbox boundary.
 - [`@lite-agent/local`](../local) — local-model support.
 - [Monorepo root](../..) — full architecture write-up.

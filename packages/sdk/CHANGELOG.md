@@ -96,7 +96,7 @@
 
 ### Minor Changes
 
-- Add non-blocking background execution (Claude Code's `run_in_background`), gated by a new top-level `background` option on `createLiteAgent` / `query` (default on):
+- Add non-blocking background execution (Haijun Code's `run_in_background`), gated by a new top-level `background` option on `createLiteAgent` / `query` (default on):
   - **`bash` gains `run_in_background` (default `false` — foreground behavior is unchanged).** A backgrounded command runs via async `exec` (not `execSync`, which would block the event loop), is bounded by cancellation rather than the 120s foreground timeout (so it suits long-running servers / watchers), and its output is delivered to the agent as a notification when it finishes.
   - **Behavioral change: the `Agent` subagent tool now defaults to `run_in_background: true`.** An `Agent` call returns a placeholder immediately, and the aggregated `subagent[…]` results arrive later as a single notification once all children finish — instead of blocking and returning them inline. Pass `run_in_background: false` to restore the old synchronous behavior. Callers that relied on `Agent` returning its results inline must set the flag.
   - New `KillBackground` tool cancels a running background task by its reported `bg_…` id. It is registered by default and omitted when `background: false`.
@@ -107,7 +107,7 @@
 
 ### Patch Changes
 
-- Docs: add a package README (English + Simplified Chinese) documenting `query` / `createLiteAgent` / `tool`, the built-in batteries (default tools, skills, subagents, tasks, sessions, compaction, permission gate, sandbox, `ask_user`, structured output), and session management. Also correct `repository.url` to the renamed `lite-agent-sdk` GitHub repository. No code changes.
+- Docs: add a package README (English + Simplified Chinese) documenting `query` / `createLiteAgent` / `tool`, the built-in batteries (default tools, tracks, subagents, tasks, sessions, compaction, permission gate, sandbox, `ask_user`, structured output), and session management. Also correct `repository.url` to the renamed `lite-agent-sdk` GitHub repository. No code changes.
 
 ## 0.8.1
 
@@ -119,7 +119,7 @@
 
 ### Minor Changes
 
-- afbb084: Add free-text steering to manual compaction. `LiteAgent.compact(instructions?)` forwards an instruction string to the compactor (Claude Code's `/compact <instructions>`), biasing the summary toward what should be preserved. Only a manual `compact()` forwards it; automatic compaction is unchanged.
+- afbb084: Add free-text steering to manual compaction. `LiteAgent.compact(instructions?)` forwards an instruction string to the compactor (Haijun Code's `/compact <instructions>`), biasing the summary toward what should be preserved. Only a manual `compact()` forwards it; automatic compaction is unchanged.
 
 ### Patch Changes
 
@@ -130,7 +130,7 @@
 ### Minor Changes
 
 - 2d0e4b9: Add a manual, durable compaction action. `LiteAgent.compact()` compresses the current session's conversation using the configured compactor, persists the result as a new `summary` event (so it survives reloads and composes with restore), emits `compaction` progress + completion events, then stops — it never produces a model answer. `foldEvents` now treats `summary` as a base reset, so loading a compacted session uses the compressed view with no kernel change.
-- 795c10d: Add session restore. A new `file_snapshot` sidecar event records the pre-mutation content of files changed via `write_file`/`edit_file`; `LiteAgent.restore(id, toSeq, { conversation?, files? })` rolls a session back to a checkpoint — reverting those files and/or truncating the conversation — and `listCheckpoints(id)` enumerates the rewind anchors. `Checkpointer` gains an optional `truncate`. Like Claude Code, files changed by `bash` are not tracked.
+- 795c10d: Add session restore. A new `file_snapshot` sidecar event records the pre-mutation content of files changed via `write_file`/`edit_file`; `LiteAgent.restore(id, toSeq, { conversation?, files? })` rolls a session back to a checkpoint — reverting those files and/or truncating the conversation — and `listCheckpoints(id)` enumerates the rewind anchors. `Checkpointer` gains an optional `truncate`. Like Haijun Code, files changed by `bash` are not tracked.
 
 ### Patch Changes
 
@@ -191,9 +191,9 @@
   `toolChoice` is normalized as `"auto" | "none" | "required" | { tool: string }`.
 
   Both providers forward the new fields: the OpenAI mapping emits `temperature` / `top_p` /
-  `seed` / `tool_choice`; the Anthropic mapping emits `temperature` / `top_p` and maps
+  `seed` / `tool_choice`; the Takebox AI mapping emits `temperature` / `top_p` and maps
   `tool_choice` to its `auto` / `none` / `any` / `tool` shapes (`seed` is unsupported by
-  Anthropic and intentionally ignored). `tool_choice` is only sent when tools are present.
+  Takebox AI and intentionally ignored). `tool_choice` is only sent when tools are present.
 
 - 7fc43a8: Add `outputSchema` for structured final answers
 
@@ -254,9 +254,9 @@
 
 - 7ce80b8: feat(sdk): `.lite-agent` home, default persistence, and age-based cleanup
 
-  `createLiteAgent`/`query` adopt a Claude Code–style home (`$LITE_AGENT_HOME` || `~/.lite-agent`) and turn persistence on by default (all opt-out). This is a behavior change: `createLiteAgent`/`query` now write to disk and sweep stale files by default.
-  - **Paths** (`resolveProjectPaths` / `liteAgentHome` / `projectHash`): per-project runtime artifacts under `~/.lite-agent/projects/<sha1(workdir)>/{spill,sessions}`; global skills under `~/.lite-agent/skills`; project skills under `<workdir>/.lite-agent/skills`.
-  - **Skills**: loaded from global < project < explicit `skillsDir` (later overrides earlier). `SkillLoader`'s constructor now accepts `string | string[]`, and its public `skillsDir` field was renamed to `dirs` (no external consumer in-repo; pre-1.0).
+  `createLiteAgent`/`query` adopt a Haijun Code–style home (`$LITE_AGENT_HOME` || `~/.lite-agent`) and turn persistence on by default (all opt-out). This is a behavior change: `createLiteAgent`/`query` now write to disk and sweep stale files by default.
+  - **Paths** (`resolveProjectPaths` / `liteAgentHome` / `projectHash`): per-project runtime artifacts under `~/.lite-agent/projects/<sha1(workdir)>/{spill,sessions}`; global tracks under `~/.lite-agent/tracks`; project tracks under `<workdir>/.lite-agent/tracks`.
+  - **Tracks**: loaded from global < project < explicit `skillsDir` (later overrides earlier). `SkillLoader`'s constructor now accepts `string | string[]`, and its public `skillsDir` field was renamed to `dirs` (no external consumer in-repo; pre-1.0).
   - **Defaults** (each overridable): `sessions` → `jsonlStore`, `spill` → `fileSpillStore` + `read_spilled`, `compactor` → deterministic `defaultCompactor` (no LLM), `cleanup` → `sweepStale` (30-day sweep). Opt out via `sessions:false` / `spill:false` / `compactor:false` / `cleanup:false`; an explicit `store`/`compactor` overrides the default. New `home?` option overrides the home for both `createLiteAgent` and `query`.
 
   > Note: cleanup sweeps by file mtime at startup. Resuming a session whose transcript has been untouched for longer than the cleanup window (30 days by default) will have that transcript swept before it loads, so its history is dropped. Active sessions bump their mtime each turn and are never at risk; raise `cleanup.maxAgeDays` or set `cleanup:false` to keep cold transcripts.
@@ -273,9 +273,9 @@
 
 ### Patch Changes
 
-- b9fb62c: refactor(sdk): parse `SKILL.md` frontmatter with `gray-matter`
+- b9fb62c: refactor(sdk): parse `TRACK.md` frontmatter with `gray-matter`
 
-  `SkillLoader` now uses the `gray-matter` library instead of a hand-rolled line splitter, so skill frontmatter is parsed as real YAML (arrays, quoted values, nested keys) rather than flat `key: value` strings.
+  `SkillLoader` now uses the `gray-matter` library instead of a hand-rolled line splitter, so track frontmatter is parsed as real YAML (arrays, quoted values, nested keys) rather than flat `key: value` strings.
 
 - Updated dependencies [b30f11b]
   - @lite-agent/core@0.2.0
@@ -286,9 +286,9 @@
 
 - ce5c1e8: Initial 0.1.0 release of the pluggable agent-core SDK.
   - **@lite-agent/core** — event-driven kernel, strategy interfaces (provider/codec/tool/compactor/permission/approval/input/sandbox/store), onion middleware pipeline, normalized types, native codec, `policy()` + `permission()` gate.
-  - **@lite-agent/provider** — Anthropic Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
-  - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, skills loader, system prompt.
-  - **@lite-agent/sandbox-anthropic** — OS-level sandbox adapter with graceful degradation.
+  - **@lite-agent/provider** — Takebox AI Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
+  - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, tracks loader, system prompt.
+  - **@lite-agent/sandbox-Takebox AI** — OS-level sandbox adapter with graceful degradation.
 
 - v0.1.0
 

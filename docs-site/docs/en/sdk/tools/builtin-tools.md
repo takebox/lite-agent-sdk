@@ -13,7 +13,7 @@
 | `delete_file` | Delete a file (snapshotted first, so `restore()` can recreate it). |
 | `TaskCreate` / `TaskUpdate` / `TaskGet` / `TaskList` | Persistent task list for multi-step work. |
 | `Agent` | Delegate subtasks to [subagents](/sdk/tools/subagents). |
-| `load_skill` | Load a [skill](/sdk/tools/skills)'s body into context on demand. |
+| `load_skill` | Load a [track](/sdk/tools/tracks)'s body into context on demand. |
 | `BashOutput` | Read incremental output from a backgrounded `bash` command by its `bg_…` id. |
 | `KillBackground` | Cancel a running background task by id. |
 | `ask_user` | Ask the user a question mid-run — registered only when `onAskUser` is set. |
@@ -27,8 +27,8 @@ Filter the final tool set by name with `allowedTools` (allow-list) or `disallowe
 
 ```ts
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   disallowedTools: ["bash", "delete_file"],
 });
@@ -52,5 +52,5 @@ The built-in tool sets are also individually importable — `defaultTools`, `bas
 
 - [Custom tools](/sdk/tools/custom-tools) — add your own tools with `tool()`.
 - [Subagents](/sdk/tools/subagents) — what the `Agent` tool delegates to.
-- [Skills](/sdk/tools/skills) — what `load_skill` loads.
+- [Tracks](/sdk/tools/tracks) — what `load_skill` loads.
 - [Permissions](/sdk/control/permissions) — gate tool calls with allow / ask / deny rules.

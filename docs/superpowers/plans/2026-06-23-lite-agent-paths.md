@@ -1,8 +1,8 @@
 # `.lite-agent` Paths, Default Persistence & Cleanup — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Give `lite-agent-sdk` a Claude Code–style home (`~/.lite-agent`) with per-project runtime artifacts, two-source skill loading (global + project), and on-by-default session persistence / tool-result spill / deterministic compaction / age-based cleanup — all opt-out.
+**Goal:** Give `lite-agent-sdk` a Haijun Code–style home (`~/.lite-agent`) with per-project runtime artifacts, two-source track loading (global + project), and on-by-default session persistence / tool-result spill / deterministic compaction / age-based cleanup — all opt-out.
 
 **Architecture:** All new code lives in the **sdk** package (filesystem = batteries); **core is unchanged** and reused via its existing `Store` / `SpillStore` / `Compactor` strategies. A pure `paths.ts` computes the directory layout from `workdir` + home; `createLiteAgent` resolves those paths once and wires the default stores/compactor/cleanup, each individually overridable. Test isolation is achieved with a vitest `setupFiles` that points `LITE_AGENT_HOME` at a fresh tmpdir.
 
@@ -16,14 +16,14 @@
 |---|---|
 | **Create** `packages/sdk/src/paths.ts` | Pure path computation: `liteAgentHome()`, `projectHash()`, `resolveProjectPaths()` → `ProjectPaths`. No fs side effects. |
 | **Create** `packages/sdk/src/cleanup.ts` | `sweepStale()` — age-based delete of stale `spill`/`sessions` files across all projects. |
-| **Modify** `packages/sdk/src/skills/loader.ts` | `SkillLoader` accepts `string \| string[]` (later dir overrides earlier); add `names()`. |
-| **Modify** `packages/sdk/src/createLiteAgent.ts` | Resolve paths once; default-on `sessions`/`spill`/`compactor`/`cleanup`; merge skill dirs; new `home` option. |
+| **Modify** `packages/sdk/src/tracks/loader.ts` | `SkillLoader` accepts `string \| string[]` (later dir overrides earlier); add `names()`. |
+| **Modify** `packages/sdk/src/createLiteAgent.ts` | Resolve paths once; default-on `sessions`/`spill`/`compactor`/`cleanup`; merge track dirs; new `home` option. |
 | **Modify** `packages/sdk/src/query.ts` | Pass new options (`home`/`sessions`/`spill`/`cleanup`, widen `compactor`) through to `createLiteAgent`. |
 | **Modify** `packages/sdk/src/index.ts` | Export `resolveProjectPaths`/`liteAgentHome`/`projectHash`/`ProjectPaths`/`sweepStale`. |
 | **Create** `packages/sdk/vitest.config.ts` | `include: test/**/*.test.ts` + `setupFiles`. |
 | **Create** `packages/sdk/test/setup.ts` | Set `process.env.LITE_AGENT_HOME` to a fresh `mkdtemp` dir (disk isolation). |
 | **Create** `packages/sdk/test/{paths,cleanup,defaults}.test.ts` | New unit/integration tests. |
-| **Modify** `packages/sdk/test/skills.test.ts` | Add multi-dir override + `names()` tests. |
+| **Modify** `packages/sdk/test/tracks.test.ts` | Add multi-dir override + `names()` tests. |
 | **Modify** `packages/sdk/test/query.test.ts` | Add option-passthrough test. |
 | **Create** `.changeset/lite-agent-paths-defaults.md` | Minor bump for `@lite-agent/sdk`. |
 
@@ -76,8 +76,8 @@ test("resolveProjectPaths derives the project + global subpaths", () => {
     hash: projectHash("/proj"),
     spillDir: join(projectDir, "spill"),
     sessionsDir: join(projectDir, "sessions"),
-    globalSkillsDir: join("/home", "skills"),
-    projectSkillsDir: join("/proj", ".lite-agent", "skills"),
+    globalSkillsDir: join("/home", "tracks"),
+    projectSkillsDir: join("/proj", ".lite-agent", "tracks"),
   });
 });
 ```
@@ -125,8 +125,8 @@ export function resolveProjectPaths(opts: { workdir: string; home?: string }): P
     hash,
     spillDir: join(projectDir, "spill"),
     sessionsDir: join(projectDir, "sessions"),
-    globalSkillsDir: join(home, "skills"),
-    projectSkillsDir: join(resolve(opts.workdir), ".lite-agent", "skills"),
+    globalSkillsDir: join(home, "tracks"),
+    projectSkillsDir: join(resolve(opts.workdir), ".lite-agent", "tracks"),
   };
 }
 ```
@@ -157,12 +157,12 @@ git commit -m "feat(sdk): add paths.ts (.lite-agent home + project path resoluti
 ## Task 2: `SkillLoader` — multi-dir merge + `names()`
 
 **Files:**
-- Modify: `packages/sdk/src/skills/loader.ts`
-- Modify: `packages/sdk/test/skills.test.ts`
+- Modify: `packages/sdk/src/tracks/loader.ts`
+- Modify: `packages/sdk/test/tracks.test.ts`
 
 - [ ] **Step 1: Write the failing tests**
 
-Append to `packages/sdk/test/skills.test.ts`:
+Append to `packages/sdk/test/tracks.test.ts`:
 
 ```ts
 test("a later dir overrides an earlier dir on name collision", () => {
@@ -170,18 +170,18 @@ test("a later dir overrides an earlier dir on name collision", () => {
   const b = mkdtempSync(join(tmpdir(), "sk-b-"));
   mkdirSync(join(a, "demo"));
   mkdirSync(join(b, "demo"));
-  writeFileSync(join(a, "demo", "SKILL.md"), "---\nname: demo\ndescription: from A\n---\nBODY A");
-  writeFileSync(join(b, "demo", "SKILL.md"), "---\nname: demo\ndescription: from B\n---\nBODY B");
+  writeFileSync(join(a, "demo", "TRACK.md"), "---\nname: demo\ndescription: from A\n---\nBODY A");
+  writeFileSync(join(b, "demo", "TRACK.md"), "---\nname: demo\ndescription: from B\n---\nBODY B");
 
   const loader = new SkillLoader([a, b]);
   expect(loader.getContent("demo")).toContain("BODY B");
   expect(loader.getContent("demo")).not.toContain("BODY A");
 });
 
-test("names() lists loaded skills; a missing dir in the list is skipped", () => {
+test("names() lists loaded tracks; a missing dir in the list is skipped", () => {
   const a = mkdtempSync(join(tmpdir(), "sk-a-"));
   mkdirSync(join(a, "demo"));
-  writeFileSync(join(a, "demo", "SKILL.md"), "---\nname: demo\ndescription: d\n---\nB");
+  writeFileSync(join(a, "demo", "TRACK.md"), "---\nname: demo\ndescription: d\n---\nB");
 
   const loader = new SkillLoader([join(tmpdir(), "missing-xyz"), a]);
   expect(loader.names()).toEqual(["demo"]);
@@ -190,17 +190,17 @@ test("names() lists loaded skills; a missing dir in the list is skipped", () => 
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `pnpm --filter @lite-agent/sdk test -- skills`
+Run: `pnpm --filter @lite-agent/sdk test -- tracks`
 Expected: FAIL — `new SkillLoader([a, b])` passes an array where a `string` is expected (the loader stringifies it / `existsSync` on the array fails), and `loader.names` is not a function.
 
 - [ ] **Step 3: Write the minimal implementation**
 
-In `packages/sdk/src/skills/loader.ts`, replace the field + constructor + `loadAll` (lines 8–30) with:
+In `packages/sdk/src/tracks/loader.ts`, replace the field + constructor + `loadAll` (lines 8–30) with:
 
 ```ts
 export class SkillLoader {
   readonly dirs: string[];
-  private skills: Record<string, Skill> = {};
+  private tracks: Record<string, Track> = {};
 
   constructor(dirs: string | string[]) {
     this.dirs = Array.isArray(dirs) ? dirs : [dirs];
@@ -212,10 +212,10 @@ export class SkillLoader {
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
         const p = join(dir, entry.name);
         if (entry.isDirectory()) walk(p);
-        else if (entry.name === "SKILL.md") {
+        else if (entry.name === "TRACK.md") {
           const { meta, body } = this.parse(readFileSync(p, "utf8"));
           const name = meta.name ?? dirname(p).split("/").pop() ?? p;
-          this.skills[name] = { meta, body, path: p };
+          this.tracks[name] = { meta, body, path: p };
         }
       }
     };
@@ -230,19 +230,19 @@ Then add a `names()` accessor next to `getDescriptions()` (after the `getDescrip
 
 ```ts
   names(): string[] {
-    return Object.keys(this.skills);
+    return Object.keys(this.tracks);
   }
 ```
 
 - [ ] **Step 4: Run the tests to verify they pass**
 
-Run: `pnpm --filter @lite-agent/sdk test -- skills`
-Expected: PASS — including the existing two skills tests (string constructor still works via the `Array.isArray` normalization).
+Run: `pnpm --filter @lite-agent/sdk test -- tracks`
+Expected: PASS — including the existing two tracks tests (string constructor still works via the `Array.isArray` normalization).
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add packages/sdk/src/skills/loader.ts packages/sdk/test/skills.test.ts
+git add packages/sdk/src/tracks/loader.ts packages/sdk/test/tracks.test.ts
 git commit -m "feat(sdk): SkillLoader accepts ordered dir list (later overrides) + names()"
 ```
 
@@ -445,7 +445,7 @@ git commit -m "test(sdk): isolate suite with a tmp LITE_AGENT_HOME via setupFile
 
 ## Task 5: `createLiteAgent` — default-on persistence wiring
 
-Wire paths + default `sessions`/`spill`/`compactor`/`cleanup` + global/project skill merge + new `home` option. Because these behaviors interlock in one small function, write the full default-on test set first (watch them fail), then replace the function once.
+Wire paths + default `sessions`/`spill`/`compactor`/`cleanup` + global/project track merge + new `home` option. Because these behaviors interlock in one small function, write the full default-on test set first (watch them fail), then replace the function once.
 
 **Files:**
 - Create: `packages/sdk/test/defaults.test.ts`
@@ -532,13 +532,13 @@ test("compactor:false → no compaction even on a history that would trigger", a
   expect(types).not.toContain("compaction");
 });
 
-test("a project skill shadows a same-named global skill", async () => {
+test("a project track shadows a same-named global track", async () => {
   const workdir = freshWorkdir();
   const { globalSkillsDir, projectSkillsDir } = resolveProjectPaths({ workdir, home: home() });
   mkdirSync(join(globalSkillsDir, "demo"), { recursive: true });
   mkdirSync(join(projectSkillsDir, "demo"), { recursive: true });
-  writeFileSync(join(globalSkillsDir, "demo", "SKILL.md"), "---\nname: demo\ndescription: g\n---\nGLOBAL BODY");
-  writeFileSync(join(projectSkillsDir, "demo", "SKILL.md"), "---\nname: demo\ndescription: p\n---\nPROJECT BODY");
+  writeFileSync(join(globalSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: g\n---\nGLOBAL BODY");
+  writeFileSync(join(projectSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: p\n---\nPROJECT BODY");
 
   const agent = createLiteAgent({ model: callTool("load_skill", { name: "demo" }), workdir });
   const res = await toolResults(agent);
@@ -599,8 +599,8 @@ import type {
   Tool,
 } from "@lite-agent/core";
 import { defaultTools, askUserTool } from "./tools";
-import { SkillLoader } from "./skills/loader";
-import { loadSkillTool } from "./skills/loadSkillTool";
+import { SkillLoader } from "./tracks/loader";
+import { loadTrackTool } from "./tracks/loadTrackTool";
 import { buildSystemPrompt } from "./system";
 import { resolveProjectPaths } from "./paths";
 import { jsonlStore } from "./store";
@@ -649,16 +649,16 @@ export function createLiteAgent(cfg: CreateLiteAgentConfig): Agent {
 
   let tools: Tool[] = [...defaultTools(cfg.workdir)];
 
-  // Skills: global < project < explicit skillsDir (later overrides earlier).
+  // Tracks: global < project < explicit skillsDir (later overrides earlier).
   const loader = new SkillLoader([
     paths.globalSkillsDir,
     paths.projectSkillsDir,
     ...(cfg.skillsDir ? [cfg.skillsDir] : []),
   ]);
-  let skills = "(no skills available)";
+  let tracks = "(no tracks available)";
   if (loader.names().length > 0) {
-    tools.push(loadSkillTool(loader));
-    skills = loader.getDescriptions();
+    tools.push(loadTrackTool(loader));
+    tracks = loader.getDescriptions();
   }
 
   // L3 spill: content-addressed store + retrieval tool, on by default.
@@ -675,7 +675,7 @@ export function createLiteAgent(cfg: CreateLiteAgentConfig): Agent {
 
   const system =
     cfg.system ??
-    buildSystemPrompt({ workdir: cfg.workdir, modelName: cfg.modelName, skills });
+    buildSystemPrompt({ workdir: cfg.workdir, modelName: cfg.modelName, tracks });
 
   // Compaction: explicit compactor wins; `false` disables; default = deterministic
   // pipeline with the spill store auto-injected (no LLM call ever by default).
@@ -727,7 +727,7 @@ Expected: PASS — existing `createLiteAgent.test.ts` stays green: the explicit-
 
 ```bash
 git add packages/sdk/src/createLiteAgent.ts packages/sdk/test/defaults.test.ts
-git commit -m "feat(sdk): default-on sessions/spill/compaction/cleanup + global+project skills"
+git commit -m "feat(sdk): default-on sessions/spill/compaction/cleanup + global+project tracks"
 ```
 
 ---
@@ -828,10 +828,10 @@ Create `.changeset/lite-agent-paths-defaults.md`:
 
 feat(sdk): `.lite-agent` home, default persistence, and age-based cleanup
 
-`createLiteAgent`/`query` adopt a Claude Code–style home (`$LITE_AGENT_HOME` || `~/.lite-agent`) and turn persistence on by default (all opt-out):
+`createLiteAgent`/`query` adopt a Haijun Code–style home (`$LITE_AGENT_HOME` || `~/.lite-agent`) and turn persistence on by default (all opt-out):
 
-- **Paths** (`resolveProjectPaths` / `liteAgentHome` / `projectHash`): per-project runtime artifacts under `~/.lite-agent/projects/<sha1(workdir)>/{spill,sessions}`; global skills under `~/.lite-agent/skills`; project skills under `<workdir>/.lite-agent/skills`.
-- **Skills**: loaded from global < project < explicit `skillsDir` (later overrides earlier).
+- **Paths** (`resolveProjectPaths` / `liteAgentHome` / `projectHash`): per-project runtime artifacts under `~/.lite-agent/projects/<sha1(workdir)>/{spill,sessions}`; global tracks under `~/.lite-agent/tracks`; project tracks under `<workdir>/.lite-agent/tracks`.
+- **Tracks**: loaded from global < project < explicit `skillsDir` (later overrides earlier).
 - **Defaults** (each overridable): `sessions` → `jsonlStore`, `spill` → `fileSpillStore` + `read_spilled`, `compactor` → deterministic `defaultCompactor` (no LLM), `cleanup` → `sweepStale` (30-day sweep). Opt out via `sessions:false` / `spill:false` / `compactor:false` / `cleanup:false`; an explicit `store`/`compactor` overrides the default.
 
 No core changes — built entirely on the existing `Store` / `SpillStore` / `Compactor` strategies.
@@ -840,7 +840,7 @@ No core changes — built entirely on the existing `Store` / `SpillStore` / `Com
 - [ ] **Step 2: Full-repo build + test + typecheck**
 
 Run: `pnpm -r build && pnpm -r test && pnpm -r typecheck`
-Expected: PASS — all packages build; sdk gains the new tests (paths 3, skills +2, cleanup 2, isolation 1, defaults 8, query +1); typecheck clean (note the widened `compactor?: Compactor | false` in both `createLiteAgent` and `query`).
+Expected: PASS — all packages build; sdk gains the new tests (paths 3, tracks +2, cleanup 2, isolation 1, defaults 8, query +1); typecheck clean (note the widened `compactor?: Compactor | false` in both `createLiteAgent` and `query`).
 
 - [ ] **Step 3: Self-review against the spec**
 

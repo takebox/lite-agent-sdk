@@ -32,8 +32,8 @@ test("resolveProjectPaths derives the project + global subpaths", () => {
     spillDir: join(projectDir, "spill"),
     sessionsDir: join(projectDir, "sessions"),
     tasksDir: join(projectDir, "tasks"),
-    globalSkillsDir: join("/home", "skills"),
-    projectSkillsDir: join("/proj", ".lite-agent", "skills"),
+    globalSkillsDir: join("/home", "tracks"),
+    projectSkillsDir: join("/proj", ".lite-agent", "tracks"),
     globalAgentsDir: join("/home", "agents"),
     projectAgentsDir: join("/proj", ".lite-agent", "agents"),
   });

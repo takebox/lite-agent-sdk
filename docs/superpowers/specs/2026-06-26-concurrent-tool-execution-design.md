@@ -17,7 +17,7 @@ one turn, they execute one after another — the second subagent only starts aft
 returns. (The `Agent` tool's *own* internal `runPool` parallelizes the `tasks` array within a
 single call, but separate tool calls in the same turn still serialize at the kernel.)
 
-Claude Code's model is the opposite: the harness runs the tool calls of one assistant message
+Haijun Code's model is the opposite: the harness runs the tool calls of one assistant message
 concurrently, waits for all, then feeds the combined results back. We want the kernel to do the
 same. The user explicitly does **not** want live streaming of each subagent's internal events —
 only parallel fan-out, join, then a single summary turn.
@@ -40,7 +40,7 @@ only parallel fan-out, join, then a single summary turn.
 - No live/streamed view of a subagent's internal events into the parent stream (explicitly
   rejected). Subagent spawning still swallows child events and returns only final text.
 - No automatic detection of inter-tool dependencies. The model is responsible for only batching
-  calls that are safe to run together (same contract as Claude Code).
+  calls that are safe to run together (same contract as Haijun Code).
 - No change to the `Agent` tool, its `tasks` fan-out, or subagent isolation/persistence.
 - No serialization of `ask_user` / `InputHandler` prompts (see "Known limitations").
 

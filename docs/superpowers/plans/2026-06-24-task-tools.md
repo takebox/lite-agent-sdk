@@ -1,6 +1,6 @@
 # Tasks API (replace `todo`) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the in-memory `todo` tool with a persistent four-tool Tasks API (`TaskCreate`/`TaskUpdate`/`TaskGet`/`TaskList`) backed by one JSON file per task, with bidirectional dependencies + cycle detection, cross-process file locking, and a per-turn reminder that re-injects the task list into the model request without persisting it.
 
@@ -916,7 +916,7 @@ git commit -m "feat(sdk): replace todo tool with persistent Tasks API + per-turn
 "lite-agent": minor
 "@lite-agent/core": minor
 "@lite-agent/provider": minor
-"@lite-agent/sandbox-anthropic": minor
+"@lite-agent/sandbox-Takebox AI": minor
 ---
 
 Replace the in-memory `todo` tool with a persistent Tasks API (`TaskCreate`/`TaskUpdate`/`TaskGet`/`TaskList`): one JSON file per task under `tasks/<listId>/`, bidirectional dependencies with cycle detection, cross-process file locking, and a per-turn `<system-reminder>` that re-injects the current task list without persisting it. New `createLiteAgent`/`query` options `tasks` (default on) and `taskListId`.
@@ -927,7 +927,7 @@ Replace the in-memory `todo` tool with a persistent Tasks API (`TaskCreate`/`Tas
 - [ ] **Step 2: Full build → test → typecheck (topological)**
 
 Run: `pnpm -r build && pnpm -r test && pnpm -r typecheck`
-Expected: all packages PASS. (`provider`/`sandbox-anthropic`/example don't depend on the task changes; this confirms nothing else broke.)
+Expected: all packages PASS. (`provider`/`sandbox-Takebox AI`/example don't depend on the task changes; this confirms nothing else broke.)
 
 - [ ] **Step 3: Commit**
 

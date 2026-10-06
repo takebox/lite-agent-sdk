@@ -79,14 +79,14 @@ pnpm add @lite-agent/checkpoint-sqlite
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { sqliteCheckpointer } from "@lite-agent/checkpoint-sqlite";
 
 const checkpointer = sqliteCheckpointer({ file: "./sessions.db" }); // or ":memory:"
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   checkpointer,
 });

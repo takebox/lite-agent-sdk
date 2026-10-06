@@ -1,6 +1,6 @@
 # Concurrent In-Turn Tool Execution Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make the kernel run all of an assistant turn's tool calls concurrently (default-on, bounded, deterministic ordering), so multiple `Agent`/tool calls fan out in parallel instead of serializing.
 
@@ -524,7 +524,7 @@ out simultaneously instead of running one after another.
 - [ ] **Step 2: Verify the changeset is recognized**
 
 Run: `pnpm exec changeset status`
-Expected: lists the four fixed packages (`@lite-agent/core`, `@lite-agent/sdk`, `@lite-agent/provider`, `@lite-agent/sandbox-anthropic`) bumping **minor**. (If `changeset status` errors comparing to `main`, this is non-fatal — confirm instead that the file exists and is well-formed.)
+Expected: lists the four fixed packages (`@lite-agent/core`, `@lite-agent/sdk`, `@lite-agent/provider`, `@lite-agent/sandbox-Takebox AI`) bumping **minor**. (If `changeset status` errors comparing to `main`, this is non-fatal — confirm instead that the file exists and is well-formed.)
 
 - [ ] **Step 3: Commit**
 

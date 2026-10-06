@@ -1,14 +1,14 @@
-import { anthropic, openai } from "@lite-agent/provider";
+import { Takebox AI, openai } from "@lite-agent/provider";
 import type { ModelProvider } from "@lite-agent/sdk";
 
-export type Protocol = "anthropic" | "openai";
+export type Protocol = "juglow" | "openai";
 
 // Explicit LITE_AGENT_MODEL_PROTOCOL wins; otherwise infer from the model id.
 export function detectProtocol(modelId: string, override?: string): Protocol {
-  if (override === "anthropic" || override === "openai") return override;
+  if (override === "juglow" || override === "openai") return override;
   const id = modelId.toLowerCase();
-  return id.startsWith("claude") || id.startsWith("anthropic")
-    ? "anthropic"
+  return id.startsWith("haijun") || id.startsWith("juglow")
+    ? "juglow"
     : "openai";
 }
 
@@ -33,8 +33,8 @@ export function resolveModel(): ResolvedModel {
     process.env["LITE_AGENT_MODEL_PROTOCOL"],
   );
   const provider =
-    protocol === "anthropic"
-      ? anthropic({ apiKey, baseURL })
+    protocol === "juglow"
+      ? Takebox AI({ apiKey, baseURL })
       : openai({ apiKey, baseURL });
   return { provider, modelName, protocol };
 }

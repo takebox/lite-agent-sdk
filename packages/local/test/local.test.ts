@@ -10,7 +10,7 @@ const sandbox = vi.hoisted(() => ({
   dispose: vi.fn(async () => {}),
 }));
 
-vi.mock("@lite-agent/sandbox-anthropic", () => ({
+vi.mock("@lite-agent/sandbox-Takebox AI", () => ({
   sandboxRuntime: () => ({ id: "test-sandbox", ...sandbox }),
 }));
 

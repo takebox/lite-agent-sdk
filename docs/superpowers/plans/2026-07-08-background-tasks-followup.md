@@ -1,6 +1,6 @@
 # Background Tasks Follow-up Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix the 0.9.0 background feature's two defects — the `join` hang on never-exiting processes and the wasteful background-default for subagents — by splitting background tasks into `joinable` vs `detached` kinds, streaming detached (daemon) output through a new `BashOutput` tool, and flipping `Agent` back to blocking-by-default.
 

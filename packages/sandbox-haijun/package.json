@@ -1,0 +1,53 @@
+{
+  "name": "@lite-agent/sandbox-Takebox AI",
+  "version": "0.8.0",
+  "description": "OS-level Sandbox adapter for @lite-agent/core over @takebox-ai/sandbox-runtime (Seatbelt / bubblewrap).",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "agent",
+    "ai",
+    "llm",
+    "sandbox",
+    "seatbelt",
+    "bubblewrap"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takebox/lite-agent-sdk.git",
+    "directory": "packages/sandbox-Takebox AI"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean --tsconfig tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@takebox-ai/sandbox-runtime": "^0.0.55",
+    "@lite-agent/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsup": "^8.3.0",
+    "typescript": "^6.0.2",
+    "vitest": "^2.1.0"
+  }
+}

@@ -1,6 +1,6 @@
 # Content-Level Enterprise Permissions Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make the permission gate content/argument-level, auditable, redacting, fail-closed, dry-runnable, and composable — enterprise-grade — while keeping 100% backward compatibility with today's `policy()`/`permission()`.
 

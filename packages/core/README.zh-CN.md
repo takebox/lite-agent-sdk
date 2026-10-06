@@ -4,7 +4,7 @@
 
 lite-agent 的可插拔、事件驱动 Agent 内核：一个精简、与具体模型无关的核心，由可替换的策略接口、洋葱式中间件管道和类型化事件流构成。用于基于原语搭建你自己的 Agent —— 如果需要开箱即用的组合（工具、技能、子 Agent、会话），请改用 [`@lite-agent/sdk`](../sdk)。
 
-其公开 API 参照 [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript) 设计，但内核为自研，因此也能通过可插拔的 tool-call 编解码器（codec）驱动本地小模型。
+其公开 API 参照 [`@takebox-ai/haijun-agent-sdk`]() 设计，但内核为自研，因此也能通过可插拔的 tool-call 编解码器（codec）驱动本地小模型。
 
 ## 安装
 
@@ -34,7 +34,7 @@ const result = await agent.send("hello");
 console.log(result.text);
 ```
 
-`fakeProvider` 是内置的测试替身。要接真实模型，请传入来自 [`@lite-agent/provider`](../provider) 的 `ModelProvider`（`anthropic()` / `openai()`）。
+`fakeProvider` 是内置的测试替身。要接真实模型，请传入来自 [`@lite-agent/provider`](../provider) 的 `ModelProvider`（`Takebox AI()` / `openai()`）。
 
 ## 特性
 
@@ -46,7 +46,7 @@ console.log(result.text);
 - **事件溯源检查点** —— 通过 `Checkpointer` 接口实现会话持久化与时间回溯；内置内存实现，持久化后端在兄弟包中。
 - **权限中间件** —— 可组合的策略，支持规则匹配与敏感数据脱敏。
 - **引导与后台任务** —— 用 `SteerController` 在运行中注入输入，用 `createBackgroundTasks` 派生 joinable 或 detached 工作，并通过结构化 completion 报告权威的 `BackgroundStatus`（`completed` / `partial` / `failed` / `cancelled`）。
-- **可插拔沙箱** —— 默认 `noopSandbox`；操作系统级边界在 [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic)。
+- **可插拔沙箱** —— 默认 `noopSandbox`；操作系统级边界在 [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI)。
 - **测试工具** —— `fakeProvider`，以及 provider 与 checkpointer 的一致性测试套件。
 
 ### 后台 completion 契约
@@ -80,8 +80,8 @@ console.log(result.text);
 ## 相关
 
 - [`@lite-agent/sdk`](../sdk) —— 在本内核之上组装的开箱即用 Agent（工具、技能、子 Agent、会话、权限门）。
-- [`@lite-agent/provider`](../provider) —— `ModelProvider` 实现（`anthropic()` / `openai()`）。
+- [`@lite-agent/provider`](../provider) —— `ModelProvider` 实现（`Takebox AI()` / `openai()`）。
 - [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) —— 持久化的 `Checkpointer` 后端。
-- [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic) —— 操作系统级沙箱边界。
+- [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) —— 操作系统级沙箱边界。
 - [`@lite-agent/local`](../local) —— 本地小模型支持。
 - [Monorepo 根目录](../..) —— 完整架构说明。

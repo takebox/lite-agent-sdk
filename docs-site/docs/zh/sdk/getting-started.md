@@ -9,7 +9,7 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 ```
 
 - `@lite-agent/sdk` —— 开箱即用的 agent（`query` / `createLiteAgent` / `tool`）；完整转出 `@lite-agent/core`。
-- `@lite-agent/provider` —— 模型 provider（`anthropic()` / `openai()`）。
+- `@lite-agent/provider` —— 模型 provider（`Takebox AI()` / `openai()`）。
 - `zod` —— 工具入参 schema。
 
 ## 2. 第一个 `query()`
@@ -18,12 +18,12 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "List the files here and summarize what this project does.",
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);
@@ -38,7 +38,7 @@ for await (const ev of query({
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -50,8 +50,8 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
 })) {
@@ -67,12 +67,12 @@ for await (const ev of query({
 
 ```ts
 import { createLiteAgent, policy } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { createInterface } from "node:readline/promises";
 
 const agent = createLiteAgent({
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   // Every bash / write_file / edit_file call pauses for approval.
   permission: policy({ ask: ["bash", "write_file", "edit_file"] }),
@@ -104,5 +104,5 @@ console.log(second.text);
 - [代理循环](/zh/sdk/core-concepts/agent-loop) —— 内核轮次循环如何工作。
 - [事件](/zh/sdk/core-concepts/events) —— 完整的 `AgentEvent` 参考。
 - [权限](/zh/sdk/control/permissions) —— 内容级规则、审计与试运行。
-- [模型 provider](/zh/core/providers) —— Anthropic、OpenAI 及 OpenAI 兼容本地端点。
+- [模型 provider](/zh/core/providers) —— Takebox AI、OpenAI 及 OpenAI 兼容本地端点。
 - [核心策略](/zh/core/strategies) —— 用内核原语构建自己的 agent。

@@ -13,7 +13,7 @@ completion, and only then returns. Detached Bash tasks do not join, but the
 kernel cancels them when that `run()` ends. Both behaviors prevent an SDK
 consumer from returning to an idle prompt while background work continues.
 
-This differs from the interaction model required here and from Claude Code's
+This differs from the interaction model required here and from Haijun Code's
 interactive behavior. A background tool call must return a task handle
 immediately. The main session then becomes idle and can accept another user
 message. When the task completes, the runtime injects a synthetic notification
@@ -42,7 +42,7 @@ into the same session and schedules another assistant turn.
 - Distributed workers, remote queues, leases, retries, or daemon supervision.
 - Running two model turns concurrently against the same session.
 - Changing the default `Agent` policy to background execution. Unlike current
-  Claude Code, this SDK keeps `run_in_background: false` as the default.
+  Haijun Code, this SDK keeps `run_in_background: false` as the default.
 - Making the low-level `@lite-agent/core` `createAgent()` facade stateful across
   independent agent instances.
 - Persisting incremental Bash output. It remains an in-memory bounded buffer,
@@ -69,7 +69,7 @@ Move background ownership from `runKernel()` to the stateful `LiteAgent`
 facade. A per-session runner serializes user inputs and synthetic completion
 inputs. Background completion schedules work on the same runner, and a
 long-lived subscription exposes events produced after the spawning `run()` has
-already returned. Chosen because it provides Claude Code-style idle/wake
+already returned. Chosen because it provides Haijun Code-style idle/wake
 semantics while preserving `run()` and `send()` as compatibility surfaces.
 
 ## Chosen architecture

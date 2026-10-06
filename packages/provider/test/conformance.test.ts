@@ -3,7 +3,7 @@ import {
   providerConformance,
   type ProviderConformanceFactory,
 } from "@lite-agent/core";
-import { anthropicConformance } from "./support/anthropicConformance";
+import { juglowConformance } from "./support/juglowConformance";
 import { openaiConformance } from "./support/openaiConformance";
 
 const providers: Array<{
@@ -11,7 +11,7 @@ const providers: Array<{
   make: ProviderConformanceFactory;
 }> = [
   { name: "openai", make: openaiConformance },
-  { name: "anthropic", make: anthropicConformance },
+  { name: "juglow", make: juglowConformance },
 ];
 
 for (const provider of providers) {

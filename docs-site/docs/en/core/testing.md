@@ -34,7 +34,7 @@ for (const test of providerConformance) {
 }
 ```
 
-The maintained `anthropic()` and `openai()` adapters pass this suite offline, via their injected-client seam.
+The maintained `Takebox AI()` and `openai()` adapters pass this suite offline, via their injected-client seam.
 
 ## `checkpointerConformance`
 

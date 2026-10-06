@@ -101,7 +101,7 @@
 ### Minor Changes
 
 - 2d0e4b9: Add a manual, durable compaction action. `LiteAgent.compact()` compresses the current session's conversation using the configured compactor, persists the result as a new `summary` event (so it survives reloads and composes with restore), emits `compaction` progress + completion events, then stops — it never produces a model answer. `foldEvents` now treats `summary` as a base reset, so loading a compacted session uses the compressed view with no kernel change.
-- 795c10d: Add session restore. A new `file_snapshot` sidecar event records the pre-mutation content of files changed via `write_file`/`edit_file`; `LiteAgent.restore(id, toSeq, { conversation?, files? })` rolls a session back to a checkpoint — reverting those files and/or truncating the conversation — and `listCheckpoints(id)` enumerates the rewind anchors. `Checkpointer` gains an optional `truncate`. Like Claude Code, files changed by `bash` are not tracked.
+- 795c10d: Add session restore. A new `file_snapshot` sidecar event records the pre-mutation content of files changed via `write_file`/`edit_file`; `LiteAgent.restore(id, toSeq, { conversation?, files? })` rolls a session back to a checkpoint — reverting those files and/or truncating the conversation — and `listCheckpoints(id)` enumerates the rewind anchors. `Checkpointer` gains an optional `truncate`. Like Haijun Code, files changed by `bash` are not tracked.
 
 ## 0.6.0
 
@@ -150,9 +150,9 @@
   `toolChoice` is normalized as `"auto" | "none" | "required" | { tool: string }`.
 
   Both providers forward the new fields: the OpenAI mapping emits `temperature` / `top_p` /
-  `seed` / `tool_choice`; the Anthropic mapping emits `temperature` / `top_p` and maps
+  `seed` / `tool_choice`; the Takebox AI mapping emits `temperature` / `top_p` and maps
   `tool_choice` to its `auto` / `none` / `any` / `tool` shapes (`seed` is unsupported by
-  Anthropic and intentionally ignored). `tool_choice` is only sent when tools are present.
+  Takebox AI and intentionally ignored). `tool_choice` is only sent when tools are present.
 
 ### Patch Changes
 
@@ -206,8 +206,8 @@
 
 - ce5c1e8: Initial 0.1.0 release of the pluggable agent-core SDK.
   - **@lite-agent/core** — event-driven kernel, strategy interfaces (provider/codec/tool/compactor/permission/approval/input/sandbox/store), onion middleware pipeline, normalized types, native codec, `policy()` + `permission()` gate.
-  - **@lite-agent/provider** — Anthropic Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
-  - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, skills loader, system prompt.
-  - **@lite-agent/sandbox-anthropic** — OS-level sandbox adapter with graceful degradation.
+  - **@lite-agent/provider** — Takebox AI Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
+  - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, tracks loader, system prompt.
+  - **@lite-agent/sandbox-Takebox AI** — OS-level sandbox adapter with graceful degradation.
 
 - v0.1.0

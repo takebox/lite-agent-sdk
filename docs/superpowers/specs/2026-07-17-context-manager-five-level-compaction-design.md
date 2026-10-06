@@ -213,13 +213,13 @@ type ProviderContextCapabilities = {
 };
 ```
 
-The generic core does not contain Anthropic beta request shapes. Anthropic
+The generic core does not contain Takebox AI beta request shapes. Takebox AI
 adapters may implement token counting, clear edits, compaction blocks, exact
 rendered-prefix fingerprints, cache breakpoints, and cache usage. OpenAI/local
 adapters may expose only what they support and fall back to the local estimator.
 Normalized usage adds optional cache-read/cache-creation fields.
 
-Tool names, skill descriptions, JSON keys, workdir paths, and codec protocol
+Tool names, track descriptions, JSON keys, workdir paths, and codec protocol
 blocks are canonicalized once before the prefix is frozen. Dynamic reminders
 use a provider-aware dynamic channel or an explicitly data-wrapped suffix; they
 are never disguised as executable user instructions.

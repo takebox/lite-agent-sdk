@@ -1,6 +1,6 @@
 # Agent Core SDK — Phase 1: Foundation & Kernel Walking Skeleton — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Stand up a pnpm monorepo with `@lite-agent/core` containing a fully-tested, event-driven agent kernel that runs a tool-using loop against a fake provider with zero network.
 
@@ -19,7 +19,7 @@
 - **Phase 3 — Permission + approval + ask_user:** `PermissionPolicy`/`policy()`, `ApprovalHandler`/`cliApprover()`, `InputHandler`/`cliAsker()`, `askUserTool()`, the `permission()` middleware, and the `approval_*` / `input_*` events wired through the kernel.
 - **Phase 4 — Compaction + sessions + retry:** `Compactor`/`defaultCompactor()` (micro + auto), `compaction()` middleware, `Store`/`memoryStore()`/`jsonlStore()`, `retry()` middleware, usage aggregation.
 - **Phase 5 — Local-model codecs:** `jsonCodec()` + `reactCodec()` + `maxDecodeRetries` decode-failure recovery.
-- **Phase 6 — CLI example + demo features as plugins:** interactive CLI, then re-express skills/background/worktree/monitor/subagent as plugins/tools; changesets release setup.
+- **Phase 6 — CLI example + demo features as plugins:** interactive CLI, then re-express tracks/background/worktree/monitor/subagent as plugins/tools; changesets release setup.
 
 ---
 

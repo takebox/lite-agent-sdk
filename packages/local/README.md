@@ -10,7 +10,7 @@ Strict single-host assembly for lite-agent: run agents against local models (Oll
 pnpm add @lite-agent/local
 ```
 
-Requires macOS or Linux, Node ≥ 20, and a running local model server. `better-sqlite3` and `@anthropic-ai/sandbox-runtime` are pulled in as transitive native/runtime dependencies.
+Requires macOS or Linux, Node ≥ 20, and a running local model server. `better-sqlite3` and `@takebox-ai/sandbox-runtime` are pulled in as transitive native/runtime dependencies.
 
 ## Quick start
 
@@ -69,5 +69,5 @@ Runtime data lives under the SDK project directory: `sessions.sqlite3` and `logs
 - [`@lite-agent/sdk`](../sdk) — the general-purpose assembly this package hardens for single-host use.
 - [`@lite-agent/provider`](../provider) — model providers used by `localOpenAI`.
 - [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) — the SQLite checkpointer used here.
-- [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic) — the OS sandbox runtime used here.
+- [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) — the OS sandbox runtime used here.
 - [Monorepo root](../..) — full architecture write-up.

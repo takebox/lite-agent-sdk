@@ -1,6 +1,6 @@
 # Part A — Library Swaps (p-limit + picomatch) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace two hand-rolled utilities with mature, well-tested libraries — the two concurrency worker-pools (`runToolPool` in core, `runPool` in sdk) with `p-limit`, and the fragile hand-rolled permission glob (`globToRegExp`) with `picomatch` — with zero observable behavior change for existing tool-name patterns.
 
@@ -275,7 +275,7 @@ git add .changeset/part-a-library-swaps.md
 git commit -m "chore: changeset for p-limit/picomatch library swaps"
 ```
 
-> **Deferred (needs explicit user consent — do NOT run as part of this plan):** `pnpm version` (bumps the fixed group core/sdk/provider/sandbox-anthropic to the next patch and writes CHANGELOGs) and any publish. When versioning later, watch for `@lite-agent/checkpoint-sqlite` getting a cascade bump from its core dependency and pin it back, consistent with the prior decision to keep it independently versioned.
+> **Deferred (needs explicit user consent — do NOT run as part of this plan):** `pnpm version` (bumps the fixed group core/sdk/provider/sandbox-Takebox AI to the next patch and writes CHANGELOGs) and any publish. When versioning later, watch for `@lite-agent/checkpoint-sqlite` getting a cascade bump from its core dependency and pin it back, consistent with the prior decision to keep it independently versioned.
 
 ---
 

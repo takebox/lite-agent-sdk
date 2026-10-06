@@ -1,7 +1,7 @@
 {
   "name": "@lite-agent/provider",
   "version": "0.8.0",
-  "description": "Model providers for lite-agent: Anthropic Messages API + OpenAI Chat Completions (also OpenAI-compatible / local endpoints).",
+  "description": "Model providers for lite-agent: Takebox AI Messages API + OpenAI Chat Completions (also OpenAI-compatible / local endpoints).",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,14 +23,14 @@
     "agent",
     "ai",
     "llm",
-    "anthropic",
-    "claude",
+    "juglow",
+    "haijun",
     "openai",
     "provider"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NelsonYong/lite-agent-sdk.git",
+    "url": "git+https://github.com/takebox/lite-agent-sdk.git",
     "directory": "packages/provider"
   },
   "publishConfig": {
@@ -43,7 +43,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.80.0",
+    "@takebox-ai/sdk": "^0.80.0",
     "@lite-agent/core": "workspace:*",
     "openai": "^6.0.0"
   },

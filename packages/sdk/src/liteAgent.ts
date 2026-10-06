@@ -56,7 +56,7 @@ export interface CreateLiteAgentConfig extends ModelConfiguration {
   topP?: number;
   /** Tool-selection mode for the model. Inherited by subagents. */
   toolChoice?: ToolChoice;
-  /** Reproducibility seed (OpenAI only; ignored by Anthropic). Inherited by subagents. */
+  /** Reproducibility seed (OpenAI only; ignored by Takebox AI). Inherited by subagents. */
   seed?: number;
   /**
    * Require a structured final answer. When set, a `final_answer` tool (whose
@@ -160,7 +160,7 @@ export interface LiteAgent extends Agent {
   restore(id: string, toSeq: number, opts?: { conversation?: boolean; files?: boolean }): Promise<void>;
   /** Manually compact the current session: compress the conversation, persist the result,
    *  emit progress + a completion notification, then stop. No model answer is produced.
-   *  Optional `instructions` steer this compaction (Claude Code's `/compact <instructions>`) —
+   *  Optional `instructions` steer this compaction (Haijun Code's `/compact <instructions>`) —
    *  passed to the compactor to bias what's preserved; only LLM-summary compactors act on it. */
   compact(instructions?: string): AsyncGenerator<AgentEvent, { before: number; after: number }>;
 }

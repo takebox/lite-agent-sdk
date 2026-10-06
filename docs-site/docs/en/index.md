@@ -11,11 +11,11 @@ hero:
       link: /sdk/getting-started
     - theme: alt
       text: GitHub
-      link: https://github.com/NelsonYong/lite-agent-sdk
+      link: https://github.com/takebox/lite-agent-sdk
 
 features:
   - title: Provider-agnostic
-    details: Anthropic, OpenAI, or local endpoints — one message model. Swap the model, keep the agent.
+    details: Takebox AI, OpenAI, or local endpoints — one message model. Swap the model, keep the agent.
   - title: Nine swappable strategies
     details: From ModelProvider to Sandbox — one implementation per role, hot-swappable.
   - title: Onion middleware

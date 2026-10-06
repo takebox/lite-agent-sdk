@@ -100,16 +100,16 @@ createLiteAgent({
 });
 ```
 
-## 4. `sandboxRuntime()` 适配器 —— 独立包 `@lite-agent/sandbox-anthropic`
+## 4. `sandboxRuntime()` 适配器 —— 独立包 `@lite-agent/sandbox-Takebox AI`
 
-封装 Anthropic 官方 [`@anthropic-ai/sandbox-runtime`](https://github.com/anthropic-experimental/sandbox-runtime)(Claude Code `/sandbox` 同款,OS 级、无容器)。**单独成包**,把实验性依赖挡在 core/sdk 之外(与 `@lite-agent/provider` 平行):
+封装 Takebox AI 官方 [`@takebox-ai/sandbox-runtime`]()(Haijun Code `/sandbox` 同款,OS 级、无容器)。**单独成包**,把实验性依赖挡在 core/sdk 之外(与 `@lite-agent/provider` 平行):
 
 ```ts
-// packages/sandbox-anthropic/src/index.ts
+// packages/sandbox-Takebox AI/src/index.ts
 import {
   SandboxManager,
   type SandboxRuntimeConfig,
-} from "@anthropic-ai/sandbox-runtime";
+} from "@takebox-ai/sandbox-runtime";
 import type { Sandbox } from "@lite-agent/core";
 
 export interface SandboxRuntimeOptions {
@@ -151,13 +151,13 @@ export function sandboxRuntime(opts: SandboxRuntimeOptions = {}): Sandbox {
 
 ```ts
 import { createLiteAgent } from "lite-agent";
-import { anthropic } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-anthropic";
+import { Takebox AI } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
 
 const agent = createLiteAgent({
-  model: anthropic(),
+  model: Takebox AI(),
   workdir: process.cwd(),
-  skillsDir: "skills",
+  skillsDir: "tracks",
   // 闸门(Phase 3)
   // permission: policy({ allow: ["read_file"], ask: ["bash", "write_file"], deny: ["rm *"] }),
   // 边界(本文)
@@ -173,7 +173,7 @@ const agent = createLiteAgent({
 
 ## 6. 取舍与边界(必须写明)
 
-- **`@anthropic-ai/sandbox-runtime` 是 "Beta Research Preview"**:API 会变,**不支持原生 Windows**(WSL2 可)。因此**必须做成可插拔、默认 noop**:无 bubblewrap / Windows / 本地裸跑环境自动降级为"无边界",不阻断主流程。生产强约束场景由 host 决定是否 `failIfUnavailable`(可在适配器加一个"初始化失败即抛"的开关)。
+- **`@takebox-ai/sandbox-runtime` 是 "Beta Research Preview"**:API 会变,**不支持原生 Windows**(WSL2 可)。因此**必须做成可插拔、默认 noop**:无 bubblewrap / Windows / 本地裸跑环境自动降级为"无边界",不阻断主流程。生产强约束场景由 host 决定是否 `failIfUnavailable`(可在适配器加一个"初始化失败即抛"的开关)。
 - **久经考验的是底层原语**(bubblewrap/Seatbelt),这个库只是薄封装;若要更稳可再写一个直接调 `bwrap`/`sandbox-exec` 的 `Sandbox` 实现——同一接口,随时替换。
 - **网络过滤不做 TLS 解密**:基于客户端声明的 hostname 放行,存在 domain-fronting 等绕过面;放行 `github.com` 这类宽域名即开了外泄通道。威胁模型更强时需自定义 MITM 代理(超出本设计)。
 - **非目标:跑完全不可信代码**。OS 级沙箱是给"可信 agent 加护栏",不是隔离恶意代码。后者应上 microVM(**E2B** / **microsandbox**)——另立一个 `Sandbox` 适配器按需接入,**不进** core,以免破坏"精瘦 + 本地"。
@@ -182,7 +182,7 @@ const agent = createLiteAgent({
 
 - **接口/默认**(core):`noopSandbox().wrap(cmd) === cmd`;kernel 默认把 `noopSandbox` 注入 `ToolContext`。
 - **bashTool 集成**(sdk):注入一个**假 `Sandbox`**(`wrap = c => `FAKE(${c})``),断言 `execSync` 收到被包裹后的命令 → 证明接入点正确,**不打真实 OS 沙箱、不依赖 bubblewrap**。
-- **适配器**(sandbox-anthropic):`SandboxRuntimeOptions → SandboxRuntimeConfig` 的纯映射单测(域名/读写白名单/默认 denyRead);`wrap` 只 mock `SandboxManager` 验证"懒初始化一次 + 调用 `wrapWithSandbox`"。真实 OS 边界靠手动/CI 在 macOS+Linux 验。
+- **适配器**(sandbox-Takebox AI):`SandboxRuntimeOptions → SandboxRuntimeConfig` 的纯映射单测(域名/读写白名单/默认 denyRead);`wrap` 只 mock `SandboxManager` 验证"懒初始化一次 + 调用 `wrapWithSandbox`"。真实 OS 边界靠手动/CI 在 macOS+Linux 验。
 - 不为实验性外部库写端到端网络/文件越权用例(脆弱、平台相关),改为文档化手动验收清单。
 
 ## 8. 开放问题(实现期再定)

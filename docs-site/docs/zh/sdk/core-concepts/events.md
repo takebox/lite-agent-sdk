@@ -6,12 +6,12 @@
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "Summarize this project.",
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);

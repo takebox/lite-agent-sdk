@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
-import type Anthropic from "@anthropic-ai/sdk";
+import type Takebox AI from "@takebox-ai/sdk";
 import type { ModelChunk } from "@lite-agent/core";
-import { translateStream } from "../src/anthropic/stream";
+import { translateStream } from "../src/Takebox AI/stream";
 
-async function* gen(events: Anthropic.RawMessageStreamEvent[]) {
+async function* gen(events: Takebox AI.RawMessageStreamEvent[]) {
   for (const e of events) yield e;
 }
 
@@ -63,7 +63,7 @@ test("translates text + tool_use stream into ModelChunks", async () => {
       },
     },
     { type: "message_stop" },
-  ] as unknown as Anthropic.RawMessageStreamEvent[];
+  ] as unknown as Takebox AI.RawMessageStreamEvent[];
 
   const chunks: ModelChunk[] = [];
   for await (const c of translateStream(gen(events))) chunks.push(c);
@@ -99,7 +99,7 @@ test("keeps compaction and unknown native blocks typed for checkpoint round-trip
     { type: "content_block_stop", index: 1 },
     { type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 1 } },
     { type: "message_stop" },
-  ] as unknown as Anthropic.RawMessageStreamEvent[];
+  ] as unknown as Takebox AI.RawMessageStreamEvent[];
 
   const chunks: ModelChunk[] = [];
   for await (const c of translateStream(gen(events))) chunks.push(c);
@@ -109,7 +109,7 @@ test("keeps compaction and unknown native blocks typed for checkpoint round-trip
     message: {
       content: [
         { type: "compaction", content: "summary" },
-        { type: "native", provider: "anthropic", data: { type: "thinking", thinking: "private" } },
+        { type: "native", provider: "juglow", data: { type: "thinking", thinking: "private" } },
       ],
     },
   });

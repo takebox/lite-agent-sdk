@@ -14,8 +14,8 @@ import {
 import type { BackgroundTasks, Checkpointer, Compactor, Middleware, Tool } from "@lite-agent/core";
 import { tool } from "./tool";
 import { askUserTool, defaultTools } from "./tools";
-import { SkillLoader } from "./skills/loader";
-import { loadSkillTool } from "./skills/loadSkillTool";
+import { SkillLoader } from "./tracks/loader";
+import { loadTrackTool } from "./tracks/loadTrackTool";
 import { buildSystemPrompt } from "./system";
 import { fileCheckpointer } from "./checkpoint";
 import { fileSpillStore, readSpilledTool } from "./spill";
@@ -59,10 +59,10 @@ export function assembleLiteAgent({
     paths.projectSkillsDir,
     ...(cfg.skillsDir ? [cfg.skillsDir] : []),
   ]);
-  let skills = "(no skills available)";
+  let tracks = "(no tracks available)";
   if (skillLoader.names().length > 0) {
-    tools.push(loadSkillTool(skillLoader));
-    skills = skillLoader.getDescriptions();
+    tools.push(loadTrackTool(skillLoader));
+    tracks = skillLoader.getDescriptions();
   }
 
   const spillEnabled = cfg.spill !== false;
@@ -155,7 +155,7 @@ export function assembleLiteAgent({
     buildSystemPrompt({
       workdir: cfg.workdir,
       modelName: cfg.modelName,
-      skills,
+      tracks,
       subagents,
     });
   if (cfg.outputSchema) {

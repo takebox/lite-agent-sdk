@@ -1,19 +1,19 @@
 # Agent SDK 概览
 
-`@lite-agent/sdk` 是用 lite-agent 构建 agent 的开箱即用方式：一套可用的内置工具、skills、子代理、持久化会话与权限闸门，对外是一个对齐 [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript) 的小巧 API（`query` / `createLiteAgent` / `tool`）。搭配 [`@lite-agent/provider`](/zh/core/providers) 提供模型——每一项"内置电池"都只是核心策略之上的可开关默认值：先用默认值跑起来，只在需要的地方接管控制权。
+`@lite-agent/sdk` 是用 lite-agent 构建 agent 的开箱即用方式：一套可用的内置工具、tracks、子代理、持久化会话与权限闸门，对外是一个对齐 [`@takebox-ai/haijun-agent-sdk`]() 的小巧 API（`query` / `createLiteAgent` / `tool`）。搭配 [`@lite-agent/provider`](/zh/core/providers) 提供模型——每一项"内置电池"都只是核心策略之上的可开关默认值：先用默认值跑起来，只在需要的地方接管控制权。
 
 ## SDK 与 Core
 
 lite-agent 分为两层：
 
-- **`@lite-agent/sdk`** —— 组装好的 agent。它把内核策略接成合理的默认配置：作用域限定在工作区的内置工具、事件溯源的会话存储、权限中间件、skills 与子代理加载。想要几行配置得到一个可用的 agent，用它。
-- **`@lite-agent/core`** —— 底层的 provider 无关内核：轮次循环、九个策略接口、中间件洋葱、`AgentEvent` 流。它不懂权限、沙箱、skills——这些都是插进去的。当 SDK 的组装方式不合适、想直接用内核原语组合自己的 agent 时，用它。
+- **`@lite-agent/sdk`** —— 组装好的 agent。它把内核策略接成合理的默认配置：作用域限定在工作区的内置工具、事件溯源的会话存储、权限中间件、tracks 与子代理加载。想要几行配置得到一个可用的 agent，用它。
+- **`@lite-agent/core`** —— 底层的 provider 无关内核：轮次循环、九个策略接口、中间件洋葱、`AgentEvent` 流。它不懂权限、沙箱、tracks——这些都是插进去的。当 SDK 的组装方式不合适、想直接用内核原语组合自己的 agent 时，用它。
 
 SDK 完整转出 `@lite-agent/core`，因此你可以随时下沉一层——写自定义策略或中间件——而不需要换包：
 
 ```ts
 import { createLiteAgent, type Middleware } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 const logging: Middleware = {
   name: "logging",
@@ -26,8 +26,8 @@ const logging: Middleware = {
 };
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   use: [logging], // extra middleware around the kernel loop
 });
@@ -53,5 +53,5 @@ const agent = createLiteAgent({
 
 - [快速上手](/zh/sdk/getting-started) —— 安装并运行你的第一个 agent。
 - [核心策略](/zh/core/strategies) —— SDK 所组装的九个可替换部件。
-- [模型 provider](/zh/core/providers) —— Anthropic、OpenAI 及 OpenAI 兼容端点。
+- [模型 provider](/zh/core/providers) —— Takebox AI、OpenAI 及 OpenAI 兼容端点。
 - [CLI 示例](/zh/examples/cli) —— 基于这些 API 构建的完整交互式 agent。

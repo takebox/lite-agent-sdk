@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
-import { sandboxRuntime } from "@lite-agent/sandbox-anthropic";
+import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
 import { createLiteAgent, policy } from "@lite-agent/sdk";
 import type {
   AgentEvent,
@@ -13,7 +13,7 @@ import type {
 } from "@lite-agent/sdk";
 import { resolveModel } from "./model.js";
 
-// Resolve this example's own root (examples/cli) so its .env + skills/ load
+// Resolve this example's own root (examples/cli) so its .env + tracks/ load
 // regardless of where you launch it from (independent of process.cwd()).
 const exampleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 config({ path: join(exampleRoot, ".env") });
@@ -80,7 +80,7 @@ const agent = createLiteAgent({
   model: provider,
   modelName,
   workdir,
-  skillsDir: join(exampleRoot, "skills"),
+  skillsDir: join(exampleRoot, "tracks"),
   permission: policy({ ask: ["bash", "write_file", "edit_file"] }),
   onApproval,
   onAskUser,

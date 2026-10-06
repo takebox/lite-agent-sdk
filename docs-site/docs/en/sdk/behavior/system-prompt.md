@@ -1,6 +1,6 @@
 # System prompt
 
-Every lite-agent run starts from a system prompt that grounds the model in your workspace: where it may work, which tools to prefer, and which skills and subagents exist. The SDK builds a good one for you with `buildSystemPrompt` — workdir, model name, available skills, and available subagents are all filled in automatically — and lets you replace or extend it when your agent needs its own voice, rules, or domain context.
+Every lite-agent run starts from a system prompt that grounds the model in your workspace: where it may work, which tools to prefer, and which tracks and subagents exist. The SDK builds a good one for you with `buildSystemPrompt` — workdir, model name, available tracks, and available subagents are all filled in automatically — and lets you replace or extend it when your agent needs its own voice, rules, or domain context.
 
 ## Usage
 
@@ -8,11 +8,11 @@ Pass `system` to `createLiteAgent` (or `systemPrompt` to `query`) to **replace**
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   system: "You are a release-notes assistant. Answer concisely, in Markdown.",
 });
@@ -25,7 +25,7 @@ import { query } from "@lite-agent/sdk";
 
 for await (const ev of query({
   prompt: "Draft release notes for v0.4.0.",
-  model: anthropic(),
+  model: Takebox AI(),
   cwd: process.cwd(),
   systemPrompt: "You are a release-notes assistant. Answer concisely, in Markdown.",
 })) {
@@ -41,11 +41,11 @@ A full override throws away the built-in grounding. To **keep the default and ad
 import { createLiteAgent, buildSystemPrompt } from "@lite-agent/sdk";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   system:
-    buildSystemPrompt({ workdir: process.cwd(), skills: "" }) +
+    buildSystemPrompt({ workdir: process.cwd(), tracks: "" }) +
     "\n\n## House rules\n- Never commit directly to main.\n- Run pnpm test before finishing.",
 });
 ```
@@ -56,11 +56,11 @@ const agent = createLiteAgent({
 | --- | --- | --- |
 | `workdir` | `string` | **Required.** Baked into the prompt as the workspace boundary. |
 | `modelName` | `string` | Optional; adds a `Your model is …` line. |
-| `skills` | `string` | Pre-rendered list of available skills, shown under the Skills section. |
+| `tracks` | `string` | Pre-rendered list of available tracks, shown under the Tracks section. |
 | `subagents` | `string` | Optional pre-rendered list of available subagents; adds a Subagents section. |
 
 :::warning
-When you override `system`, the SDK no longer injects the auto-generated lists of available skills and subagents into the prompt. The `load_skill` and `Agent` tools still work, but the model only knows what to load if your prompt tells it.
+When you override `system`, the SDK no longer injects the auto-generated lists of available tracks and subagents into the prompt. The `load_skill` and `Agent` tools still work, but the model only knows what to load if your prompt tells it.
 :::
 
 ## What the default prompt contains
@@ -71,7 +71,7 @@ When you override `system`, the SDK no longer injects the auto-generated lists o
 - **Core principles** — prefer tools over prose.
 - **Files** — use `read_file` / `write_file` / `edit_file` / `delete_file` instead of shell equivalents; use `bash` for running commands and searching.
 - **Task planning** — for 3+ step work, plan with `TaskCreate` and track with `TaskUpdate` (see [Tasks](/sdk/behavior/tasks)).
-- **Skills** — pull specialized knowledge on demand with `load_skill`, followed by the auto-discovered skill list.
+- **Tracks** — pull specialized knowledge on demand with `load_skill`, followed by the auto-discovered track list.
 - **Subagents** — when subagents exist, how and when to delegate with the `Agent` tool (see [Subagents](/sdk/tools/subagents)).
 
 Two capabilities extend the prompt at assembly time rather than through `system`:

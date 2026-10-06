@@ -41,8 +41,8 @@ export function resolveProjectPaths(opts: { workdir: string; home?: string }): P
     spillDir: join(projectDir, "spill"),
     sessionsDir: join(projectDir, "sessions"),
     tasksDir: join(projectDir, "tasks"),
-    globalSkillsDir: join(home, "skills"),
-    projectSkillsDir: join(resolve(opts.workdir), ".lite-agent", "skills"),
+    globalSkillsDir: join(home, "tracks"),
+    projectSkillsDir: join(resolve(opts.workdir), ".lite-agent", "tracks"),
     globalAgentsDir: join(home, "agents"),
     projectAgentsDir: join(resolve(opts.workdir), ".lite-agent", "agents"),
   };

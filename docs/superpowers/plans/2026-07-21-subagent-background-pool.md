@@ -1,6 +1,6 @@
 # 同级子代理后台任务池实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 在一个根 `LiteAgent` 实例中让 `Agent` 组统一后台执行，使用共享 FIFO 子代理池，并可靠地传递 display name、partial/失败状态和 terminal metadata。
 

@@ -119,7 +119,7 @@ Behavior:
 - `sessionId` — getter returning `currentSessionId`.
 - `resume(id)` — `currentSessionId = id` (lenient: an unknown id simply starts empty there).
 - `clear()` — `currentSessionId = newSessionId(); return currentSessionId`. Does **not**
-  delete the prior transcript (matches Claude Code `/clear`).
+  delete the prior transcript (matches Haijun Code `/clear`).
 - `deleteSession(id)` / `listSessions()` — require a session-capable store. The wrapper
   captures `sessionStore = isSessionStore(store) ? store : undefined`. If undefined
   (i.e. `sessions:false` → no store, or a custom `cfg.store` lacking `list`/`delete`),

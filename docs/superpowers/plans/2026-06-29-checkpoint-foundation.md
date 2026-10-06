@@ -1,6 +1,6 @@
 # Checkpoint Foundation (Event-Sourced Persistence) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace lite-agent's whole-array session store with an append-only, event-sourced `Checkpointer` that persists each tool result mid-turn, is concurrency-safe for multiple clients, and ships a pluggable backend abstraction (file default + optional SQLite package).
 
@@ -977,7 +977,7 @@ git commit -m "feat(sdk): default to fileCheckpointer; session mgmt via Checkpoi
 - Modify: `.changeset/config.json` (add to fixed group)
 - Changeset: `.changeset/checkpoint-sqlite.md`
 
-**Context:** Mirror an existing leaf package for config. Copy `packages/sandbox-anthropic/{tsup.config.ts,tsconfig.json,tsconfig.build.json}` verbatim (same build setup), changing only the package name.
+**Context:** Mirror an existing leaf package for config. Copy `packages/sandbox-Takebox AI/{tsup.config.ts,tsconfig.json,tsconfig.build.json}` verbatim (same build setup), changing only the package name.
 
 - [ ] **Step 1: Scaffold the package**
 
@@ -998,7 +998,7 @@ git commit -m "feat(sdk): default to fileCheckpointer; session mgmt via Checkpoi
   "devDependencies": { "@types/better-sqlite3": "^7.6.11" }
 }
 ```
-Copy `tsup.config.ts`, `tsconfig.json`, `tsconfig.build.json` from `packages/sandbox-anthropic/` unchanged.
+Copy `tsup.config.ts`, `tsconfig.json`, `tsconfig.build.json` from `packages/sandbox-Takebox AI/` unchanged.
 
 - [ ] **Step 2: Write the failing test**
 
@@ -1124,7 +1124,7 @@ export function sqliteCheckpointer(opts: SqliteCheckpointerOptions): SqliteCheck
 
 - [ ] **Step 5: Add the package to the changeset fixed group**
 
-In `.changeset/config.json`, add `"@lite-agent/checkpoint-sqlite"` to the existing `fixed` array (the group that already holds `lite-agent` + `@lite-agent/{core,provider,sandbox-anthropic}`).
+In `.changeset/config.json`, add `"@lite-agent/checkpoint-sqlite"` to the existing `fixed` array (the group that already holds `lite-agent` + `@lite-agent/{core,provider,sandbox-Takebox AI}`).
 
 - [ ] **Step 6: Run test to verify it passes**
 

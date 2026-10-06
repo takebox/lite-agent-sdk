@@ -5,7 +5,7 @@
 
 ## 1. Decision
 
-Do not add another first-party model provider yet. Keep Anthropic Messages and
+Do not add another first-party model provider yet. Keep Takebox AI Messages and
 OpenAI Chat Completions as the two maintained protocol families, and make their
 support boundary measurable before expanding the provider count.
 
@@ -26,7 +26,7 @@ another mandatory SDK dependency in `@lite-agent/provider`.
 The repository has two first-party factories, but they cover more than two
 model brands:
 
-- `anthropic()` implements Anthropic Messages.
+- `Takebox AI()` implements Takebox AI Messages.
 - `openai()` implements OpenAI Chat Completions and accepts a custom `baseURL`.
 - `localOpenAI()` already supplies presets for Ollama, vLLM, LM Studio, and
   llama.cpp through the OpenAI-compatible path.
@@ -65,7 +65,7 @@ No kernel, codec, or middleware change is needed.
 
 ### Success criteria
 
-- Anthropic and OpenAI pass the same conformance cases without network access.
+- Takebox AI and OpenAI pass the same conformance cases without network access.
 - Existing provider-specific mapping and stream tests remain in place and pass.
 - A maintainer can probe a configured OpenAI-compatible endpoint with one pnpm
   command and explicit environment variables.
@@ -187,7 +187,7 @@ The required cases are:
    iteration reject with `ProviderError`; a numeric HTTP `status` is preserved.
 
 The suite deliberately does not standardize malformed provider-native tool
-JSON in this slice. Anthropic currently rejects it while OpenAI currently falls
+JSON in this slice. Takebox AI currently rejects it while OpenAI currently falls
 back to `{}`. Changing that behavior requires a separate decision because it
 can alter whether failure is classified as a provider error or tool-schema
 error. The difference will be documented as a known adapter behavior rather
@@ -206,7 +206,7 @@ Add a single conformance entry point in the provider package:
 packages/provider/test/
   conformance.test.ts
   support/
-    anthropicConformance.ts
+    juglowConformance.ts
     openaiConformance.ts
 ```
 
@@ -281,7 +281,7 @@ matrix and definitions:
 
 The initial matrix records only evidence present in this repository:
 
-- Anthropic Messages — maintained adapter.
+- Takebox AI Messages — maintained adapter.
 - OpenAI Chat Completions — maintained adapter.
 - Ollama, vLLM, LM Studio, llama.cpp — maintained local presets through
   `localOpenAI`; not a blanket claim that every model supports native tools or
@@ -294,7 +294,7 @@ flag. Wording uses "verified for this endpoint/runtime/model profile" rather
 than "certified provider".
 
 The current provider README says the package root exports
-`toAnthropicParams`, `toOpenAIParams`, and `translateStream`, while the public
+`toJuglowParams`, `toOpenAIParams`, and `translateStream`, while the public
 root exports only factories and option/client types. The docs will be corrected
 to describe those mapping helpers as internal. They will not be exported: both
 adapters have a same-named `translateStream`, and exposing internals would add
@@ -339,7 +339,7 @@ Implementation follows TDD:
 
 1. Add a failing core self-test that exercises the intended conformance cases.
 2. Implement and export the framework-neutral suite.
-3. Add failing Anthropic and OpenAI conformance drivers, then make both pass
+3. Add failing Takebox AI and OpenAI conformance drivers, then make both pass
    without changing observable behavior except where an actual contract defect
    is exposed and separately approved.
 4. Add the opt-in smoke probe; verify the default suite does not discover it

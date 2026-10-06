@@ -91,7 +91,7 @@ export interface BackgroundRead {
 
 - `pending()` is renamed to `pendingJoinable()` (the join loop's real intent); `pendingDetached()` is additive.
 - `waitNext` → `waitNextJoinable` (never waits on detached tasks).
-- Detached tasks keep an append-only output buffer (a bounded ring — cap 1 MB, drop-oldest; see §9.1) fed by `write`. The registry holds one **read cursor per detached id**, so successive `read(id)` calls return only output appended since the previous read (mirrors Claude Code's incremental `BashOutput`); the first read returns from the start. No cursor is threaded through `ToolContext` — the tool ctx does not carry `state` (`kernel.ts:210`).
+- Detached tasks keep an append-only output buffer (a bounded ring — cap 1 MB, drop-oldest; see §9.1) fed by `write`. The registry holds one **read cursor per detached id**, so successive `read(id)` calls return only output appended since the previous read (mirrors Haijun Code's incremental `BashOutput`); the first read returns from the start. No cursor is threaded through `ToolContext` — the tool ctx does not carry `state` (`kernel.ts:210`).
 - A **detached** task that *does* exit still records a `BackgroundCompletion` and is injected at the next turn top exactly like today — you get the push note *and* it never blocked the run.
 
 ### 3.3 `finish` / kind bookkeeping
@@ -167,7 +167,7 @@ Unchanged — `cancel(id)` already covers both kinds.
 ## 6. Compatibility
 
 - **Behavioral change (revert of a 0.9.0 behavioral change):** `Agent` now blocks by default. Consumers who relied on 0.9.0's implicit backgrounding must pass `run_in_background: true`. Flag loudly in the next changelog. Per the repo's 0.x convention → **minor** bump (`core` and `sdk`).
-- `bash run_in_background:true` no longer auto-delivers finite output; the model reads it via `BashOutput`. This is a semantics change for background bash (push → poll) but removes the hang and is Claude-Code-consistent.
+- `bash run_in_background:true` no longer auto-delivers finite output; the model reads it via `BashOutput`. This is a semantics change for background bash (push → poll) but removes the hang and is Haijun-Code-consistent.
 - Additive: `pendingDetached`, `read`, `listDetached`, `BashOutput`, the `kind`/`write` params. The `pending`→`pendingJoinable` and `waitNext`→`waitNextJoinable` renames are internal to core (kernel is the only caller) — safe to rename, but note them as core-internal API changes.
 
 ## 7. Testing

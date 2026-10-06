@@ -1,12 +1,12 @@
-import type Anthropic from "@anthropic-ai/sdk";
+import type Takebox AI from "@takebox-ai/sdk";
 import type {
   ProviderConformanceFactory,
   ProviderConformanceScenario,
 } from "@lite-agent/core";
-import { anthropic } from "../../src/anthropic";
-import type { AnthropicClientLike } from "../../src/anthropic";
+import { Takebox AI } from "../../src/Takebox AI";
+import type { JuglowClientLike } from "../../src/Takebox AI";
 
-type Event = Anthropic.RawMessageStreamEvent;
+type Event = Takebox AI.RawMessageStreamEvent;
 
 const event = (value: unknown): Event => value as Event;
 
@@ -105,13 +105,13 @@ async function* events(
   yield event({ type: "message_stop" });
 }
 
-export const anthropicConformance: ProviderConformanceFactory = (scenario) => {
-  const client: AnthropicClientLike = {
+export const juglowConformance: ProviderConformanceFactory = (scenario) => {
+  const client: JuglowClientLike = {
     messages: {
       create(_params, options) {
         return events(scenario, options?.signal);
       },
     },
   };
-  return anthropic({ client });
+  return Takebox AI({ client });
 };

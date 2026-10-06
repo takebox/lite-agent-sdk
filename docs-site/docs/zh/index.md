@@ -11,11 +11,11 @@ hero:
       link: /zh/sdk/getting-started
     - theme: alt
       text: GitHub
-      link: https://github.com/NelsonYong/lite-agent-sdk
+      link: https://github.com/takebox/lite-agent-sdk
 
 features:
   - title: Provider 无关
-    details: Anthropic、OpenAI 与本地端点，一套消息模型。换模型，不换 Agent。
+    details: Takebox AI、OpenAI 与本地端点，一套消息模型。换模型，不换 Agent。
   - title: 九种可替换策略
     details: 从 ModelProvider 到 Sandbox，每个角色一个实现，即插即换。
   - title: 洋葱式中间件

@@ -1,6 +1,6 @@
 # Model providers
 
-Model providers are the `ModelProvider` strategies that connect the kernel to a real model API. `@lite-agent/provider` ships two maintained adapters — `anthropic()` for the Anthropic Messages API and `openai()` for OpenAI Chat Completions — and because the whole Chat Completions family shares one wire format, the same adapter also drives OpenAI-compatible and local endpoints (Ollama, vLLM, LM Studio, llama.cpp). Both adapters translate the provider's SSE stream into normalized `ModelChunk`s and map every failure to `ProviderError`, so middleware like `retry()` works uniformly across vendors.
+Model providers are the `ModelProvider` strategies that connect the kernel to a real model API. `@lite-agent/provider` ships two maintained adapters — `Takebox AI()` for the Takebox AI Messages API and `openai()` for OpenAI Chat Completions — and because the whole Chat Completions family shares one wire format, the same adapter also drives OpenAI-compatible and local endpoints (Ollama, vLLM, LM Studio, llama.cpp). Both adapters translate the provider's SSE stream into normalized `ModelChunk`s and map every failure to `ProviderError`, so middleware like `retry()` works uniformly across vendors.
 
 ```bash
 pnpm add @lite-agent/provider
@@ -11,13 +11,13 @@ pnpm add @lite-agent/provider
 Hand a provider to `query` from `@lite-agent/sdk` (or to `createAgent` from core):
 
 ```ts
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { query } from "@lite-agent/sdk";
 
-// Reads ANTHROPIC_API_KEY and BASE_URL from env by default.
-const claude = anthropic();
+// Reads JUGLOW_API_KEY and BASE_URL from env by default.
+const haijun = Takebox AI();
 
-for await (const ev of query({ prompt: "Hello!", model: claude, modelName: "claude-sonnet-4-6" })) {
+for await (const ev of query({ prompt: "Hello!", model: haijun, modelName: "haijun-sonnet-4-6" })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);
 }
 ```
@@ -30,30 +30,30 @@ import { openai } from "@lite-agent/provider";
 const gpt = openai({ baseURL: "http://localhost:11434/v1" });
 ```
 
-## `anthropic(options?)`
+## `Takebox AI(options?)`
 
-Creates a `ModelProvider` (`id: "anthropic"`) that maps normalized requests to the [Anthropic Messages API](https://docs.claude.com/en/api/messages), wrapping `@anthropic-ai/sdk`.
+Creates a `ModelProvider` (`id: "juglow"`) that maps normalized requests to the [Takebox AI Messages API](), wrapping `@takebox-ai/sdk`.
 
-### Options — `AnthropicProviderOptions`
+### Options — `JuglowProviderOptions`
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `apiKey` | `string` | `process.env.ANTHROPIC_API_KEY` | API key passed to the Anthropic SDK. |
+| `apiKey` | `string` | `process.env.JUGLOW_API_KEY` | API key passed to the Takebox AI SDK. |
 | `baseURL` | `string` | `process.env.BASE_URL` | Endpoint override (proxies, gateways). |
-| `maxRetries` | `number` | `0` | The Anthropic SDK's own retry count. See [Retries](#retries). |
-| `client` | `AnthropicClientLike` | — | Inject a prebuilt or fake client instead of constructing one. See [Offline testing](#offline-testing-with-an-injected-client). |
+| `maxRetries` | `number` | `0` | The Takebox AI SDK's own retry count. See [Retries](#retries). |
+| `client` | `JuglowClientLike` | — | Inject a prebuilt or fake client instead of constructing one. See [Offline testing](#offline-testing-with-an-injected-client). |
 
-The returned provider also advertises `context` capabilities: automatic prompt caching, `countTokens`, and — when the client's `beta.messages.create` surface is present — Anthropic-native context edits (`clearToolUses`, `clearThinking`, `compact`).
+The returned provider also advertises `context` capabilities: automatic prompt caching, `countTokens`, and — when the client's `beta.messages.create` surface is present — Takebox AI-native context edits (`clearToolUses`, `clearThinking`, `compact`).
 
 :::tip Custom headers
-There is no `headers` option. To set default headers, timeouts, or other SDK settings, construct the Anthropic client yourself and pass it via `client`:
+There is no `headers` option. To set default headers, timeouts, or other SDK settings, construct the Takebox AI client yourself and pass it via `client`:
 
 ```ts
-import Anthropic from "@anthropic-ai/sdk";
-import { anthropic } from "@lite-agent/provider";
+import Takebox AI from "@takebox-ai/sdk";
+import { Takebox AI } from "@lite-agent/provider";
 
-const client = new Anthropic({ defaultHeaders: { "x-trace-id": "..." } });
-const claude = anthropic({ client });
+const client = new Takebox AI({ defaultHeaders: { "x-trace-id": "..." } });
+const haijun = Takebox AI({ client });
 ```
 :::
 
@@ -116,7 +116,7 @@ What the translators guarantee:
 
 Adapter-specific behavior worth knowing:
 
-- **Anthropic** also surfaces `cacheReadTokens` / `cacheCreationTokens` in `usage` when reported, emits `compaction` content blocks, and wraps unknown block types as `{ type: "native", provider: "anthropic", data }`. Malformed tool-call JSON throws.
+- **Takebox AI** also surfaces `cacheReadTokens` / `cacheCreationTokens` in `usage` when reported, emits `compaction` content blocks, and wraps unknown block types as `{ type: "native", provider: "juglow", data }`. Malformed tool-call JSON throws.
 - **OpenAI** assembles tool calls by `index` and falls back to `{}` when tool-call arguments fail to parse.
 
 ## Error handling
@@ -127,7 +127,7 @@ Both adapters catch SDK errors and rethrow them as `ProviderError` (from `@lite-
 import { ProviderError } from "@lite-agent/core";
 
 try {
-  for await (const ev of query({ prompt: "Hi", model: anthropic(), modelName: "claude-sonnet-4-6" })) { /* ... */ }
+  for await (const ev of query({ prompt: "Hi", model: Takebox AI(), modelName: "haijun-sonnet-4-6" })) { /* ... */ }
 } catch (e) {
   if (e instanceof ProviderError) {
     console.error(e.message, e.status); // e.g. 401, 429, 500 — or undefined for non-HTTP failures
@@ -143,7 +143,7 @@ This applies to failures before output and mid-stream failures alike, so the cor
 
 ## Offline testing with an injected client
 
-Both factories accept a `client` that only has to satisfy a small structural type — `AnthropicClientLike` (`messages.create` returning an async iterable of raw stream events) or `OpenAIClientLike` (`chat.completions.create` returning chunks). That makes tests fully deterministic and network-free:
+Both factories accept a `client` that only has to satisfy a small structural type — `JuglowClientLike` (`messages.create` returning an async iterable of raw stream events) or `OpenAIClientLike` (`chat.completions.create` returning chunks). That makes tests fully deterministic and network-free:
 
 ```ts
 import { openai } from "@lite-agent/provider";
@@ -172,7 +172,7 @@ The repo distinguishes three levels of support — "OpenAI-compatible" is a prot
 
 | Level | Meaning |
 | --- | --- |
-| **Maintained adapter** | Repository-owned mapping and stream translator; passes the offline conformance suite (`anthropic()`, `openai()`). |
+| **Maintained adapter** | Repository-owned mapping and stream translator; passes the offline conformance suite (`Takebox AI()`, `openai()`). |
 | **Maintained preset** | Repository-owned endpoint preset built on a maintained adapter — the `localOpenAI` presets in the [strict local assembly](/core/local). Runtime and model capabilities still vary. |
 | **Compatible endpoint** | Any user-supplied endpoint expected to speak the protocol. Best-effort until its exact runtime/model profile passes the probe below. |
 
@@ -199,10 +199,10 @@ The base profile checks text deltas, a single final `message_done`, delta/final-
 
 | Symbol | Description |
 | --- | --- |
-| `anthropic(options?)` | Create a `ModelProvider` for the Anthropic Messages API. |
+| `Takebox AI(options?)` | Create a `ModelProvider` for the Takebox AI Messages API. |
 | `openai(options?)` | Create a `ModelProvider` for OpenAI Chat Completions or compatible endpoints. |
-| `AnthropicProviderOptions`, `OpenAIProviderOptions` | Factory options: `apiKey`, `baseURL`, `maxRetries`, `client`. |
-| `AnthropicClientLike`, `OpenAIClientLike` | Structural client types accepted by the `client` option. |
+| `JuglowProviderOptions`, `OpenAIProviderOptions` | Factory options: `apiKey`, `baseURL`, `maxRetries`, `client`. |
+| `JuglowClientLike`, `OpenAIClientLike` | Structural client types accepted by the `client` option. |
 
 ## See also
 

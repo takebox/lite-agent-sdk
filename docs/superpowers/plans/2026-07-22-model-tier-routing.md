@@ -1,6 +1,6 @@
 # Model Tier Routing Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add an SDK-level catalog for `simple`, `medium`, and `complex` model profiles with provider/model metadata, a configurable `defaultModel`, and explicit per-subagent/per-task model selection while preserving the current single-model API.
 

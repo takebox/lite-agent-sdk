@@ -1,6 +1,6 @@
 # Tasks
 
-Multi-step work needs a plan the model can see and update — and that survives context compaction and restarts. The Tasks capability gives the agent a **persistent task list** modeled on Claude Code's Tasks API: four built-in tools (`TaskCreate` / `TaskUpdate` / `TaskGet` / `TaskList`), on-disk storage shared across sessions of the same project, and a per-turn reminder that keeps the current list in front of the model without polluting the transcript.
+Multi-step work needs a plan the model can see and update — and that survives context compaction and restarts. The Tasks capability gives the agent a **persistent task list** modeled on Haijun Code's Tasks API: four built-in tools (`TaskCreate` / `TaskUpdate` / `TaskGet` / `TaskList`), on-disk storage shared across sessions of the same project, and a per-turn reminder that keeps the current list in front of the model without polluting the transcript.
 
 ## Usage
 
@@ -10,11 +10,11 @@ To scope a run to a named list, or turn the capability off:
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   taskListId: "release-0.4", // which list to use; default "default"
   // tasks: false,           // disable the tools and the reminder entirely
@@ -44,8 +44,8 @@ Set `tasks: false` to remove all four tools **and** the reminder middleware:
 
 ```ts
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   tasks: false,
 });

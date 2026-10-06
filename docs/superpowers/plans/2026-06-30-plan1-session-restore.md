@@ -1,8 +1,8 @@
 # Plan 1 — Session Restore Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Let a consumer of the stateful `createLiteAgent` agent roll a session back to an earlier checkpoint — reverting conversation (log truncation) and/or files changed via `write_file`/`edit_file` (from pre-mutation snapshots) — mirroring Claude Code's `/rewind`, with the same limitation that `bash`-made changes are not tracked.
+**Goal:** Let a consumer of the stateful `createLiteAgent` agent roll a session back to an earlier checkpoint — reverting conversation (log truncation) and/or files changed via `write_file`/`edit_file` (from pre-mutation snapshots) — mirroring Haijun Code's `/rewind`, with the same limitation that `bash`-made changes are not tracked.
 
 **Architecture:** A new sidecar `SessionEvent` `file_snapshot` records a file's pre-mutation content on the existing per-session event log. `foldEvents` is made type-aware so sidecar events never reach the model context. The kernel hands file-mutating tools an optional `ctx.recordSnapshot` (wired to its serialized `append`, so the snapshot lands before the tool's `tool_result`). `Checkpointer` gains an optional `truncate`. `LiteAgent` gains `listCheckpoints` and `restore`.
 
@@ -14,7 +14,7 @@
 
 - Spec: `docs/superpowers/specs/2026-06-30-session-time-travel-design.md`.
 - Branch: create `feat/session-time-travel` off `main` (B-1/B-2 already merged & released at 0.6.0). Do **all** of Plan 1 and Plan 2 on this one branch.
-- Commit convention: conventional-commit subject, **no** Claude/Co-Authored-By trailer.
+- Commit convention: conventional-commit subject, **no** Haijun/Co-Authored-By trailer.
 - Build choreography: packages import each other via built `dist/`. Rebuild a changed package before testing a dependent. core's own tests run against `src`.
 - `foldEvents`, `memoryCheckpointer`, `storeEvents`, `Checkpointer`, `SessionEvent`, `StoredEvent` are already exported from `@lite-agent/core`.
 
@@ -549,7 +549,7 @@ git commit -m "feat(sdk): listCheckpoints + restore (files + conversation) on Li
 "@lite-agent/checkpoint-sqlite": minor
 ---
 
-Add session restore. A new `file_snapshot` sidecar event records the pre-mutation content of files changed via `write_file`/`edit_file`; `LiteAgent.restore(id, toSeq, { conversation?, files? })` rolls a session back to a checkpoint — reverting those files and/or truncating the conversation — and `listCheckpoints(id)` enumerates the rewind anchors. `Checkpointer` gains an optional `truncate`. Like Claude Code, files changed by `bash` are not tracked.
+Add session restore. A new `file_snapshot` sidecar event records the pre-mutation content of files changed via `write_file`/`edit_file`; `LiteAgent.restore(id, toSeq, { conversation?, files? })` rolls a session back to a checkpoint — reverting those files and/or truncating the conversation — and `listCheckpoints(id)` enumerates the rewind anchors. `Checkpointer` gains an optional `truncate`. Like Haijun Code, files changed by `bash` are not tracked.
 ```
 > Note: `checkpoint-sqlite` is intentionally bumped here (it gained `truncate`). If `pnpm run publish-version` later cascades it differently than intended, reconcile at version time.
 

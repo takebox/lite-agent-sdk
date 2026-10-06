@@ -46,8 +46,8 @@ export default defineConfig({
         `<a href="${base}sdk/overview">SDK</a>` +
         `<a href="${base}core/overview">Core</a>` +
         `<a href="${base}examples/cli">Examples</a>` +
-        '<a href="https://github.com/NelsonYong/lite-agent-sdk">GitHub</a>' +
-        '<a href="https://github.com/NelsonYong/lite-agent-sdk/issues">Issues</a>' +
+        '<a href="https://github.com/takebox/lite-agent-sdk">GitHub</a>' +
+        '<a href="https://github.com/takebox/lite-agent-sdk/issues">Issues</a>' +
         `<a href="${base}llms.txt">llms.txt</a>` +
         "</div>" +
         '<div class="la-footer-legal">Released under the MIT License · Copyright © 2026 lite-agent contributors</div>',
@@ -56,7 +56,7 @@ export default defineConfig({
       {
         icon: "github",
         mode: "link",
-        content: "https://github.com/NelsonYong/lite-agent-sdk",
+        content: "https://github.com/takebox/lite-agent-sdk",
       },
     ],
   },

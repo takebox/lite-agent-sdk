@@ -267,7 +267,7 @@ System prompt 的设计要点：
 │  │  2. 读取收件箱                                          │   │
 │  │     - shutdown_request → return + 通知 lead             │   │
 │  │     - 其他消息 → 注入为 user message                    │   │
-│  │  3. 调用 Claude API（带 tools，5xx 自动重试）           │   │
+│  │  3. 调用 Haijun API（带 tools，5xx 自动重试）           │   │
 │  │     - 全部失败 → shutdown + 通知 lead                   │   │
 │  │  4. 将 assistant response 加入历史                      │   │
 │  │  5. 如果 stop_reason ≠ "tool_use" → break              │   │
@@ -356,7 +356,7 @@ function makeIdentityBlock(name, role, teamName): MessageParam {
 
 ### 5. _exec — 工具执行分发
 
-将 Claude 返回的 tool_use 请求分发到具体的工具实现：
+将 Haijun 返回的 tool_use 请求分发到具体的工具实现：
 
 #### 基础工具
 
@@ -600,12 +600,12 @@ Lead 调用:
     prompt="你是后端开发者，查看任务看板开始工作")
 
 → _loop Work Phase 第 1 轮:
-    Claude 调用 task_list → 看到 task #1, #2 都是 pending
-    Claude 调用 claim_task(task_id=1)
+    Haijun 调用 task_list → 看到 task #1, #2 都是 pending
+    Haijun 调用 claim_task(task_id=1)
     执行: TASKS.claimTask(1, "backend") → task #1 owner=backend, status=in_progress
 
 → _loop Work Phase 第 2 轮:
-    Claude 调用 plan_approval(plan="1. 创建路由 2. 实现控制器 3. 添加验证")
+    Haijun 调用 plan_approval(plan="1. 创建路由 2. 实现控制器 3. 添加验证")
     向 lead 发送 plan_submission
     等待审批...
 

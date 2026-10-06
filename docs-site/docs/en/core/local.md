@@ -8,7 +8,7 @@ The guiding principle is **fail-closed**: every layer refuses to run unless its 
 pnpm add @lite-agent/local
 ```
 
-Requires macOS or Linux, Node ≥ 20, and a running local model server. `better-sqlite3` and `@anthropic-ai/sandbox-runtime` are pulled in as transitive native/runtime dependencies.
+Requires macOS or Linux, Node ≥ 20, and a running local model server. `better-sqlite3` and `@takebox-ai/sandbox-runtime` are pulled in as transitive native/runtime dependencies.
 
 ## Quick start
 

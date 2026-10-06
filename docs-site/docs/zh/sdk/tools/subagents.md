@@ -122,6 +122,6 @@ child 使用 `agents: false`；不支持递归子代理、Agent Teams、消息�
 ## 另请参阅
 
 - [内置工具](/zh/sdk/tools/builtin-tools)——`Agent` 工具说明及如何禁用（`agents: false`）。
-- [Skills](/zh/sdk/tools/skills)——另一个由 Markdown 驱动、按需加载的能力。
+- [Tracks](/zh/sdk/tools/tracks)——另一个由 Markdown 驱动、按需加载的能力。
 - [权限](/zh/sdk/control/permissions)——编写 `subagentPermission` 所需的 allow/deny 规则。
 - [自定义工具](/zh/sdk/tools/custom-tools)——添加可被子代理继承的工具。

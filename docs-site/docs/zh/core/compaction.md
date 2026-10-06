@@ -35,7 +35,7 @@ const agent = createAgent({
 | `memorySpillStore()` / `toolResultBudgetPass(opts)` | spill 机制：工具结果正文合计超过 `budgetBytes` 时，最大的正文被移出上下文、存入 `SpillStore`，原地留下可检索的短标记（`SPILL_PREFIX`）。它在 micro *之前*运行，因此完整内容得以保留。 |
 | `snipPass` / `microPass` / `splitTurns` / `runPipeline` / `estimateTokens` | 组装自定义 `CompactPass` 管道的构建块（可通过 `defaultCompactor({ passes })` 整体替换）。 |
 
-每个 compactor 都实现 `Compactor` 策略——`maybeCompact(messages, usage, instructions?) → CompactResult`。可选的 `instructions` 用于引导手动 compaction（类似 Claude Code 的 `/compact <instructions>`）；结构性 compactor 会忽略它。
+每个 compactor 都实现 `Compactor` 策略——`maybeCompact(messages, usage, instructions?) → CompactResult`。可选的 `instructions` 用于引导手动 compaction（类似 Haijun Code 的 `/compact <instructions>`）；结构性 compactor 会忽略它。
 
 ## ContextEngine
 

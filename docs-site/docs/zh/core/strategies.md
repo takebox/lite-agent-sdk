@@ -53,7 +53,7 @@ const weather = defineTool({
 
 ### `Compactor`
 
-`maybeCompact(messages, usage, instructions?) → CompactResult`——决定是否以及如何压缩对话。`instructions` 用于引导手动 compaction（类似 Claude Code 的 `/compact <instructions>`）；结构性 compactor 会忽略它。
+`maybeCompact(messages, usage, instructions?) → CompactResult`——决定是否以及如何压缩对话。`instructions` 用于引导手动 compaction（类似 Haijun Code 的 `/compact <instructions>`）；结构性 compactor 会忽略它。
 
 **自定义场景：** 一个领域感知的 compactor，永远保留提到未关闭 Jira 工单的消息。见[上下文压缩](/zh/core/compaction)。
 

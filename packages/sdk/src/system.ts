@@ -1,7 +1,7 @@
 export interface SystemPromptOptions {
   workdir: string;
   modelName?: string;
-  skills: string;
+  tracks: string;
   subagents?: string;
 }
 
@@ -28,8 +28,8 @@ ${modelLine}
 - For any task with 3+ steps, call TaskCreate to capture each step before executing.
 - Call TaskUpdate to set a task in_progress before starting it and completed only when fully done; use TaskList/TaskGet to review state.
 
-## Skills
+## Tracks
 Use load_skill to access specialized knowledge before tackling unfamiliar topics.
-Available skills:
-${opts.skills}${subagentsSection}`;
+Available tracks:
+${opts.tracks}${subagentsSection}`;
 }

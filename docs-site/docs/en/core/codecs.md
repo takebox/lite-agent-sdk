@@ -17,7 +17,7 @@ const agent = createAgent({
 
 | Codec | Protocol | Streaming | Use it when |
 | --- | --- | --- | --- |
-| `nativeCodec()` | Tool specs passed as native `tools`; calls arrive as structured blocks | passthrough | The provider has real function calling (Anthropic, OpenAI). The default choice. |
+| `nativeCodec()` | Tool specs passed as native `tools`; calls arrive as structured blocks | passthrough | The provider has real function calling (Takebox AI, OpenAI). The default choice. |
 | `jsonCodec(opts?)` | Whole-response JSON protocol injected into `system`: `{"type":"tool_calls","calls":[…]}` or `{"type":"final","text":…}` | buffer | The model follows instructions well but has no native tool API (most local models). |
 | `reactCodec(opts?)` | ReAct text: `Action:` / `Action Input:` / `Observation:` / `Final Answer:`, one tool per response | buffer | Small models that parse better with a textual reasoning trace than strict JSON. |
 
@@ -70,6 +70,6 @@ const myCodec: ToolCallCodec = {
 ## See also
 
 - [The nine strategies](/core/strategies) — where `ToolCallCodec` sits among the kernel's strategy interfaces.
-- [Model providers](/core/providers) — `anthropic()` / `openai()` for use with `nativeCodec()`.
+- [Model providers](/core/providers) — `Takebox AI()` / `openai()` for use with `nativeCodec()`.
 - [Strict local assembly](/core/local) — automatic codec selection (`"auto"`) for local runtimes.
 - [Testing utilities](/core/testing) — exercise your codec end to end with `fakeProvider`.

@@ -5,10 +5,10 @@ Status: approved (pending spec review)
 
 ## Goal
 
-Give `lite-agent-sdk` a Claude Code–style home so persistence "just works":
-a global `~/.lite-agent` home, per-project runtime artifacts, two-source skill
+Give `lite-agent-sdk` a Haijun Code–style home so persistence "just works":
+a global `~/.lite-agent` home, per-project runtime artifacts, two-source track
 loading (global + project), and age-based auto-cleanup. `createLiteAgent` ships
-these **on by default** (overridable), like Claude Code.
+these **on by default** (overridable), like Haijun Code.
 
 All new code lives in the **sdk** package (filesystem = batteries). **core is
 unchanged** — the `Store`, `Compactor`/`SpillStore`, and compaction blocks it
@@ -18,20 +18,20 @@ already exposes are sufficient.
 
 ```
 ~/.lite-agent/                     # global home (override: $LITE_AGENT_HOME)
-  skills/                          # global skills (SKILL.md tree)
+  tracks/                          # global tracks (TRACK.md tree)
   projects/<hash>/                 # per-project runtime artifacts
     spill/                         # spilled tool_result blobs (<sha1>.txt)
     sessions/                      # session transcripts (<sessionId>.jsonl)
 
 <project>/.lite-agent/
-  skills/                          # project skills (SKILL.md tree)
+  tracks/                          # project tracks (TRACK.md tree)
 ```
 
 - **Global home**: `$LITE_AGENT_HOME` if set, else `~/.lite-agent`.
 - **Project root**: `createLiteAgent`'s existing `workdir` (`query`'s `cwd`).
   No git/.lite-agent walk-up — keep it simple.
 - **`<hash>`**: first 16 hex chars of `sha1(resolve(workdir))`. Stable per
-  absolute project path; partitions runtime artifacts the way Claude Code does.
+  absolute project path; partitions runtime artifacts the way Haijun Code does.
 
 ## Components (all in sdk)
 
@@ -51,7 +51,7 @@ export function resolveProjectPaths(opts: { workdir: string; home?: string }): P
 Pure path computation — no fs side effects (dirs are created lazily by the
 stores that write to them).
 
-### 2. Skills: global + project merge
+### 2. Tracks: global + project merge
 
 `SkillLoader` is extended to accept an **ordered list of directories**; later
 dirs override earlier ones on name collision.
@@ -131,7 +131,7 @@ opt-out. Minor version bump (additive options, changed defaults).
     `sessions: false` → nothing written.
   - spill on by default → `read_spilled` registered; `spill: false` → not.
   - `compactor: false` → no compaction event even when it would trigger.
-  - skills: a project skill shadows a same-named global skill.
+  - tracks: a project track shadows a same-named global track.
   - `cleanup: false` → no sweep.
 
 ## Out of scope (future)

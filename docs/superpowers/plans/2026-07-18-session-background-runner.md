@@ -1,6 +1,6 @@
 # Session-Scoped Background Runner Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Let explicit background Bash and subagent work outlive the `run()` that spawned it, accept later user turns, and automatically wake the originating `LiteAgent` session on completion while ordinary `Agent` calls remain blocking.
 
@@ -1292,7 +1292,7 @@ Expected: every command exits 0. Because workspace packages import built `dist`,
 
 - [ ] **Step 4: Apply package-scoped version and changelog updates**
 
-Invoke the repository's `version-and-changelog` skill after the full green run. It must inspect the actual code diff and update only changed published packages under `packages/`. Expected affected packages are `@lite-agent/core` and `@lite-agent/sdk`; with the repository's 0.x convention and the new public SDK API/behavior, the expected next version is `0.13.0` for both unless the skill's live diff establishes a different semver result.
+Invoke the repository's `version-and-changelog` track after the full green run. It must inspect the actual code diff and update only changed published packages under `packages/`. Expected affected packages are `@lite-agent/core` and `@lite-agent/sdk`; with the repository's 0.x convention and the new public SDK API/behavior, the expected next version is `0.13.0` for both unless the track's live diff establishes a different semver result.
 
 The English changelogs must cover:
 

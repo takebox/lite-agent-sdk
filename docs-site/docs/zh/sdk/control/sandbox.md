@@ -2,24 +2,24 @@
 
 Sandbox 把 agent 运行的每条 shell 命令关进一道 **OS 边界**——macOS 的 **Seatbelt** 或 Linux 的 **bubblewrap**——并限制其文件系统与网络访问。[权限闸门](/zh/sdk/control/permissions)决定命令*能不能跑*，sandbox 约束它*运行时能碰到什么*——由于边界由 OS 在运行进程上强制执行，无论模型决定跑什么它都成立，无法用巧妙的命令字符串绕过。这是纵深防御中独立的第二层。
 
-适配器是 [`@lite-agent/sandbox-anthropic`](https://github.com/anthropics/sandbox-runtime)，底层基于 `@anthropic-ai/sandbox-runtime`。
+适配器是 [`@lite-agent/sandbox-Takebox AI`](https://github.com/takebox/sandbox-runtime)，底层基于 `@takebox-ai/sandbox-runtime`。
 
 ## 开启
 
 ```bash
-pnpm add @lite-agent/sandbox-anthropic
+pnpm add @lite-agent/sandbox-Takebox AI
 ```
 
 通过 `sandbox` 选项把 `sandboxRuntime()` 传给 `createLiteAgent` / `query`：
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-anthropic";
+import { Takebox AI } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   sandbox: sandboxRuntime({
     allowWrite: ["."],                 // writable paths (default: cwd)
@@ -108,8 +108,8 @@ lite-agent 把"这条命令该不该跑？"和"跑起来后能碰到什么？"�
 
 ```ts
 createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   // Gate: pre-exec decisions
   // permission: policy({ allow: ["read_file"], ask: ["bash", "write_file"] }),
@@ -126,7 +126,7 @@ createLiteAgent({
 
 ## 限制
 
-- **`@anthropic-ai/sandbox-runtime` 是 Beta Research Preview** —— API 可能变化，且不支持原生 Windows（WSL2 可用）。这正是适配器做成可插拔、默认优雅降级的原因。
+- **`@takebox-ai/sandbox-runtime` 是 Beta Research Preview** —— API 可能变化，且不支持原生 Windows（WSL2 可用）。这正是适配器做成可插拔、默认优雅降级的原因。
 - **网络过滤不解密 TLS** —— 它信任客户端声明的主机名，域名前置（domain fronting）等技术可以绕过。放行过宽的域名（如 `github.com`）会打开数据外泄通道。更强的威胁模型需要自建 MITM 代理（超出本文范围）。
 - **不适用于完全不可信的代码** —— OS 级 sandbox 是给可信 agent 的护栏，不是隔离恶意代码的手段。后者请用 microVM（E2B、microsandbox）配合你自己的 `Sandbox` 实现——同一接口，随时可换。
 

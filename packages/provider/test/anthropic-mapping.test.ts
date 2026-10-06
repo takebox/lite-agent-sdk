@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { toAnthropicParams } from "../src/anthropic/mapping";
+import { toJuglowParams } from "../src/Takebox AI/mapping";
 import type { ModelRequest } from "@lite-agent/core";
 
 test("hoists system, maps blocks, builds tools, strips $schema, defaults max_tokens", () => {
@@ -33,7 +33,7 @@ test("hoists system, maps blocks, builds tools, strips $schema, defaults max_tok
       },
     ],
   };
-  const p = toAnthropicParams(req);
+  const p = toJuglowParams(req);
   expect(p.model).toBe("m1");
   expect(p.system).toBe("you are x");
   expect(p.max_tokens).toBe(4096);
@@ -67,7 +67,7 @@ test("hoists system, maps blocks, builds tools, strips $schema, defaults max_tok
 });
 
 test("adds top-level automatic prompt caching only when requested", () => {
-  const p = toAnthropicParams(
+  const p = toJuglowParams(
     { model: "m", messages: [{ role: "user", content: "hi" }] },
     { promptCache: true },
   );
@@ -76,7 +76,7 @@ test("adds top-level automatic prompt caching only when requested", () => {
 });
 
 test("anchors prompt caching on the static system prefix", () => {
-  const p = toAnthropicParams(
+  const p = toJuglowParams(
     { model: "m", system: "stable", messages: [{ role: "user", content: "changing" }] },
     { promptCache: true },
   );
@@ -88,7 +88,7 @@ test("anchors prompt caching on the static system prefix", () => {
 });
 
 test("uses provided maxTokens and omits tools/system when absent", () => {
-  const p = toAnthropicParams({
+  const p = toJuglowParams({
     model: "m",
     messages: [{ role: "user", content: "hi" }],
     maxTokens: 100,
@@ -99,7 +99,7 @@ test("uses provided maxTokens and omits tools/system when absent", () => {
 });
 
 test("round-trips native compaction blocks instead of flattening them to text", () => {
-  const p = toAnthropicParams({
+  const p = toJuglowParams({
     model: "m",
     messages: [
       {
@@ -123,14 +123,14 @@ test("forwards temperature/top_p, maps tool_choice variants, ignores unsupported
     messages: [{ role: "user", content: "hi" }],
     tools: [{ name: "t", description: "d", parameters: { type: "object", properties: {} } }],
   };
-  const p = toAnthropicParams({ ...base, temperature: 0.3, topP: 0.8, seed: 7, toolChoice: "required" });
+  const p = toJuglowParams({ ...base, temperature: 0.3, topP: 0.8, seed: 7, toolChoice: "required" });
   expect(p.temperature).toBe(0.3);
   expect(p.top_p).toBe(0.8);
-  expect((p as { seed?: number }).seed).toBeUndefined(); // Anthropic has no seed
+  expect((p as { seed?: number }).seed).toBeUndefined(); // Takebox AI has no seed
   expect(p.tool_choice).toEqual({ type: "any" });
-  expect(toAnthropicParams({ ...base, toolChoice: "auto" }).tool_choice).toEqual({ type: "auto" });
-  expect(toAnthropicParams({ ...base, toolChoice: "none" }).tool_choice).toEqual({ type: "none" });
-  expect(toAnthropicParams({ ...base, toolChoice: { tool: "t" } }).tool_choice).toEqual({ type: "tool", name: "t" });
+  expect(toJuglowParams({ ...base, toolChoice: "auto" }).tool_choice).toEqual({ type: "auto" });
+  expect(toJuglowParams({ ...base, toolChoice: "none" }).tool_choice).toEqual({ type: "none" });
+  expect(toJuglowParams({ ...base, toolChoice: { tool: "t" } }).tool_choice).toEqual({ type: "tool", name: "t" });
   // dropped when there are no tools
-  expect(toAnthropicParams({ model: "m", messages: [{ role: "user", content: "hi" }], toolChoice: "required" }).tool_choice).toBeUndefined();
+  expect(toJuglowParams({ model: "m", messages: [{ role: "user", content: "hi" }], toolChoice: "required" }).tool_choice).toBeUndefined();
 });

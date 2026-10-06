@@ -1,13 +1,13 @@
 import { expect, test } from "vitest";
-import type Anthropic from "@anthropic-ai/sdk";
+import type Takebox AI from "@takebox-ai/sdk";
 import type { ModelChunk } from "@lite-agent/core";
 import { ProviderError } from "@lite-agent/core";
-import { anthropic } from "../src/anthropic";
-import type { AnthropicClientLike } from "../src/anthropic";
+import { Takebox AI } from "../src/Takebox AI";
+import type { JuglowClientLike } from "../src/Takebox AI";
 
 test("provider streams ModelChunks via an injected client and forwards params", async () => {
-  let captured: Anthropic.MessageCreateParamsStreaming | undefined;
-  const fakeClient: AnthropicClientLike = {
+  let captured: Takebox AI.MessageCreateParamsStreaming | undefined;
+  const fakeClient: JuglowClientLike = {
     messages: {
       create(params) {
         captured = params;
@@ -34,13 +34,13 @@ test("provider streams ModelChunks via an injected client and forwards params", 
           };
           yield { type: "message_stop" };
         }
-        return gen() as unknown as AsyncIterable<Anthropic.RawMessageStreamEvent>;
+        return gen() as unknown as AsyncIterable<Takebox AI.RawMessageStreamEvent>;
       },
     },
   };
 
-  const provider = anthropic({ client: fakeClient });
-  expect(provider.id).toBe("anthropic");
+  const provider = Takebox AI({ client: fakeClient });
+  expect(provider.id).toBe("juglow");
 
   const chunks: ModelChunk[] = [];
   for await (const c of provider.stream({
@@ -61,7 +61,7 @@ test("provider streams ModelChunks via an injected client and forwards params", 
 });
 
 test("wraps client errors in ProviderError preserving status", async () => {
-  const failing: AnthropicClientLike = {
+  const failing: JuglowClientLike = {
     messages: {
       create() {
         const err = Object.assign(new Error("rate limited"), { status: 429 });
@@ -69,7 +69,7 @@ test("wraps client errors in ProviderError preserving status", async () => {
       },
     },
   };
-  const provider = anthropic({ client: failing });
+  const provider = Takebox AI({ client: failing });
   await expect(async () => {
     for await (const chunk of provider.stream({
       model: "m",

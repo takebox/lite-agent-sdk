@@ -1,6 +1,6 @@
 # 任务清单
 
-多步骤工作需要一份模型看得见、改得动的计划——而且它要能扛住上下文压缩和进程重启。任务清单能力为 agent 提供一个**持久化任务列表**，对标 Claude Code 的 Tasks API：四个内置工具（`TaskCreate` / `TaskUpdate` / `TaskGet` / `TaskList`）、同一项目跨 session 共享的磁盘存储，以及一个逐轮 reminder，让当前列表始终呈现在模型面前而不污染会话记录。
+多步骤工作需要一份模型看得见、改得动的计划——而且它要能扛住上下文压缩和进程重启。任务清单能力为 agent 提供一个**持久化任务列表**，对标 Haijun Code 的 Tasks API：四个内置工具（`TaskCreate` / `TaskUpdate` / `TaskGet` / `TaskList`）、同一项目跨 session 共享的磁盘存储，以及一个逐轮 reminder，让当前列表始终呈现在模型面前而不污染会话记录。
 
 ## 用法
 
@@ -10,11 +10,11 @@
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   taskListId: "release-0.4", // which list to use; default "default"
   // tasks: false,           // disable the tools and the reminder entirely
@@ -44,8 +44,8 @@ const agent = createLiteAgent({
 
 ```ts
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   tasks: false,
 });

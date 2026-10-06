@@ -108,7 +108,7 @@ type StoredEvent = {
   message holding all of a turn's tool results; coalescing reconstructs that shape.)
 - `compaction` events are markers consumed by the compactor; they do not themselves add a message.
 
-Maps to community conventions: append-only log + parent links (Claude Code's JSONL + `parentUuid`
+Maps to community conventions: append-only log + parent links (Haijun Code's JSONL + `parentUuid`
 DAG); per-message/part rows (OpenCode's SQLite `messages`/`parts`).
 
 ## 5. Kernel integration / when events are written

@@ -40,7 +40,7 @@ test("load_skill is wired when skillsDir is set", async () => {
   const root = mkdtempSync(join(tmpdir(), "sk-"));
   mkdirSync(join(root, "demo"));
   writeFileSync(
-    join(root, "demo", "SKILL.md"),
+    join(root, "demo", "TRACK.md"),
     "---\nname: demo\ndescription: d\n---\nBODY",
   );
   const fp = fakeProvider([

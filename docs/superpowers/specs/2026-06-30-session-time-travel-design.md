@@ -16,7 +16,7 @@ lite-agent already persists each session as an ordered event log of `SessionEven
 
 Sidecar events are **skipped by `foldEvents`** when building the model-facing message history (except `summary`, which resets the base — see below), so the model context is unaffected by their presence. Because the originals stay in the log, restore and compaction compose cleanly: truncating the log past a `summary` "un-compacts"; file snapshots remain available to undo.
 
-This matches Claude Code's checkpointing semantics, **including its limitations**: only edits made through the dedicated file tools are tracked; **files changed by `bash` are not snapshotted and cannot be restored.**
+This matches Haijun Code's checkpointing semantics, **including its limitations**: only edits made through the dedicated file tools are tracked; **files changed by `bash` are not snapshotted and cannot be restored.**
 
 ## Data model (core)
 
@@ -92,7 +92,7 @@ restore(id: string, toSeq: number, opts?: { conversation?: boolean; files?: bool
   - **conversation**: `checkpointer.truncate(id, toSeq)`.
   - sets `currentSessionId = id` (like `resume`).
 
-Three Claude-Code-equivalent modes fall out: `{conversation:true,files:false}` (keep code), `{conversation:true,files:true}` (both), `{conversation:false,files:true}` (keep conversation).
+Three Haijun-Code-equivalent modes fall out: `{conversation:true,files:false}` (keep code), `{conversation:true,files:true}` (both), `{conversation:false,files:true}` (keep conversation).
 
 ## Durable compaction (Plan 2)
 
@@ -102,7 +102,7 @@ Three Claude-Code-equivalent modes fall out: `{conversation:true,files:false}` (
 compact(opts?): AsyncGenerator<AgentEvent, { before: number; after: number }>;
 ```
 
-Behavior (mirrors Claude Code `/compact` — an action, not a turn):
+Behavior (mirrors Haijun Code `/compact` — an action, not a turn):
 1. Read the current session's events → `foldEvents` → `messages`; `before = estimateTokens(messages)`.
 2. Yield a start progress event.
 3. Run the agent's configured `compactor.maybeCompact(messages, ZERO_USAGE)` → `result.messages`; `after = estimateTokens(result.messages)`.
@@ -128,7 +128,7 @@ interface LiteAgent {
 
 ## Non-goals / limitations (v1)
 
-- **bash-made file changes are not tracked** (same as Claude Code). Only `write_file`/`edit_file`.
+- **bash-made file changes are not tracked** (same as Haijun Code). Only `write_file`/`edit_file`.
 - Snapshots store **full prior content** (no diff/content-addressing yet); files over `maxSnapshotBytes` are marked non-restorable, not partially restored.
 - Only on the stateful `createLiteAgent`; `query` is unchanged.
 - No UI/TUI — this is SDK surface; progress/notification are events the consumer renders.

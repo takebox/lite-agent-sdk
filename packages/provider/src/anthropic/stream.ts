@@ -1,4 +1,4 @@
-import type Anthropic from "@anthropic-ai/sdk";
+import type Takebox AI from "@takebox-ai/sdk";
 import type {
   AssistantMessage,
   ContentBlock,
@@ -7,7 +7,7 @@ import type {
 } from "@lite-agent/core";
 
 export async function* translateStream(
-  events: AsyncIterable<Anthropic.RawMessageStreamEvent>,
+  events: AsyncIterable<Takebox AI.RawMessageStreamEvent>,
 ): AsyncGenerator<ModelChunk> {
   const blocks: (ContentBlock | undefined)[] = [];
   const toolJson: string[] = [];
@@ -42,7 +42,7 @@ export async function* translateStream(
         } else if (cb.type === "compaction") {
           blocks[event.index] = { type: "compaction", content: typeof cb.content === "string" ? cb.content : null };
         } else {
-          blocks[event.index] = { type: "native", provider: "anthropic", data: cb };
+          blocks[event.index] = { type: "native", provider: "juglow", data: cb };
         }
         break;
       }

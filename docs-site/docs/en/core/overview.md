@@ -1,6 +1,6 @@
 # Core overview
 
-`@lite-agent/core` is the pluggable, event-driven agent kernel of lite-agent: a lean, provider-agnostic core built from swappable strategy interfaces, an onion middleware pipeline, and a typed event stream. Use it when you want to assemble your own agent from primitives — full control over the model, the tools, the persistence, and every layer in between — without forking a framework. Its public API is shaped after [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript), but the kernel is self-built, so it can also drive local small models via pluggable tool-call codecs.
+`@lite-agent/core` is the pluggable, event-driven agent kernel of lite-agent: a lean, provider-agnostic core built from swappable strategy interfaces, an onion middleware pipeline, and a typed event stream. Use it when you want to assemble your own agent from primitives — full control over the model, the tools, the persistence, and every layer in between — without forking a framework. Its public API is shaped after [`@takebox-ai/haijun-agent-sdk`](), but the kernel is self-built, so it can also drive local small models via pluggable tool-call codecs.
 
 ## Getting started
 
@@ -42,7 +42,7 @@ The loop that ties them together — encode → call → decode → execute → 
 
 ## Core vs. SDK
 
-The core knows nothing about permissions, compaction, or sessions by default — those are strategies and middleware you plug in. [@lite-agent/sdk](/sdk/overview) is the batteries-included composition of this same kernel: built-in tools, skills, subagents, sessions, and permission gating, with the ContextEngine enabled out of the box. Reach for the core when the SDK's defaults don't fit — an in-house inference gateway, a bespoke tool-call protocol, a custom persistence backend — and you want to wire the primitives yourself.
+The core knows nothing about permissions, compaction, or sessions by default — those are strategies and middleware you plug in. [@lite-agent/sdk](/sdk/overview) is the batteries-included composition of this same kernel: built-in tools, tracks, subagents, sessions, and permission gating, with the ContextEngine enabled out of the box. Reach for the core when the SDK's defaults don't fit — an in-house inference gateway, a bespoke tool-call protocol, a custom persistence backend — and you want to wire the primitives yourself.
 
 ## See also
 

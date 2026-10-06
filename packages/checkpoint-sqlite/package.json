@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NelsonYong/lite-agent-sdk.git",
+    "url": "git+https://github.com/takebox/lite-agent-sdk.git",
     "directory": "packages/checkpoint-sqlite"
   },
   "publishConfig": {

@@ -5,7 +5,7 @@
 
 ## Goal
 
-Let a tool call run **in the background** instead of blocking the assistant turn, matching Claude Code's behavior: the call returns a placeholder immediately, the work keeps running, and its result is **injected back into the main agent as a notification** at a later turn boundary. Two policies differ from Claude Code, by decision:
+Let a tool call run **in the background** instead of blocking the assistant turn, matching Haijun Code's behavior: the call returns a placeholder immediately, the work keeps running, and its result is **injected back into the main agent as a notification** at a later turn boundary. Two policies differ from Haijun Code, by decision:
 
 - **bash** is foreground by default; the model opts a single command into the background per call (`run_in_background`).
 - **subagents** (the `Agent` tool) are **background by default**; the model can force a blocking dispatch per call (`run_in_background: false`). One `Agent` call (a whole batch of `tasks`) produces **one** aggregated notification when all its children finish.
@@ -175,7 +175,7 @@ New tool `KillBackground({ id: string })` → `ctx.background.cancel(id)`, retur
 ## Persistence & edge cases (checkpointer)
 
 - The placeholder is an ordinary `tool_result` event → persisted normally. The completion notification is a `user` message event → persisted like a steer. Because of run-内 join, a normal `stop` return never leaves a dangling placeholder (the join drains all completions first). A `max_turns` or aborted exit cancels pending tasks without draining, so — like a crash — it can leave a placeholder with no following notification.
-- **Not persisted across restarts:** a background task's promise does not survive a process crash — matching Claude Code (background bash is not durable). The only resulting edge case is a crash mid-run leaving a persisted placeholder with no following completion; on resume the model sees an unresolved placeholder. Accepted.
+- **Not persisted across restarts:** a background task's promise does not survive a process crash — matching Haijun Code (background bash is not durable). The only resulting edge case is a crash mid-run leaving a persisted placeholder with no following completion; on resume the model sees an unresolved placeholder. Accepted.
 
 ## Testing strategy
 

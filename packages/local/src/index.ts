@@ -14,8 +14,8 @@ import type {
   CreateLiteAgentConfig, EventSink, FilePermissionPolicy, LiteAgent, LiteAgentResult,
 } from "@lite-agent/sdk";
 import { sqliteCheckpointer } from "@lite-agent/checkpoint-sqlite";
-import { sandboxRuntime } from "@lite-agent/sandbox-anthropic";
-import type { SandboxRuntimeOptions } from "@lite-agent/sandbox-anthropic";
+import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
+import type { SandboxRuntimeOptions } from "@lite-agent/sandbox-Takebox AI";
 import {
   DEFAULT_RESOURCE_LIMITS, probeResourceLimits, resourceLimitedSandbox,
 } from "./resources";

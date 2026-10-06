@@ -1,6 +1,6 @@
 # Part B-2 — Turn-Boundary Steering (steer / followUp) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Let a consumer inject user messages into a running agent at turn boundaries — `steer(msg)` to add input before the next model turn, `followUp(msg)` to continue a run that would otherwise stop — without interrupting an in-flight model stream.
 

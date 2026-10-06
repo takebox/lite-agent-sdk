@@ -1,6 +1,6 @@
 # Subagents Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add file-defined subagents (`agents/*.md`) dispatched by the main agent through a single parallel-capable `Agent` tool, with each subagent run persisted to disk and resumable.
 
@@ -499,7 +499,7 @@ Add to `packages/sdk/test/system.test.ts`:
 test("includes a Subagents section listing types when subagents are provided", () => {
   const prompt = buildSystemPrompt({
     workdir: "/w",
-    skills: "(no skills available)",
+    tracks: "(no tracks available)",
     subagents: "  - researcher: digs through code",
   });
   expect(prompt).toContain("## Subagents");
@@ -509,7 +509,7 @@ test("includes a Subagents section listing types when subagents are provided", (
 test("omits the Subagents section when none are available", () => {
   const prompt = buildSystemPrompt({
     workdir: "/w",
-    skills: "(no skills available)",
+    tracks: "(no tracks available)",
     subagents: "(no subagents available)",
   });
   expect(prompt).not.toContain("## Subagents");
@@ -533,7 +533,7 @@ Replace the interface:
 export interface SystemPromptOptions {
   workdir: string;
   modelName?: string;
-  skills: string;
+  tracks: string;
   subagents?: string;
 }
 ```
@@ -550,10 +550,10 @@ ${opts.subagents}`
       : "";
 ```
 
-Then append `${subagentsSection}` to the very end of the returned template string (after the `${opts.skills}` line):
+Then append `${subagentsSection}` to the very end of the returned template string (after the `${opts.tracks}` line):
 
 ```ts
-${opts.skills}${subagentsSection}`;
+${opts.tracks}${subagentsSection}`;
 ```
 
 - [ ] **Step 4: Run to verify system tests pass**
@@ -713,7 +713,7 @@ import type { Spawn } from "./tools/agent";
 ```ts
   const system =
     cfg.system ??
-    buildSystemPrompt({ workdir: cfg.workdir, modelName: cfg.modelName, skills, subagents });
+    buildSystemPrompt({ workdir: cfg.workdir, modelName: cfg.modelName, tracks, subagents });
 ```
 
 - [ ] **Step 8: Implement the `query` threading**
@@ -781,7 +781,7 @@ git commit -m "feat(sdk): wire file-defined subagents into createLiteAgent/query
 
 **Files:**
 - Create: `.changeset/subagents.md`
-- Modify: `CLAUDE.md` (project root)
+- Modify: `HAIJUN.md` (project root)
 
 - [ ] **Step 1: Add the changeset**
 
@@ -792,7 +792,7 @@ Create `.changeset/subagents.md` (verify the four package names against an exist
 "lite-agent": minor
 "@lite-agent/core": minor
 "@lite-agent/provider": minor
-"@lite-agent/sandbox-anthropic": minor
+"@lite-agent/sandbox-Takebox AI": minor
 ---
 
 feat(sdk): file-defined subagents loaded from `agents/*.md` (global `~/.lite-agent/agents` + project `.lite-agent/agents`), dispatched via a parallel-capable `Agent` tool. Each subagent runs in an isolated, persisted, resumable session and may share the project task list. Default-on; disable with `agents: false`.
@@ -803,19 +803,19 @@ feat(sdk): file-defined subagents loaded from `agents/*.md` (global `~/.lite-age
 Run: `ls .changeset && cat .changeset/*.md | head -20`
 Expected: the four names above match the existing convention (e.g. the `task-tools` changeset). Fix any mismatch.
 
-- [ ] **Step 3: Update `CLAUDE.md`**
+- [ ] **Step 3: Update `HAIJUN.md`**
 
-In `packages/sdk/.../CLAUDE.md`'s "SDK batteries" paragraph (the project-root `CLAUDE.md` section describing `createLiteAgent`), append one sentence after the Tasks/skills description:
+In `packages/sdk/.../HAIJUN.md`'s "SDK batteries" paragraph (the project-root `HAIJUN.md` section describing `createLiteAgent`), append one sentence after the Tasks/tracks description:
 
 > It also loads file-defined **subagents** from `~/.lite-agent/agents` + `<workdir>/.lite-agent/agents`, registering a parallel-capable `Agent` dispatch tool (default on; `agents:false` disables) whose children run isolated, persisted, resumable sessions.
 
-(Find the exact paragraph with `grep -n "createLiteAgent" CLAUDE.md` and edit in place; keep the surrounding wording.)
+(Find the exact paragraph with `grep -n "createLiteAgent" HAIJUN.md` and edit in place; keep the surrounding wording.)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add .changeset/subagents.md CLAUDE.md
-git commit -m "docs(sdk): changeset + CLAUDE.md note for subagents"
+git add .changeset/subagents.md HAIJUN.md
+git commit -m "docs(sdk): changeset + HAIJUN.md note for subagents"
 ```
 
 ---

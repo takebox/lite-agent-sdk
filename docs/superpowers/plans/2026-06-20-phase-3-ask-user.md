@@ -1,6 +1,6 @@
 # Phase 3 — ask_user / InputHandler Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add the model-initiated half of the interrupt-resume pair: an `ask_user` tool backed by the `InputHandler` strategy, symmetric to the approval gate.
 

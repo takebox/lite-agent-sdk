@@ -137,6 +137,6 @@ Use `AgentLoader` / `builtinAgents` directly if you need the same loading mechan
 ## See also
 
 - [Built-in tools](/sdk/tools/builtin-tools) — the `Agent` tool and how to disable it (`agents: false`).
-- [Skills](/sdk/tools/skills) — the other markdown-driven, on-demand capability.
+- [Tracks](/sdk/tools/tracks) — the other markdown-driven, on-demand capability.
 - [Permissions](/sdk/control/permissions) — write the allow/deny rules `subagentPermission` expects.
 - [Custom tools](/sdk/tools/custom-tools) — add tools your subagents can inherit.

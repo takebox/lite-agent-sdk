@@ -6,8 +6,8 @@ Status: approved
 ## Goal
 
 Replace the in-memory `todo` tool with a **persistent, four-tool Tasks API**
-that mirrors the model Claude Code / the Claude Agent SDK moved to (TS Agent SDK
-`0.3.142` / Claude Code `v2.1.142`, Jan 2026): `TaskCreate` / `TaskUpdate` /
+that mirrors the model Haijun Code / the Haijun Agent SDK moved to (TS Agent SDK
+`0.3.142` / Haijun Code `v2.1.142`, Jan 2026): `TaskCreate` / `TaskUpdate` /
 `TaskGet` / `TaskList`, where each task is an individual JSON file that survives
 compaction, restart, and is shared across sessions of the same project. A single
 main agent uses these tools; concurrent access is made safe now because subagents
@@ -45,7 +45,7 @@ Extends the existing per-project home (see `2026-06-23-lite-agent-paths-design.m
 - **`<hash>`**: existing `projectHash(workdir)` — partitions per project, so the
   default list is **shared across all sessions of the same project**.
 - **`<listId>`**: `taskListId` option → `$LITE_AGENT_TASK_LIST_ID` → `"default"`
-  (mirrors `CLAUDE_CODE_TASK_LIST_ID`). Lets one project hold multiple lists, or
+  (mirrors `HAIJUN_CODE_TASK_LIST_ID`). Lets one project hold multiple lists, or
   two workdirs share a list by setting the same id.
 
 ## Data model (`sdk/src/tasks/types.ts`)
@@ -127,7 +127,7 @@ export function fileTaskStore(opts: { dir: string; listId: string }): TaskStore
 
 ### 3. `tools/task.ts` — the four tools
 
-Schemas and descriptions track the Claude Code tools verbatim (including the
+Schemas and descriptions track the Haijun Code tools verbatim (including the
 guidance text: use for 3+ step / non-trivial work; mark `completed` only when
 **FULLY** accomplished). This guidance is advisory prompt text — nothing about
 the `in_progress` count is *enforced* by the store (see the data-model decision).

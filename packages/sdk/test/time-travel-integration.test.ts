@@ -79,7 +79,7 @@ test("compact persists a summary that a subsequent run loads as the base", async
   expect(last.some((m) => m.content === "hello")).toBe(false); // compacted away from the model's view
 });
 
-test("compact forwards custom instructions to the compactor (Claude Code /compact <prompt>)", async () => {
+test("compact forwards custom instructions to the compactor (Haijun Code /compact <prompt>)", async () => {
   const dir = mkdtempSync(join(tmpdir(), "tt-e-"));
   const cp = memoryCheckpointer();
   const provider = fakeProvider([{ text: "a1", message: { role: "assistant", content: [textBlock("a1")] } }]);

@@ -1,6 +1,6 @@
 # 内核概览
 
-`@lite-agent/core` 是 lite-agent 的可插拔、事件驱动 agent 内核：一个精简、provider 无关的核心，由可替换的策略接口、洋葱中间件管道和类型化事件流构成。当你想从原语出发自己组装 agent——完全掌控模型、工具、持久化以及中间的每一层——而不是魔改某个框架时，用它。它的公开 API 参照 [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript) 设计，但内核是自研的，因此也能通过可插拔的工具调用 codec 驱动本地小模型。
+`@lite-agent/core` 是 lite-agent 的可插拔、事件驱动 agent 内核：一个精简、provider 无关的核心，由可替换的策略接口、洋葱中间件管道和类型化事件流构成。当你想从原语出发自己组装 agent——完全掌控模型、工具、持久化以及中间的每一层——而不是魔改某个框架时，用它。它的公开 API 参照 [`@takebox-ai/haijun-agent-sdk`]() 设计，但内核是自研的，因此也能通过可插拔的工具调用 codec 驱动本地小模型。
 
 ## 快速开始
 

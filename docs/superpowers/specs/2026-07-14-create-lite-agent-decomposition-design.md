@@ -31,7 +31,7 @@ new runtime behavior or converting the SDK into a plugin container.
 - No new SDK capability, configuration option, or public export.
 - No Battery interface, contribution protocol, registry, builder, base class,
   dependency-injection container, or service locator.
-- No changes to tools, tasks, skills, subagent behavior, persistence formats,
+- No changes to tools, tasks, tracks, subagent behavior, persistence formats,
   compaction behavior, event streams, or error types.
 - No cleanup of unrelated code and no version or changelog update.
 - No attempt to redefine structured-output behavior for aborted, failed, or
@@ -80,7 +80,7 @@ This internal-only module converts `CreateLiteAgentConfig` into the runtime
 dependencies needed by the facade. It owns:
 
 - ordered default and optional tool assembly;
-- skill and subagent descriptions used by the system prompt;
+- track and subagent descriptions used by the system prompt;
 - spill and task stores;
 - structured-output tool, prompt suffix, and capture state;
 - compactor selection and structural/budget composition;
@@ -129,7 +129,7 @@ The following order is observable and must remain unchanged:
 
 ```text
 default tools
--> skills
+-> tracks
 -> spill
 -> tasks
 -> Agent
@@ -255,7 +255,7 @@ pin the assembly behavior not covered today:
   structured output; and
 - custom system prompt plus structured-output suffix behavior.
 
-Existing session, restore, manual compaction, output-schema, task, skill,
+Existing session, restore, manual compaction, output-schema, task, track,
 cleanup, and subagent tests remain the primary coverage for those features.
 Tests must exercise the public `createLiteAgent()` behavior rather than expose
 or couple to the new internal modules.

@@ -53,7 +53,7 @@ const weather = defineTool({
 
 ### `Compactor`
 
-`maybeCompact(messages, usage, instructions?) → CompactResult` — decides whether and how to shrink the conversation. `instructions` steers manual compaction (like Claude Code's `/compact <instructions>`); structural compactors ignore it.
+`maybeCompact(messages, usage, instructions?) → CompactResult` — decides whether and how to shrink the conversation. `instructions` steers manual compaction (like Haijun Code's `/compact <instructions>`); structural compactors ignore it.
 
 **Custom scenario:** a domain-aware compactor that always preserves messages mentioning open Jira tickets. See [Context compaction](/core/compaction).
 

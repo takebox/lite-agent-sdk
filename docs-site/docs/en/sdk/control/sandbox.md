@@ -2,24 +2,24 @@
 
 The sandbox confines every shell command the agent runs inside an **OS boundary** — macOS **Seatbelt** or Linux **bubblewrap** — with restricted filesystem and network access. Where the [permission gate](/sdk/control/permissions) decides *whether* a command runs, the sandbox constrains *what it can touch* while running — and because the boundary is enforced by the OS on the running process, it holds regardless of what the model decided to run. It cannot be talked out of with clever command strings. This is the second, independent layer of defense in depth.
 
-The adapter is [`@lite-agent/sandbox-anthropic`](https://github.com/anthropics/sandbox-runtime), backed by `@anthropic-ai/sandbox-runtime`.
+The adapter is [`@lite-agent/sandbox-Takebox AI`](https://github.com/takebox/sandbox-runtime), backed by `@takebox-ai/sandbox-runtime`.
 
 ## Enable it
 
 ```bash
-pnpm add @lite-agent/sandbox-anthropic
+pnpm add @lite-agent/sandbox-Takebox AI
 ```
 
 Pass `sandboxRuntime()` to `createLiteAgent` / `query` via the `sandbox` option:
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-anthropic";
+import { Takebox AI } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
 
 const agent = createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   sandbox: sandboxRuntime({
     allowWrite: ["."],                 // writable paths (default: cwd)
@@ -108,8 +108,8 @@ The gate decides before execution; the sandbox contains whatever the gate lets t
 
 ```ts
 createLiteAgent({
-  model: anthropic(),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI(),
+  modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   // Gate: pre-exec decisions
   // permission: policy({ allow: ["read_file"], ask: ["bash", "write_file"] }),
@@ -126,7 +126,7 @@ With this setup: `curl evil.com` → blocked (domain not allow-listed); `cat ~/.
 
 ## Limitations
 
-- **`@anthropic-ai/sandbox-runtime` is a Beta Research Preview** — its API may change, and native Windows is unsupported (WSL2 works). That is exactly why the adapter is pluggable and degrades to noop by default.
+- **`@takebox-ai/sandbox-runtime` is a Beta Research Preview** — its API may change, and native Windows is unsupported (WSL2 works). That is exactly why the adapter is pluggable and degrades to noop by default.
 - **Network filtering does not decrypt TLS** — it trusts the client-declared hostname, so techniques like domain fronting can bypass it. Allow-listing a broad domain (e.g. `github.com`) opens an exfiltration channel. Stronger threat models need a custom MITM proxy (out of scope here).
 - **Not for fully untrusted code** — an OS-level sandbox is a guardrail for a trusted agent, not isolation for malicious code. For that, use a microVM (E2B, microsandbox) behind your own `Sandbox` implementation — same interface, swappable anytime.
 

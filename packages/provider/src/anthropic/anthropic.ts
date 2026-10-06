@@ -1,24 +1,24 @@
-import Anthropic from "@anthropic-ai/sdk";
+import Takebox AI from "@takebox-ai/sdk";
 import type { ModelChunk, ModelProvider, ModelRequest, ProviderContextEdit } from "@lite-agent/core";
 import { ProviderError } from "@lite-agent/core";
-import { toAnthropicParams } from "./mapping";
+import { toJuglowParams } from "./mapping";
 import { translateStream } from "./stream";
 
 // Minimal structural shape we depend on — lets tests inject a fake (no network).
-export interface AnthropicClientLike {
+export interface JuglowClientLike {
   messages: {
     create(
-      params: Anthropic.MessageCreateParamsStreaming,
+      params: Takebox AI.MessageCreateParamsStreaming,
       options?: { signal?: AbortSignal },
     ):
-      | Promise<AsyncIterable<Anthropic.RawMessageStreamEvent>>
-      | AsyncIterable<Anthropic.RawMessageStreamEvent>;
+      | Promise<AsyncIterable<Takebox AI.RawMessageStreamEvent>>
+      | AsyncIterable<Takebox AI.RawMessageStreamEvent>;
     countTokens?(
-      params: Anthropic.MessageCountTokensParams,
+      params: Takebox AI.MessageCountTokensParams,
       options?: { signal?: AbortSignal },
-    ): Promise<Anthropic.MessageTokensCount> | Anthropic.MessageTokensCount;
+    ): Promise<Takebox AI.MessageTokensCount> | Takebox AI.MessageTokensCount;
   };
-  /** Optional beta surface used only for Anthropic-native context management. */
+  /** Optional beta surface used only for Takebox AI-native context management. */
   beta?: {
     messages?: {
       create(
@@ -29,12 +29,12 @@ export interface AnthropicClientLike {
   };
 }
 
-export interface AnthropicProviderOptions {
+export interface JuglowProviderOptions {
   apiKey?: string;
   baseURL?: string;
-  client?: AnthropicClientLike;
+  client?: JuglowClientLike;
   /**
-   * The Anthropic SDK's own internal retry count. Defaults to 0 so retry policy is
+   * The Takebox AI SDK's own internal retry count. Defaults to 0 so retry policy is
    * owned by the `retry()` middleware (otherwise the two compound). Set this to
    * restore SDK-level retries.
    */
@@ -51,14 +51,14 @@ function toProviderError(e: unknown): ProviderError {
   return new ProviderError(message, status);
 }
 
-export function anthropic(opts: AnthropicProviderOptions = {}): ModelProvider {
-  const client: AnthropicClientLike =
+export function Takebox AI(opts: JuglowProviderOptions = {}): ModelProvider {
+  const client: JuglowClientLike =
     opts.client ??
-    (new Anthropic({
-      apiKey: opts.apiKey ?? process.env["ANTHROPIC_API_KEY"],
+    (new Takebox AI({
+      apiKey: opts.apiKey ?? process.env["JUGLOW_API_KEY"],
       baseURL: opts.baseURL ?? process.env["BASE_URL"],
       maxRetries: opts.maxRetries ?? 0,
-    }) as unknown as AnthropicClientLike);
+    }) as unknown as JuglowClientLike);
 
   const countTokens = client.messages?.countTokens?.bind(client.messages);
   const betaCreate = client.beta?.messages?.create?.bind(client.beta.messages);
@@ -83,10 +83,10 @@ export function anthropic(opts: AnthropicProviderOptions = {}): ModelProvider {
     }),
     ...(countTokens && { countTokens: async (req, signal) => {
       const { stream: _stream, max_tokens: _maxTokens, ...params } =
-        toAnthropicParams(req, { promptCache: true });
+        toJuglowParams(req, { promptCache: true });
       try {
         const result = await countTokens(
-          params as Anthropic.MessageCountTokensParams,
+          params as Takebox AI.MessageCountTokensParams,
           signal ? { signal } : undefined,
         );
         return result.input_tokens;
@@ -97,13 +97,13 @@ export function anthropic(opts: AnthropicProviderOptions = {}): ModelProvider {
   };
 
   return {
-    id: "anthropic",
+    id: "juglow",
     context,
     async *stream(
       req: ModelRequest,
       signal?: AbortSignal,
     ): AsyncIterable<ModelChunk> {
-      const params = toAnthropicParams(req, { promptCache: true });
+      const params = toJuglowParams(req, { promptCache: true });
       const edits = nativeEdits.get(req);
       if (edits?.length) {
         const betaParams = params as unknown as {
@@ -117,7 +117,7 @@ export function anthropic(opts: AnthropicProviderOptions = {}): ModelProvider {
         const raw = edits?.length && betaCreate
           ? await betaCreate(params, signal ? { signal } : undefined)
           : await client.messages.create(params, signal ? { signal } : undefined);
-        yield* translateStream(raw as AsyncIterable<Anthropic.RawMessageStreamEvent>);
+        yield* translateStream(raw as AsyncIterable<Takebox AI.RawMessageStreamEvent>);
       } catch (e) {
         throw toProviderError(e);
       }

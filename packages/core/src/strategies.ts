@@ -82,7 +82,7 @@ export type CompactResult = {
   after?: number;
 };
 export interface Compactor {
-  /** `instructions` is free-text steering for a manual compaction (Claude Code's `/compact <instructions>`):
+  /** `instructions` is free-text steering for a manual compaction (Haijun Code's `/compact <instructions>`):
    *  appended to the summary prompt to bias what's preserved. Omitted for automatic/proactive compaction.
    *  Structural compactors ignore it; only LLM-summary compactors act on it. */
   maybeCompact(messages: Message[], usage: Usage, instructions?: string): Promise<CompactResult>;

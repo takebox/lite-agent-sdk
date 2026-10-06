@@ -10,7 +10,7 @@ Today `policy()` (`packages/core/src/permission.ts`) matches only the **tool nam
 
 **Guiding constraint (why this is additive):** the `PermissionPolicy` strategy interface already hands `check(call, ctx)` the full `ToolCall` including `call.input`. Content-level decisions therefore need **no interface change** — existing name-only policies keep working unchanged. What we add is (a) a richer built-in matcher, (b) decision provenance, (c) an audit event, (d) redaction, (e) fail-closed enforcement, (f) a dry-run mode, and (g) a policy-composition combinator for layered/managed policy.
 
-**Reference (how Claude Code does it), adopted where it's stronger:**
+**Reference (how Haijun Code does it), adopted where it's stronger:**
 - Rules are `Tool(specifier)` with per-tool specifier semantics (Bash=command prefix, Read/Edit=path glob, WebFetch=domain). **Precedence is deny > ask > allow**, then the mode default. We keep **deny > ask > allow** (safer for a security product than firewall-style first-match; a mis-ordered allow can't shadow a deny).
 - Enterprise "managed" settings layer that users cannot override. We model this with a deny-wins **composition** combinator (a managed deny can't be loosened downstream).
 - `PreToolUse` hooks / `canUseTool` = programmatic content-aware decision. We model this with the `where` predicate escape hatch (and the existing `PermissionPolicy` seam for a full external engine).
@@ -107,13 +107,13 @@ In `dry-run` the gate computes the verdict and emits `permission_decision` with 
 export function composePolicies(...policies: PermissionPolicy[]): PermissionPolicy;
 ```
 
-Evaluates each policy and merges with **deny-wins** (deny > ask > allow > default). Because a `deny` from any layer wins, a **managed** layer placed in the list yields non-overridable restrictions: a downstream project/user layer cannot loosen a managed `deny`. This is the core mechanism behind Claude Code's managed-settings guarantee, expressed as a small combinator. Provenance is the winning layer's own verdict (its `ruleId` / `reason`) — the combinator adds no labels of its own.
+Evaluates each policy and merges with **deny-wins** (deny > ask > allow > default). Because a `deny` from any layer wins, a **managed** layer placed in the list yields non-overridable restrictions: a downstream project/user layer cannot loosen a managed `deny`. This is the core mechanism behind Haijun Code's managed-settings guarantee, expressed as a small combinator. Provenance is the winning layer's own verdict (its `ruleId` / `reason`) — the combinator adds no labels of its own.
 
 Core ships only the combinator. The **full settings-file hierarchy** (discovering a managed `managed-permissions.json` an sdk consumer can't override, project vs user files, hot-reload) is an **sdk-level follow-up** — out of scope here.
 
 ## 9. Per-tool specifier sugar (sdk)
 
-Core stays tool-agnostic (generic dot-path). The sdk — which knows its tools' names and input shapes — ships thin builders that expand to rules, matching Claude Code's ergonomics:
+Core stays tool-agnostic (generic dot-path). The sdk — which knows its tools' names and input shapes — ships thin builders that expand to rules, matching Haijun Code's ergonomics:
 
 ```ts
 // packages/sdk/src/permission/specifiers.ts

@@ -1,4 +1,4 @@
-import type Anthropic from "@anthropic-ai/sdk";
+import type Takebox AI from "@takebox-ai/sdk";
 import type {
   ContentBlock,
   Message,
@@ -9,12 +9,12 @@ import type {
 
 const DEFAULT_MAX_TOKENS = 4096;
 
-type AnthropicMappingOptions = {
+type JuglowMappingOptions = {
   /** Internal provider capability switch; not part of ModelRequest. */
   promptCache?: boolean;
 };
 
-function toBlockParam(b: ContentBlock): Anthropic.ContentBlockParam {
+function toBlockParam(b: ContentBlock): Takebox AI.ContentBlockParam {
   if (b.type === "text") return { type: "text", text: b.text };
   if (b.type === "tool_call") {
     return {
@@ -25,9 +25,9 @@ function toBlockParam(b: ContentBlock): Anthropic.ContentBlockParam {
     };
   }
   if (b.type === "compaction") {
-    return { type: "compaction", content: b.content } as unknown as Anthropic.ContentBlockParam;
+    return { type: "compaction", content: b.content } as unknown as Takebox AI.ContentBlockParam;
   }
-  if (b.type === "native") return b.data as Anthropic.ContentBlockParam;
+  if (b.type === "native") return b.data as Takebox AI.ContentBlockParam;
   return b.isError
     ? {
         type: "tool_result",
@@ -38,7 +38,7 @@ function toBlockParam(b: ContentBlock): Anthropic.ContentBlockParam {
     : { type: "tool_result", tool_use_id: b.id, content: b.content };
 }
 
-function toMessageParam(m: Message): Anthropic.MessageParam {
+function toMessageParam(m: Message): Takebox AI.MessageParam {
   const role: "user" | "assistant" =
     m.role === "assistant" ? "assistant" : "user";
   const content =
@@ -48,12 +48,12 @@ function toMessageParam(m: Message): Anthropic.MessageParam {
 
 function toInputSchema(
   parameters: Record<string, unknown>,
-): Anthropic.Tool.InputSchema {
+): Takebox AI.Tool.InputSchema {
   const { $schema: _drop, ...rest } = parameters;
-  return rest as Anthropic.Tool.InputSchema;
+  return rest as Takebox AI.Tool.InputSchema;
 }
 
-function toTool(spec: ToolSpec): Anthropic.Tool {
+function toTool(spec: ToolSpec): Takebox AI.Tool {
   return {
     name: spec.name,
     description: spec.description,
@@ -61,11 +61,11 @@ function toTool(spec: ToolSpec): Anthropic.Tool {
   };
 }
 
-export function toAnthropicParams(
+export function toJuglowParams(
   req: ModelRequest,
-  options: AnthropicMappingOptions = {},
-): Anthropic.MessageCreateParamsStreaming {
-  const params: Anthropic.MessageCreateParamsStreaming = {
+  options: JuglowMappingOptions = {},
+): Takebox AI.MessageCreateParamsStreaming {
+  const params: Takebox AI.MessageCreateParamsStreaming = {
     model: req.model,
     max_tokens: req.maxTokens ?? DEFAULT_MAX_TOKENS,
     messages: req.messages
@@ -81,7 +81,7 @@ export function toAnthropicParams(
   if (req.stopSequences) params.stop_sequences = req.stopSequences;
   if (req.temperature !== undefined) params.temperature = req.temperature;
   if (req.topP !== undefined) params.top_p = req.topP;
-  // req.seed is intentionally not forwarded — Anthropic's Messages API has no seed.
+  // req.seed is intentionally not forwarded — Takebox AI's Messages API has no seed.
   if (req.tools && req.tools.length) {
     const tools = req.tools.map(toTool);
     if (options.promptCache && !req.system) {
@@ -90,7 +90,7 @@ export function toAnthropicParams(
     }
     params.tools = tools;
     // tool_choice only applies when tools are present.
-    if (req.toolChoice !== undefined) params.tool_choice = toAnthropicToolChoice(req.toolChoice);
+    if (req.toolChoice !== undefined) params.tool_choice = toJuglowToolChoice(req.toolChoice);
   }
   // With no static system/tools prefix, retain the old automatic fallback for
   // callers that intentionally cache the transcript tail.
@@ -100,9 +100,9 @@ export function toAnthropicParams(
   return params;
 }
 
-function toAnthropicToolChoice(
+function toJuglowToolChoice(
   tc: ToolChoice,
-): Anthropic.MessageCreateParams["tool_choice"] {
+): Takebox AI.MessageCreateParams["tool_choice"] {
   if (tc === "auto") return { type: "auto" };
   if (tc === "none") return { type: "none" };
   if (tc === "required") return { type: "any" };

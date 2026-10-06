@@ -1,6 +1,6 @@
 # Sessions: safe default id + external resume/clear — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix the cross-restart transcript-leak bug and expose session management (`resume`/`clear`/`deleteSession`/`listSessions`/`sessionId`) on the lite-agent.
 
@@ -20,7 +20,7 @@
 - `packages/sdk/src/index.ts` — **modify**: export the new types/helpers.
 - `examples/cli/src/main.ts` — **modify**: server-side history + `/sessions`,`/resume`,`/clear`,`/delete` commands; print `[session]` at startup.
 - `.changeset/sessions-resume-clear.md` — **create**.
-- `CLAUDE.md` — **modify**: one-line note on the session-management API.
+- `HAIJUN.md` — **modify**: one-line note on the session-management API.
 
 **Test files:**
 - `packages/core/test/createAgent.test.ts` — **modify**: assert the default id is unique (uuid form).
@@ -497,12 +497,12 @@ git commit -m "feat(sdk): createLiteAgent returns a stateful LiteAgent (resume/c
 
 ---
 
-## Task 4: Exports + changeset + CLAUDE.md
+## Task 4: Exports + changeset + HAIJUN.md
 
 **Files:**
 - Modify: `packages/sdk/src/index.ts`
 - Create: `.changeset/sessions-resume-clear.md`
-- Modify: `CLAUDE.md`
+- Modify: `HAIJUN.md`
 
 - [ ] **Step 1: Update the public exports** in `packages/sdk/src/index.ts`.
 
@@ -544,13 +544,13 @@ Expected: PASS (no missing-export or type errors).
 "@lite-agent/core": minor
 "@lite-agent/sdk": minor
 "@lite-agent/provider": minor
-"@lite-agent/sandbox-anthropic": minor
+"@lite-agent/sandbox-Takebox AI": minor
 ---
 
 feat: session management. `createLiteAgent` now returns a stateful `LiteAgent` that owns a current session and exposes `sessionId`, `resume(id)`, `clear()`, `deleteSession(id)`, and `listSessions()`. `jsonlStore` gains `list()`/`delete()` and is typed `SessionStore`; new `newSessionId`/`isSessionStore` helpers. The default session id is now a unique value instead of a process-local counter — fixing a cross-restart bug where a fresh run silently resumed (and kept growing) the previous run's `s1` transcript. The example CLI switches to server-side history and adds `/sessions`, `/resume`, `/clear`, `/delete`.
 ```
 
-- [ ] **Step 4: Add a CLAUDE.md note.** In `CLAUDE.md`, in the `### SDK batteries (lite-agent)` paragraph, append this sentence at the end of the paragraph:
+- [ ] **Step 4: Add a HAIJUN.md note.** In `HAIJUN.md`, in the `### SDK batteries (lite-agent)` paragraph, append this sentence at the end of the paragraph:
 
 ```md
 `createLiteAgent` returns a `LiteAgent` that owns a current session: `run`/`send` default to it, and `resume(id)` / `clear()` / `deleteSession(id)` / `listSessions()` / `sessionId` manage it. The default session id is unique per agent (not a process-local counter), and the default `jsonlStore` is a `SessionStore` (supports `list`/`delete`).
@@ -559,7 +559,7 @@ feat: session management. `createLiteAgent` now returns a stateful `LiteAgent` t
 - [ ] **Step 5: Commit**
 
 ```bash
-git add packages/sdk/src/index.ts .changeset/sessions-resume-clear.md CLAUDE.md
+git add packages/sdk/src/index.ts .changeset/sessions-resume-clear.md HAIJUN.md
 git commit -m "feat(sdk): export session-management API; changeset + docs"
 ```
 

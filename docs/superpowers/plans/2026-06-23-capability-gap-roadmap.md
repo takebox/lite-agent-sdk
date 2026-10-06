@@ -1,7 +1,7 @@
 # lite-agent-sdk 能力补齐路线图（按优先级）
 
 > 来源：2026-06-23 代码审计 + 联网调研（22 来源 / 25 条对抗式验证 / 23 确认）。
-> 对标：Claude Agent SDK、OpenAI Agents SDK、LangGraph、Vercel AI SDK；编码 agent：Claude Code、Codex CLI、opencode。
+> 对标：Haijun Agent SDK、OpenAI Agents SDK、LangGraph、Vercel AI SDK；编码 agent：Haijun Code、Codex CLI、opencode。
 
 ## 优先级判定标准
 
@@ -39,7 +39,7 @@
 - **现状**：`strategies.ts`（`Store.load/save`）有定义；`kernel.ts`、`createAgent.ts` 中 sessionId 自增但不落盘；grep `resume/.jsonl` 零命中。
 - **改动**：
   - `KernelConfig` 增 `store?: Store`；kernel run 起始 `load(sessionId)`，turn 末 `save(sessionId, messages)`。
-  - 实现 `memoryStore()` 与 `jsonlStore({ dir })`（仿 Claude Code `~/.claude/projects/*.jsonl` 落盘）。
+  - 实现 `memoryStore()` 与 `jsonlStore({ dir })`（仿 Haijun Code `~/.haijun/projects/*.jsonl` 落盘）。
   - SDK/CLI 暴露 `resume(sessionId)`；可选 `fork(sessionId)`（复制为新 id，探索分支）。
 - **验收**：保存会话→新进程 `load`→续跑，断言历史完整、tool 状态连续；fork 后两分支独立。
 - **工作量**：M ｜ **依赖**：无。
@@ -57,7 +57,7 @@
 ## P1 — 新增能力（业界一等公民，需新层）
 
 ### P1-1 MCP（Model Context Protocol）支持 ★最大单点缺口
-- **缺口**：完全没有 MCP（grep `mcp` 零命中）。Claude Agent SDK（`mcpServers` + MCP-as-hooks + Elicitation）、OpenAI Agents SDK（Hosted/StreamableHTTP/SSE/stdio 四传输 + 工具过滤）都是一等公民。当前用户要接任何 MCP server 都得手写 `Tool` 包装。
+- **缺口**：完全没有 MCP（grep `mcp` 零命中）。Haijun Agent SDK（`mcpServers` + MCP-as-hooks + Elicitation）、OpenAI Agents SDK（Hosted/StreamableHTTP/SSE/stdio 四传输 + 工具过滤）都是一等公民。当前用户要接任何 MCP server 都得手写 `Tool` 包装。
 - **改动**：
   - 新增 MCP 客户端适配层（建议新包 `@lite-agent/mcp` 或 sdk 子模块），把远端 MCP 工具动态注册为现有 `Tool`（zod schema 由 MCP JSON Schema 反推或透传）。
   - 传输优先级：**stdio + streamable-HTTP**（OpenAI 已弃用 SSE，转 streamable-HTTP，故 SSE 可缓做）。
@@ -66,7 +66,7 @@
 - **工作量**：L ｜ **依赖**：复用现有 `Tool`/permission；**需你拍板**是「一等策略」还是「用户land 包装」（见文末决策）。
 
 ### P1-2 子 agent / agent-as-tool（多 agent 编排）
-- **缺口**：只有单层扁平 loop，无 parent/child、无 `parent_tool_use_id`。Claude Agent SDK（独立上下文 + 并发 + 可 resume transcript）、OpenAI（handoffs + agents-as-tools）。
+- **缺口**：只有单层扁平 loop，无 parent/child、无 `parent_tool_use_id`。Haijun Agent SDK（独立上下文 + 并发 + 可 resume transcript）、OpenAI（handoffs + agents-as-tools）。
 - **改动**（最小可用先行）：
   - **先做 agent-as-tool**：把一个 `createLiteAgent` 实例包成一个 `Tool`，父 agent 调用它、只回传最终消息（天然上下文隔离，省 token）。
   - 后续可选：subagent 注册（`agents` 配置 + 独立 transcript 落盘，复用 P0-2 Store）、并发执行。
@@ -74,7 +74,7 @@
 - **工作量**：M（agent-as-tool）/ L（完整 subagent）｜ **依赖**：subagent transcript 复用 P0-2。
 
 ### P1-3 可观测性：OTel GenAI adapter（不进 kernel）
-- **缺口**：自定义 `AgentEvent` 不映射任何 OTel；无 exporter、无 token/cost 计量。OTel GenAI 语义约定（`invoke_agent`→子 `chat`/`execute_tool` span + `gen_ai.*` 属性）已成事实标准；Vercel AI SDK 内置；Claude Code/Codex/Copilot 已导出。
+- **缺口**：自定义 `AgentEvent` 不映射任何 OTel；无 exporter、无 token/cost 计量。OTel GenAI 语义约定（`invoke_agent`→子 `chat`/`execute_tool` span + `gen_ai.*` 属性）已成事实标准；Vercel AI SDK 内置；Haijun Code/Codex/Copilot 已导出。
 - **改动**：写**适配中间件/订阅器**，把现有事件流映射成 OTel span（保持核心轻量，不在 kernel 里硬塞 OTel）。映射：`turn_start`→`invoke_agent`，model 调用→`chat` 子 span，`tool_use/tool_result`→`execute_tool` 子 span，attributes 填 `gen_ai.request.model`、`gen_ai.usage.input_tokens/output_tokens`、`gen_ai.response.finish_reasons`。
 - **验收**：跑一轮 agent，导出到内存 exporter，断言 span 层级与属性符合约定。
 - **工作量**：M ｜ **依赖**：token 计量（P2-3）。**注意**：OTel GenAI 约定仍 experimental（Development 状态），是事实标准非冻结规范——可接受小幅变动。
@@ -85,7 +85,7 @@
 
 ### P2-1 结构化最终输出（typed result）
 - **缺口**：工具**入参**有 zod，但最终答案无 `response_format`/`outputSchema`，`RunResult` 仅自由文本。对标 Vercel `generateObject`、OpenAI structured outputs、Pydantic AI typed result。
-- **改动**：`query/run` 可选 `outputSchema: ZodType`；provider mapping 注入 `response_format`/`json_schema`（Anthropic 用 tool 强制、OpenAI 用 `response_format`）；最终用 zod 校验并返回 typed 结果。
+- **改动**：`query/run` 可选 `outputSchema: ZodType`；provider mapping 注入 `response_format`/`json_schema`（Takebox AI 用 tool 强制、OpenAI 用 `response_format`）；最终用 zod 校验并返回 typed 结果。
 - **验收**：给定 schema，断言最终结果通过 zod 校验且类型正确；不符时重试/报错。
 - **工作量**：M ｜ **依赖**：无。
 
@@ -102,11 +102,11 @@
 - **工作量**：S ｜ **依赖**：被 P0-1、P1-3 依赖，建议提前做。
 
 ### P2-4 权限网关表达力（defer + 改写入参）
-- **缺口**：网关只 allow/ask/deny，不能 defer 决策、不能改写工具入参。Claude Code PreToolUse 可返回 `permissionDecision`(含 defer) + `updatedInput`。
+- **缺口**：网关只 allow/ask/deny，不能 defer 决策、不能改写工具入参。Haijun Code PreToolUse 可返回 `permissionDecision`(含 defer) + `updatedInput`。
 - **改动**：`Decision` 增 `defer`；gate 支持返回 `updatedInput` 改写 `ctx.call.input` 后再执行。
 - **验收**：策略返回改写后的入参→断言工具收到改写值；defer→交下一层决策。
 - **工作量**：S ｜ **依赖**：无。
-- 注：调研中「Claude Code 有 31 个 hook 事件 vs 你 5 个」的说法被对抗验证 **0-3 推翻**（夸大计数）。真实差距仅是**网关表达力 + 少数生命周期粒度**（如 `UserPromptSubmit`/`PreCompact` 等价物），不是缺扩展性。按需补，不紧急。
+- 注：调研中「Haijun Code 有 31 个 hook 事件 vs 你 5 个」的说法被对抗验证 **0-3 推翻**（夸大计数）。真实差距仅是**网关表达力 + 少数生命周期粒度**（如 `UserPromptSubmit`/`PreCompact` 等价物），不是缺扩展性。按需补，不紧急。
 
 ---
 
@@ -116,7 +116,7 @@
 - 设计 spec 已明确列为 non-goal。若要做，建议作为**独立上层包**（embeddings + vector + retriever tool），不进核心。工作量 L。
 
 ### P3-2 更多 Provider（Gemini / Bedrock / Vertex / 原生 Ollama 预设）
-- 现仅 Anthropic + OpenAI（兼容端点可跑本地）。多数需求已被 OpenAI-compatible 覆盖；按真实诉求再加。工作量 S-M/个。
+- 现仅 Takebox AI + OpenAI（兼容端点可跑本地）。多数需求已被 OpenAI-compatible 覆盖；按真实诉求再加。工作量 S-M/个。
 
 ---
 
@@ -147,7 +147,7 @@ P2 波次:   P2-1 结构化输出   P2-2 本地 codec   P2-4 网关 defer/改写
 
 ## 诚实标注（证据强度）
 
-- 每条 gap 的**竞品侧**有官方一手文档支撑（Claude/OpenAI/LangGraph/OTel docs）；**本仓侧**由 2026-06-23 源码审计确认（grep + 读 kernel/strategies/middleware/permission/events）。
+- 每条 gap 的**竞品侧**有官方一手文档支撑（Haijun/OpenAI/LangGraph/OTel docs）；**本仓侧**由 2026-06-23 源码审计确认（grep + 读 kernel/strategies/middleware/permission/events）。
 - 高置信（两侧均验证）：MCP、subagent、会话持久化、压缩、可观测性、权限网关。
 - 中置信（本仓侧已验、竞品侧依赖通用行业认知）：结构化输出、RAG。
-- 被推翻未采纳：「Claude Code 31 hooks vs 5」(0-3)、「LangGraph 多 checkpointer 后端清单」(1-2，但 thread_id resume 本身 3-0 确认)。
+- 被推翻未采纳：「Haijun Code 31 hooks vs 5」(0-3)、「LangGraph 多 checkpointer 后端清单」(1-2，但 thread_id resume 本身 3-0 确认)。

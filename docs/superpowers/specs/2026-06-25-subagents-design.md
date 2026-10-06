@@ -6,9 +6,9 @@ Status: approved
 ## Goal
 
 Add **subagents** to the sdk: agent definitions loaded from `agents/*.md` files in
-the project and user directories (mirroring Claude Code), dispatched by the main
+the project and user directories (mirroring Haijun Code), dispatched by the main
 agent through a single `Agent` tool that supports **parallel fan-out**, with each
-subagent run **persisted** to disk and **resumable** — the model Claude Code uses.
+subagent run **persisted** to disk and **resumable** — the model Haijun Code uses.
 
 All new code lives in the **sdk** package (orchestration = batteries; see the
 `multi-agent-goes-in-sdk` memory). **core is unchanged** — `createLiteAgent`,
@@ -18,13 +18,13 @@ subagent tool closes over the model provider + agent registry (because
 `ToolContext` carries none of that), exactly as `taskTools(store)` closes over its
 store.
 
-## Background: how Claude Code / the Agent SDK do it
+## Background: how Haijun Code / the Agent SDK do it
 
 - Subagents are `.md` files with YAML frontmatter; the **body is the system
   prompt**. Frontmatter: `description` (when to use), `tools`/`disallowedTools`,
   `model`, plus extras we omit for the MVP.
-- Two locations with precedence: **project** `.claude/agents/` wins over **user**
-  `~/.claude/agents/`; identity is the `name` field, subfolders are cosmetic.
+- Two locations with precedence: **project** `.haijun/agents/` wins over **user**
+  `~/.haijun/agents/`; identity is the `name` field, subfolders are cosmetic.
 - The main agent spawns one via a single tool (renamed `Task` → **`Agent`**) with a
   `subagent_type` arg. Context is **isolated**: the subagent starts fresh, the only
   channel in is the prompt string, and only its final result returns.
@@ -41,7 +41,7 @@ the durable transcript is the existing `jsonlStore` swept by `sweepStale` (whose
 
 ## Directory layout
 
-Extends the existing per-project home, mirroring the skills dirs exactly:
+Extends the existing per-project home, mirroring the tracks dirs exactly:
 
 ```
 ~/.lite-agent/
@@ -73,7 +73,7 @@ interface AgentDefinition {
 ```
 
 `tools`/`model` reuse the parent `ModelProvider` — `model` only overrides the
-request-time `modelName` (works for the Anthropic/OpenAI providers, which are
+request-time `modelName` (works for the Takebox AI/OpenAI providers, which are
 generic over model ids). No model-registry is introduced.
 
 ## Components (all in sdk)
@@ -208,7 +208,7 @@ const spawn: Spawn = async (def, prompt, { signal, sessionId }) => {
 
 `system.ts` gains a `## Subagents` section (only when subagents exist), listing
 available types + descriptions and instructing the agent to delegate large/
-independent subtasks (and to batch them for parallelism), mirroring the `## Skills`
+independent subtasks (and to batch them for parallelism), mirroring the `## Tracks`
 section.
 
 ## Execution model: parallel fan-out
@@ -232,7 +232,7 @@ section.
 
 - Each child run persists via the default `jsonlStore` under `paths.sessionsDir`,
   keyed by its `sessionId` → a durable `agent-<type>-<id>.jsonl`, swept by the
-  existing `sweepStale` (30-day default, matching Claude Code).
+  existing `sweepStale` (30-day default, matching Haijun Code).
 - **Resume**: pass a prior `agentId` as a task's `resume`; the kernel's existing
   `store.load(sessionId)` prepends that child's history, so it continues with full
   context. The `Agent` result always reports each child's `agentId` for this.

@@ -1,6 +1,6 @@
 # `createLiteAgent` Decomposition Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Split `createLiteAgent.ts` into a thin composition root, an explicit assembly module, and a stateful facade without changing any public API or observable behavior.
 
@@ -14,7 +14,7 @@
 - Preserve the `createLiteAgent()` signature, synchronous construction, package-root exports, and direct type imports from `src/createLiteAgent.ts`.
 - Add characterization tests against the current implementation before moving production code; these are green-baseline refactor tests, not new behavior.
 - No new SDK capability, configuration option, public export, dependency, persistence format, event, error class, registry, builder, base class, service locator, or generic Battery contribution protocol.
-- Preserve tool order exactly: defaults → skills → spill → tasks → Agent → background → user tools → ask_user → allow filter → deny filter → final_answer.
+- Preserve tool order exactly: defaults → tracks → spill → tasks → Agent → background → user tools → ask_user → allow filter → deny filter → final_answer.
 - Preserve checkpointer precedence exactly: explicit checkpointer → adapted legacy store → `sessions:false` → default file checkpointer.
 - Preserve middleware order exactly: compaction → reactive compaction → permission → user middleware → task reminder.
 - Preserve current compactor semantics: `compactor:false` disables structural compaction, but an independently configured `contextBudget` still enables token-budget compaction and the reactive overflow net.
@@ -1210,8 +1210,8 @@ import {
 import type { Checkpointer, Compactor, Middleware, Tool } from "@lite-agent/core";
 import { tool } from "./tool";
 import { askUserTool, defaultTools } from "./tools";
-import { SkillLoader } from "./skills/loader";
-import { loadSkillTool } from "./skills/loadSkillTool";
+import { SkillLoader } from "./tracks/loader";
+import { loadTrackTool } from "./tracks/loadTrackTool";
 import { buildSystemPrompt } from "./system";
 import { fileCheckpointer } from "./checkpoint";
 import { fileSpillStore, readSpilledTool } from "./spill";
@@ -1252,10 +1252,10 @@ Inside the function, move the current assembly statements in their existing orde
     paths.projectSkillsDir,
     ...(cfg.skillsDir ? [cfg.skillsDir] : []),
   ]);
-  let skills = "(no skills available)";
+  let tracks = "(no tracks available)";
   if (skillLoader.names().length > 0) {
-    tools.push(loadSkillTool(skillLoader));
-    skills = skillLoader.getDescriptions();
+    tools.push(loadTrackTool(skillLoader));
+    tracks = skillLoader.getDescriptions();
   }
 
   const spillEnabled = cfg.spill !== false;
@@ -1323,7 +1323,7 @@ Inside the function, move the current assembly statements in their existing orde
     buildSystemPrompt({
       workdir: cfg.workdir,
       modelName: cfg.modelName,
-      skills,
+      tracks,
       subagents,
     });
   if (cfg.outputSchema) {

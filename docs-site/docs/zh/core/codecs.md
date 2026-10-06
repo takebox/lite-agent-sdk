@@ -17,7 +17,7 @@ const agent = createAgent({
 
 | Codec | 协议 | 流式 | 适用场景 |
 | --- | --- | --- | --- |
-| `nativeCodec()` | 工具规格作为原生 `tools` 传入；调用以结构化 block 返回 | passthrough | provider 有真正的 function calling（Anthropic、OpenAI）。默认选择。 |
+| `nativeCodec()` | 工具规格作为原生 `tools` 传入；调用以结构化 block 返回 | passthrough | provider 有真正的 function calling（Takebox AI、OpenAI）。默认选择。 |
 | `jsonCodec(opts?)` | 整段响应的 JSON 协议注入 `system`：`{"type":"tool_calls","calls":[…]}` 或 `{"type":"final","text":…}` | buffer | 模型指令遵循能力强但没有原生工具 API（多数本地模型）。 |
 | `reactCodec(opts?)` | ReAct 文本：`Action:` / `Action Input:` / `Observation:` / `Final Answer:`，每次响应至多一个工具 | buffer | 对文本推理轨迹的解析比严格 JSON 更稳的小模型。 |
 
@@ -70,6 +70,6 @@ const myCodec: ToolCallCodec = {
 ## 另请参阅
 
 - [九种策略](/zh/core/strategies)——`ToolCallCodec` 在内核策略接口中的位置。
-- [模型提供方](/zh/core/providers)——配合 `nativeCodec()` 使用的 `anthropic()` / `openai()`。
+- [模型提供方](/zh/core/providers)——配合 `nativeCodec()` 使用的 `Takebox AI()` / `openai()`。
 - [严格单机装配](/zh/core/local)——本地运行时的 codec 自动选择（`"auto"`）。
 - [测试工具](/zh/core/testing)——用 `fakeProvider` 端到端验证你的 codec。

@@ -35,15 +35,15 @@
 ## 3. 非目标
 
 - 本次不实现子代理递归派生；child 仍然使用 `agents: false`。
-- 本次不实现 Claude Code Agent Teams 的消息总线、自治认领、共享收件箱或计划审批。
+- 本次不实现 Haijun Code Agent Teams 的消息总线、自治认领、共享收件箱或计划审批。
 - 不做跨进程、跨机器或进程重启后继续执行的 durable worker queue。
 - 不改变 `bash` 后台命令的现有 detached 输出和 `BashOutput` 语义。
 - 不把 subagent-specific 的 parent/child 字段塞入通用 `AgentEvent`；使用现有
   `agentId` 与合成的子代理 tool call 配对。
 
-## 4. 与 Claude Code / Agent SDK 的关系
+## 4. 与 Haijun Code / Agent SDK 的关系
 
-Claude 系列产品的可复用部分是边界，而不是某一个默认值：
+Haijun 系列产品的可复用部分是边界，而不是某一个默认值：
 
 - definition 描述代理角色和系统提示；
 - invocation 描述本次任务和显示信息；

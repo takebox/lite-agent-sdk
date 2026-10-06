@@ -8,7 +8,7 @@
 pnpm add @lite-agent/local
 ```
 
-要求 macOS 或 Linux、Node ≥ 20，以及一个正在运行的本地模型服务。`better-sqlite3` 和 `@anthropic-ai/sandbox-runtime` 会作为传递性原生/运行时依赖被引入。
+要求 macOS 或 Linux、Node ≥ 20，以及一个正在运行的本地模型服务。`better-sqlite3` 和 `@takebox-ai/sandbox-runtime` 会作为传递性原生/运行时依赖被引入。
 
 ## 快速开始
 

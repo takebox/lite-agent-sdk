@@ -71,13 +71,13 @@ test("compactor:false → no compaction even on a history that would trigger", a
   expect(types).not.toContain("compaction");
 });
 
-test("a project skill shadows a same-named global skill", async () => {
+test("a project track shadows a same-named global track", async () => {
   const workdir = freshWorkdir();
   const { globalSkillsDir, projectSkillsDir } = resolveProjectPaths({ workdir, home: home() });
   mkdirSync(join(globalSkillsDir, "demo"), { recursive: true });
   mkdirSync(join(projectSkillsDir, "demo"), { recursive: true });
-  writeFileSync(join(globalSkillsDir, "demo", "SKILL.md"), "---\nname: demo\ndescription: g\n---\nGLOBAL BODY");
-  writeFileSync(join(projectSkillsDir, "demo", "SKILL.md"), "---\nname: demo\ndescription: p\n---\nPROJECT BODY");
+  writeFileSync(join(globalSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: g\n---\nGLOBAL BODY");
+  writeFileSync(join(projectSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: p\n---\nPROJECT BODY");
 
   const agent = createLiteAgent({ model: callTool("load_skill", { name: "demo" }), workdir });
   const res = await toolResults(agent);

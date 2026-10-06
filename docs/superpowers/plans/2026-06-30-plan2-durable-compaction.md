@@ -1,8 +1,8 @@
 # Plan 2 — Durable Manual Compaction Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a manual `compact()` action to the stateful `LiteAgent` that compresses the current session's conversation, reports progress, persists the compacted view durably, emits a completion notification, then stops — producing no model answer or extra output. Mirrors Claude Code's `/compact`.
+**Goal:** Add a manual `compact()` action to the stateful `LiteAgent` that compresses the current session's conversation, reports progress, persists the compacted view durably, emits a completion notification, then stops — producing no model answer or extra output. Mirrors Haijun Code's `/compact`.
 
 **Architecture:** A new sidecar `SessionEvent` `summary` stores a compacted `Message[]` plus the seq it covers. `foldEvents` gains a `summary` case that resets the message base, so loading a session with a summary uses the compacted view **with no kernel change**, while the original events remain on the log (so Plan 1 restore can still un-compact by truncating past the summary). `compact()` reuses the agent's configured `Compactor`, computes token deltas with `estimateTokens`, appends the `summary`, and yields `compaction` progress/notification events.
 
@@ -14,7 +14,7 @@
 
 - Spec: `docs/superpowers/specs/2026-06-30-session-time-travel-design.md`.
 - **Depends on Plan 1** for the type-aware `foldEvents` switch (Plan 1 Task 1). Build on the same branch `feat/session-time-travel` after Plan 1 lands.
-- Commit convention: conventional-commit subject, **no** Claude/Co-Authored-By trailer.
+- Commit convention: conventional-commit subject, **no** Haijun/Co-Authored-By trailer.
 - Already exported from `@lite-agent/core`: `foldEvents`, `estimateTokens`, `memoryCheckpointer`, `Checkpointer`, `SessionEvent`, `CompactResult`, `Compactor`.
 - `compact()` is an **action**: it never runs a model turn or emits an assistant answer. The generator yields progress + a completion notification, then returns.
 

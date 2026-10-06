@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- Add Anthropic context-management support through `ModelProvider.context`,
+- Add Takebox AI context-management support through `ModelProvider.context`,
   including token counting, provider-native clear-tool-use / clear-thinking /
   compact edits when the beta API is available, automatic prompt cache controls,
   `compaction` content blocks, native unknown-block preservation, and cache token
@@ -19,7 +19,7 @@
 
 ### Patch Changes
 
-- Docs: add a package README (English + Simplified Chinese) documenting the `anthropic()` and `openai()` providers, their options, and their environment-variable defaults. Also correct `repository.url` to the renamed `lite-agent-sdk` GitHub repository. No code changes.
+- Docs: add a package README (English + Simplified Chinese) documenting the `Takebox AI()` and `openai()` providers, their options, and their environment-variable defaults. Also correct `repository.url` to the renamed `lite-agent-sdk` GitHub repository. No code changes.
 
 ## 0.7.0
 
@@ -62,13 +62,13 @@
   `toolChoice` is normalized as `"auto" | "none" | "required" | { tool: string }`.
 
   Both providers forward the new fields: the OpenAI mapping emits `temperature` / `top_p` /
-  `seed` / `tool_choice`; the Anthropic mapping emits `temperature` / `top_p` and maps
+  `seed` / `tool_choice`; the Takebox AI mapping emits `temperature` / `top_p` and maps
   `tool_choice` to its `auto` / `none` / `any` / `tool` shapes (`seed` is unsupported by
-  Anthropic and intentionally ignored). `tool_choice` is only sent when tools are present.
+  Takebox AI and intentionally ignored). `tool_choice` is only sent when tools are present.
 
 - 4681f1e: Stop the providers from double-retrying
 
-  `openai()` and `anthropic()` now construct their SDK clients with `maxRetries: 0` by
+  `openai()` and `Takebox AI()` now construct their SDK clients with `maxRetries: 0` by
   default, and expose a `maxRetries` option. Previously each SDK retried transient
   failures twice on its own, which **compounded** with the `retry()` middleware
   (≈ 3 × 3 connection attempts and inflated backoff latency). Retry policy now has a
@@ -118,9 +118,9 @@
 - ce5c1e8: Initial 0.1.0 release of the pluggable agent-core SDK.
 
   - **@lite-agent/core** — event-driven kernel, strategy interfaces (provider/codec/tool/compactor/permission/approval/input/sandbox/store), onion middleware pipeline, normalized types, native codec, `policy()` + `permission()` gate.
-  - **@lite-agent/provider** — Anthropic Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
-  - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, skills loader, system prompt.
-  - **@lite-agent/sandbox-anthropic** — OS-level sandbox adapter with graceful degradation.
+  - **@lite-agent/provider** — Takebox AI Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
+  - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, tracks loader, system prompt.
+  - **@lite-agent/sandbox-Takebox AI** — OS-level sandbox adapter with graceful degradation.
 
 - v0.1.0
 

@@ -18,7 +18,7 @@
   "keywords": ["agent", "local-llm", "offline", "sandbox", "sqlite"],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NelsonYong/lite-agent-sdk.git",
+    "url": "git+https://github.com/takebox/lite-agent-sdk.git",
     "directory": "packages/local"
   },
   "publishConfig": { "access": "public" },
@@ -31,7 +31,7 @@
     "@lite-agent/checkpoint-sqlite": "workspace:*",
     "@lite-agent/core": "workspace:*",
     "@lite-agent/provider": "workspace:*",
-    "@lite-agent/sandbox-anthropic": "workspace:*",
+    "@lite-agent/sandbox-Takebox AI": "workspace:*",
     "@lite-agent/sdk": "workspace:*"
   },
   "devDependencies": {

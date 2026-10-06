@@ -2,7 +2,7 @@
 
 - 日期:2026-06-18
 - 状态:已评审,待实现计划
-- 背景:把当前 `lite-agent`(demo)重构为一个**生产级、可复用、可拔插的 agent core SDK**,对标 Claude Agent SDK 与 LangChain v1 `create-agent`。
+- 背景:把当前 `lite-agent`(demo)重构为一个**生产级、可复用、可拔插的 agent core SDK**,对标 Haijun Agent SDK 与 LangChain v1 `create-agent`。
 
 ---
 
@@ -33,12 +33,12 @@
 | 维度 | 决策 |
 |---|---|
 | 交付形态 | 公开可复用 SDK,`createAgent({...})`,公共 API/插件边界按公开库标准 |
-| 模型层 | `ModelProvider` 抽象(Anthropic + OpenAI 兼容)+ **可插拔工具调用 codec**(native → JSON/ReAct 回退) |
+| 模型层 | `ModelProvider` 抽象(Takebox AI + OpenAI 兼容)+ **可插拔工具调用 codec**(native → JSON/ReAct 回退) |
 | 权限 | 统一 `PermissionPolicy`(allow/deny/ask),白/黑名单是规则;`ask` → 进程内异步审批 |
 | 审批模型 | 进程内「中断 → 人批 → 恢复」,**不做持久化挂起 / checkpoint** |
 | 输出模型 | **流式 + 事件驱动**(async generator of events),顶层薄封装 `send()` |
 | ask_user | 内置工具 + `InputHandler` 策略,与审批对称;未配处理器则不注册该工具 |
-| 范围 | **精瘦核心**;team/worktree/background/monitor/skills 全部降为插件/示例 |
+| 范围 | **精瘦核心**;team/worktree/background/monitor/tracks 全部降为插件/示例 |
 | 扩展模型 | **混合内核**:策略接口 + 中间件管道 + 类型化事件流 |
 
 ---
@@ -77,14 +77,14 @@ packages/
   core/               # @x/agent —— kernel + 接口 + 事件类型 + createAgent + 内置中间件
                       #   依赖: 仅 zod (工具入参 schema & 类型推导)
                       #   src/{kernel, events, types, middleware, strategies(接口), builtins(permission/compaction/retry), tools(ask_user/subagent)}
-  provider-anthropic/ # @x/agent-anthropic  (Adapter → @anthropic-ai/sdk)
+  provider-Takebox AI/ # @x/agent-Takebox AI  (Adapter → @takebox-ai/sdk)
   provider-openai/    # @x/agent-openai     (Adapter → 覆盖 vLLM/Ollama/LM Studio/llama.cpp)
 examples/
   cli/                # 交互式 CLI + cliApprover + cliAsker
-  team/ worktree/ monitor/ skills/   # demo 老功能重写为插件 → 反证可拔插
+  team/ worktree/ monitor/ tracks/   # demo 老功能重写为插件 → 反证可拔插
 ```
 
-> 关键:**provider 单独成包**——只用本地 OpenAI 兼容模型的人不会被强行装上 `@anthropic-ai/sdk`。这是「轻量 + 公开库」的依赖隔离要点。
+> 关键:**provider 单独成包**——只用本地 OpenAI 兼容模型的人不会被强行装上 `@takebox-ai/sdk`。这是「轻量 + 公开库」的依赖隔离要点。
 
 ### 设计模式映射
 
@@ -248,12 +248,12 @@ interface Store {
 ```
 
 > **Phase 3 追加第 9 个策略 `Sandbox`** —— 给 `bash` 等工具一个 OS 级运行时边界(文件系统 + 网络),
-> 默认 `noopSandbox()`,`@anthropic-ai/sandbox-runtime` 适配器 opt-in;与 `PermissionPolicy`(闸门)
+> 默认 `noopSandbox()`,`@takebox-ai/sandbox-runtime` 适配器 opt-in;与 `PermissionPolicy`(闸门)
 > 叠加成"边界层"。详见 [phase-3-sandbox-boundary-design.md](./2026-06-18-phase-3-sandbox-boundary-design.md)。
 
 ### 本地小模型闭环
 `ModelProvider` 只翻译协议、不碰工具语义;`ToolCallCodec` 负责「工具调用怎么编进请求、怎么从输出里解出来」。于是:
-- 强模型(Anthropic/GPT)→ `nativeCodec` + 对应 provider;
+- 强模型(Takebox AI/GPT)→ `nativeCodec` + 对应 provider;
 - function-calling 不靠谱的本地 7B → **同一个 OpenAI 兼容 provider,只把 codec 换成 `jsonCodec` 或 `reactCodec`**,kernel / 工具 / 权限 / 压缩**全不动**。
 
 ---
@@ -371,7 +371,7 @@ class AgentError extends Error {}
 
 | 老功能 | 落成 | 机制 |
 |---|---|---|
-| skills | beforeAgent 注入技能描述的 middleware + `load_skill` 工具 | Middleware + Tool |
+| tracks | beforeAgent 注入技能描述的 middleware + `load_skill` 工具 | Middleware + Tool |
 | background | `background_run/check/stop` 工具 + 完成 `emit` 事件 + 回灌结果的 beforeModel middleware | Tool + Event + Middleware |
 | monitor | 纯事件流消费者 + 进程指标,起 HTTP/SSE,**零侵入** | Event only |
 | worktree | git 操作工具组 | Tool |
@@ -398,7 +398,7 @@ class AgentError extends Error {}
 ```ts
 const agent = createAgent({
   // ── 策略(可替换部件)──
-  model: openai({ baseURL, model, apiKey }),       // | anthropic({ model, apiKey })
+  model: openai({ baseURL, model, apiKey }),       // | Takebox AI({ model, apiKey })
   codec: nativeCodec(),                            // | jsonCodec() | reactCodec()
   tools: [readFile, writeFile, bash, askUserTool(), subagentTool()],
   compactor: defaultCompactor({ microTrigger: 80_000, autoTrigger: 150_000 }),

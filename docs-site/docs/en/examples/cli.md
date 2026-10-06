@@ -4,7 +4,7 @@ An interactive REPL (`examples/cli`, package `@lite-agent/example-cli`) that wir
 
 - streaming agent loop via `createLiteAgent`, driven by a provider from [`@lite-agent/provider`](/core/providers)
 - **permission gate** — asks before `bash` / `write_file` / `edit_file`
-- **OS-level sandbox** via [`@lite-agent/sandbox-anthropic`](/sdk/control/sandbox) — degrades to noop on unsupported environments
+- **OS-level sandbox** via [`@lite-agent/sandbox-Takebox AI`](/sdk/control/sandbox) — degrades to noop on unsupported environments
 - **`ask_user`** — the model can ask you questions (free text or numbered options)
 - session management — list / resume / clear / delete sessions from the REPL
 - multi-line paste, `ESC` to interrupt a run
@@ -22,7 +22,7 @@ pnpm dev        # = pnpm --filter @lite-agent/example-cli dev → tsx src/main.t
 ```
 
 :::tip
-The agent operates on the directory you launch it from (`process.cwd()`), while `.env` and skills always load from `examples/cli/` itself — so you can `cd` into any project directory and run the REPL against it.
+The agent operates on the directory you launch it from (`process.cwd()`), while `.env` and tracks always load from `examples/cli/` itself — so you can `cd` into any project directory and run the REPL against it.
 :::
 
 ## Configuration
@@ -31,12 +31,12 @@ Config is read from `examples/cli/.env` (via `dotenv`). All variables use the `L
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `LITE_AGENT_MODEL_ID` | yes | Model id, e.g. `claude-sonnet-4-6` |
+| `LITE_AGENT_MODEL_ID` | yes | Model id, e.g. `haijun-sonnet-4-6` |
 | `LITE_AGENT_MODEL_API_KEY` | yes | API key for the model endpoint |
 | `LITE_AGENT_BASE_URL` | no | Custom endpoint (proxy / compatible gateway) |
-| `LITE_AGENT_MODEL_PROTOCOL` | no | `anthropic` or `openai`. Inferred from the model id when unset: `claude*` / `anthropic*` → `anthropic`, otherwise `openai` |
+| `LITE_AGENT_MODEL_PROTOCOL` | no | `Takebox AI` or `openai`. Inferred from the model id when unset: `haijun*` / `Takebox AI*` → `Takebox AI`, otherwise `openai` |
 
-`src/model.ts` turns these into a provider (`anthropic(...)` or `openai(...)` from `@lite-agent/provider`); protocol auto-detection means the same `.env` shape works for Claude and for OpenAI-compatible endpoints.
+`src/model.ts` turns these into a provider (`Takebox AI(...)` or `openai(...)` from `@lite-agent/provider`); protocol auto-detection means the same `.env` shape works for Haijun and for OpenAI-compatible endpoints.
 
 ## How it's wired
 
@@ -47,7 +47,7 @@ const agent = createLiteAgent({
   model: provider,                    // from @lite-agent/provider
   modelName,
   workdir: process.cwd(),             // the agent acts on your launch directory
-  skillsDir: join(exampleRoot, "skills"),
+  skillsDir: join(exampleRoot, "tracks"),
   permission: policy({ ask: ["bash", "write_file", "edit_file"] }),
   onApproval,                         // ApprovalHandler — y/N prompt
   onAskUser,                          // InputHandler — [ask] prompt

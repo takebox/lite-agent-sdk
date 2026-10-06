@@ -2,7 +2,7 @@
 
 **English** | [简体中文](./README.zh-CN.md)
 
-Batteries-included agent SDK over [`@lite-agent/core`](../core): a working tool set, skills, subagents, sessions, and a permission gate behind a small [`@anthropic-ai/claude-agent-sdk`](https://github.com/anthropics/claude-agent-sdk-typescript)-shaped API (`query` / `createLiteAgent` / `tool`). Pair it with a [`@lite-agent/provider`](../provider) for the model — every battery is a toggleable default over the core strategies.
+Batteries-included agent SDK over [`@lite-agent/core`](../core): a working tool set, tracks, subagents, sessions, and a permission gate behind a small [`@takebox-ai/haijun-agent-sdk`]()-shaped API (`query` / `createLiteAgent` / `tool`). Pair it with a [`@lite-agent/provider`](../provider) for the model — every battery is a toggleable default over the core strategies.
 
 ## Install
 
@@ -14,7 +14,7 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -26,8 +26,8 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
 })) {
@@ -119,13 +119,13 @@ inherited provider.
 ## Features
 
 - **Default tools** — `bash`, `read_file`, `write_file`, `edit_file`, `delete_file`, scoped to `workdir`, with atomic writes and pre-change snapshots so session restore can undo them.
-- **Skills** — `SKILL.md` files loaded from `~/.lite-agent/skills`, `<workdir>/.lite-agent/skills`, or `skillsDir`; injected on demand via `load_skill`.
+- **Tracks** — `TRACK.md` files loaded from `~/.lite-agent/tracks`, `<workdir>/.lite-agent/tracks`, or `skillsDir`; injected on demand via `load_skill`.
 - **Subagents** — detached, pooled `Agent` groups with one ordered aggregate result; a built-in `general-purpose` agent plus custom `agents/*.md` definitions (`agents: false` disables child dispatch and prevents recursion).
 - **Tasks** — persistent task list (`TaskCreate/Update/Get/List`) with a per-turn reminder (`tasks: false` to disable).
 - **Sessions** — event-sourced persistence via `fileCheckpointer`; swap in [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) or any `Checkpointer`.
 - **Compaction** — deterministic default compactor (no LLM call), reactive overflow net, and disk spill for oversized tool results.
 - **Permission gate** — `policy({ allow, ask, deny })` matched by tool-name glob (`deny > ask > allow`); pair with `onApproval` for human-in-the-loop and `permissionAudit: true` to persist redacted decisions.
-- **Sandbox** — pass a `Sandbox` (e.g. [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic)) to run `bash` inside an OS boundary.
+- **Sandbox** — pass a `Sandbox` (e.g. [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI)) to run `bash` inside an OS boundary.
 - **Human input** — an `ask_user` tool is registered when `onAskUser` is set, letting the model ask questions mid-run.
 - **Structured output** — set `outputSchema` (a Zod object) to force a validated final answer, surfaced as `result.output`.
 - **Background tasks** — enabled by default (`background: false` disables them); Agent groups continue across turns and report `completed` / `partial` / `failed` / `cancelled`, while `bash_output` / `kill_background` observe and control background Bash.
@@ -143,12 +143,12 @@ inherited provider.
 | `policy`, `bashCommand`, `filePath`, `permissionFilePolicy` | Permission policies and content-level specifiers. |
 | `fileCheckpointer`, `jsonlStore`, `fileTaskStore`, `fileSpillStore`, `fileContextArchive` | File-backed persistence adapters. |
 | `jsonlEventSink`, `recordEventStream` | Event observability sinks. |
-| `SkillLoader`, `loadSkillTool`, `AgentLoader`, `builtinAgents` | Skill and subagent loading. |
+| `SkillLoader`, `loadTrackTool`, `AgentLoader`, `builtinAgents` | Track and subagent loading. |
 | `* from @lite-agent/core` | Full re-export of the kernel: types, events, strategies, middleware helpers. |
 
 ## Related
 
 - [`@lite-agent/core`](../core) — the provider-agnostic kernel this package assembles.
-- [`@lite-agent/provider`](../provider) — model providers (Anthropic, …).
-- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-anthropic`](../sandbox-anthropic) · [`@lite-agent/local`](../local) — pluggable backends and hardening.
+- [`@lite-agent/provider`](../provider) — model providers (Takebox AI, …).
+- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) · [`@lite-agent/local`](../local) — pluggable backends and hardening.
 - [Monorepo root](../..) — architecture overview; [`examples/cli`](../../examples/cli) — a full interactive REPL wiring provider + sandbox + permission + `ask_user`.

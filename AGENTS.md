@@ -4,20 +4,20 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Project
 
-lite-agent is a **pluggable, lightweight agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable strategy interfaces + an onion middleware pipeline + a typed event stream. Its public API is shaped after `@anthropic-ai/Codex-agent-sdk` (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs. The API design references that SDK; the Anthropic **provider** wraps the raw `@anthropic-ai/sdk` Messages API.
+lite-agent is a **pluggable, lightweight agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable strategy interfaces + an onion middleware pipeline + a typed event stream. Its public API is shaped after `@takebox-ai/Codex-agent-sdk` (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs. The API design references that SDK; the Takebox AI **provider** wraps the raw `@takebox-ai/sdk` Messages API.
 
 ## Layout
 
 ```
 packages/                     # published SDK packages (versioned per changed package)
   core/                       # @lite-agent/core  — kernel, strategies, middleware, types, codecs, permission, sandbox
-  provider/                   # @lite-agent/provider — Anthropic + OpenAI ModelProviders (src/anthropic, src/openai)
-  sdk/                        # @lite-agent/sdk — batteries: tools, skills, system prompt, createLiteAgent / query
-  sandbox-anthropic/          # @lite-agent/sandbox-anthropic — OS-level Sandbox adapter (sandbox-runtime)
+  provider/                   # @lite-agent/provider — Takebox AI + OpenAI ModelProviders (src/Takebox AI, src/openai)
+  sdk/                        # @lite-agent/sdk — batteries: tools, tracks, system prompt, createLiteAgent / query
+  sandbox-Takebox AI/          # @lite-agent/sandbox-Takebox AI — OS-level Sandbox adapter (sandbox-runtime)
   checkpoint-sqlite/          # @lite-agent/checkpoint-sqlite — SQLite WAL event checkpointer
   local/                      # @lite-agent/local — strict single-host local-model/runtime assembly
 examples/
-  cli/                        # @lite-agent/example-cli (private) — interactive REPL demo; owns its .env + skills/
+  cli/                        # @lite-agent/example-cli (private) — interactive REPL demo; owns its .env + tracks/
 docs-site/                    # @lite-agent/docs (private) — Rspress bilingual docs site → GitHub Pages
 docs/superpowers/             # specs/ (design docs) + plans/ (TDD implementation plans)
 ```
@@ -63,13 +63,13 @@ Provider-agnostic `Message` / `ContentBlock` / `ToolCall` / `ToolResult` / `User
 
 `policy({ allow, ask, deny, default })` → a `PermissionPolicy` matching **tool name** by glob (`*`), precedence **deny > ask > allow**, unmatched → `default` (`"allow"`). `permission(policy, approval?)` is the gate middleware: `allow` → run; `deny` → `isError` result, tool never runs; `ask` → emit `approval_request` → `await approval.request()` (fail-closed `deny` if no handler) → emit `approval_resolved` → run or deny.
 
-### Sandbox (`core/src/sandbox.ts`, `@lite-agent/sandbox-anthropic`)
+### Sandbox (`core/src/sandbox.ts`, `@lite-agent/sandbox-Takebox AI`)
 
-`Sandbox.wrap(command, {cwd})` rewrites a shell command to run inside an OS boundary. Default `noopSandbox()` (no boundary). `sandboxRuntime(opts)` wraps `@anthropic-ai/sandbox-runtime` (macOS Seatbelt / Linux bubblewrap); on an unsupported env it **degrades to noop** (unless `requireSandbox: true`) and fires `onUnavailable` once. `bashTool` wraps its command via `ctx.sandbox` before `execSync`. Sandbox (runtime boundary) + permission gate (pre-exec decision) = defense-in-depth.
+`Sandbox.wrap(command, {cwd})` rewrites a shell command to run inside an OS boundary. Default `noopSandbox()` (no boundary). `sandboxRuntime(opts)` wraps `@takebox-ai/sandbox-runtime` (macOS Seatbelt / Linux bubblewrap); on an unsupported env it **degrades to noop** (unless `requireSandbox: true`) and fires `onUnavailable` once. `bashTool` wraps its command via `ctx.sandbox` before `execSync`. Sandbox (runtime boundary) + permission gate (pre-exec decision) = defense-in-depth.
 
 ### SDK batteries (`@lite-agent/sdk`)
 
-`createLiteAgent(cfg)` assembles `defaultTools` (bash/file) + task tools + skills + a built system prompt + a configurable codec (default `nativeCodec`), prepending the `permission()` middleware when `permission` is set, registering `ask_user` only when `onAskUser` is set, and threading sandbox, checkpoint, recovery, context-budget, and resource options. `query(opts)` is the agent-sdk-style facade over it. `tool(name, desc, schema, handler, opts?)` defines a tool and optional security metadata. Skills load from `SKILL.md` files; subagents are parallel-capable, isolated sessions. `createLiteAgent` owns a current session with `resume`/`clear`/`deleteSession`/`listSessions`; the default backend is the event-sourced file checkpointer.
+`createLiteAgent(cfg)` assembles `defaultTools` (bash/file) + task tools + tracks + a built system prompt + a configurable codec (default `nativeCodec`), prepending the `permission()` middleware when `permission` is set, registering `ask_user` only when `onAskUser` is set, and threading sandbox, checkpoint, recovery, context-budget, and resource options. `query(opts)` is the agent-sdk-style facade over it. `tool(name, desc, schema, handler, opts?)` defines a tool and optional security metadata. Tracks load from `TRACK.md` files; subagents are parallel-capable, isolated sessions. `createLiteAgent` owns a current session with `resume`/`clear`/`deleteSession`/`listSessions`; the default backend is the event-sourced file checkpointer.
 
 ### Strict local assembly (`@lite-agent/local`)
 
@@ -77,7 +77,7 @@ Provider-agnostic `Message` / `ContentBlock` / `ToolCall` / `ToolResult` / `User
 
 ### Providers (`@lite-agent/provider`)
 
-One package ships two `ModelProvider`s. `anthropic(opts)` (`src/anthropic/`) maps normalized requests → Anthropic Messages API; `openai(opts)` (`src/openai/`) maps them → OpenAI Chat Completions (also works against OpenAI-compatible / local endpoints). Each subfolder pairs a `mapping.ts` (request → provider params) with a `stream.ts` (provider SSE → `ModelChunk`s), wraps SDK errors in `ProviderError` preserving `.status`, and exposes an injectable client seam for offline tests. The package root re-exports both `anthropic` and `openai`.
+One package ships two `ModelProvider`s. `Takebox AI(opts)` (`src/Takebox AI/`) maps normalized requests → Takebox AI Messages API; `openai(opts)` (`src/openai/`) maps them → OpenAI Chat Completions (also works against OpenAI-compatible / local endpoints). Each subfolder pairs a `mapping.ts` (request → provider params) with a `stream.ts` (provider SSE → `ModelChunk`s), wraps SDK errors in `ProviderError` preserving `.status`, and exposes an injectable client seam for offline tests. The package root re-exports both `Takebox AI` and `openai`.
 
 ## Design discipline (enforced in the specs)
 

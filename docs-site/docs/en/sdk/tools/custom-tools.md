@@ -6,7 +6,7 @@ Tools are how the model acts on the world. Beyond the [built-in tools](/sdk/tool
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { anthropic } from "@lite-agent/provider";
+import { Takebox AI } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -18,8 +18,8 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
-  modelName: "claude-sonnet-4-6",
+  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
 })) {

@@ -1,12 +1,12 @@
 # Phase 3 Sandbox Boundary — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax.
+> **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax.
 
-**Goal:** Add a pluggable `Sandbox` strategy that gives `bash` (and future process tools) an OS-level runtime boundary, defaulting to a no-op so the core stays lean and cross-platform; ship a `@lite-agent/sandbox-anthropic` adapter wrapping `@anthropic-ai/sandbox-runtime`.
+**Goal:** Add a pluggable `Sandbox` strategy that gives `bash` (and future process tools) an OS-level runtime boundary, defaulting to a no-op so the core stays lean and cross-platform; ship a `@lite-agent/sandbox-Takebox AI` adapter wrapping `@takebox-ai/sandbox-runtime`.
 
-**Architecture:** `Sandbox` is the 9th pluggable strategy. Core defines the interface + `noopSandbox()` and threads it through `ToolContext`. The `bash` tool wraps its command via `ctx.sandbox.wrap()` before `execSync`. The Anthropic adapter lives in its own package so the experimental dependency stays out of core/sdk. Pairs with the (separately designed) `PermissionPolicy` gate as Phase 3's boundary layer.
+**Architecture:** `Sandbox` is the 9th pluggable strategy. Core defines the interface + `noopSandbox()` and threads it through `ToolContext`. The `bash` tool wraps its command via `ctx.sandbox.wrap()` before `execSync`. The Takebox AI adapter lives in its own package so the experimental dependency stays out of core/sdk. Pairs with the (separately designed) `PermissionPolicy` gate as Phase 3's boundary layer.
 
-**Tech Stack:** TS6 ESM (moduleResolution Bundler, verbatimModuleSyntax, strict, noUncheckedIndexedAccess), pnpm workspace, tsup, vitest, zod 4. Adapter deps on `@anthropic-ai/sandbox-runtime` ^0.0.55 (no install scripts; runtime-only OS deps, mocked in tests).
+**Tech Stack:** TS6 ESM (moduleResolution Bundler, verbatimModuleSyntax, strict, noUncheckedIndexedAccess), pnpm workspace, tsup, vitest, zod 4. Adapter deps on `@takebox-ai/sandbox-runtime` ^0.0.55 (no install scripts; runtime-only OS deps, mocked in tests).
 
 **Reference spec:** `docs/superpowers/specs/2026-06-18-phase-3-sandbox-boundary-design.md`.
 
@@ -405,21 +405,21 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 
 ---
 
-## Task 3: New package `@lite-agent/sandbox-anthropic` — `sandboxRuntime()` adapter
+## Task 3: New package `@lite-agent/sandbox-Takebox AI` — `sandboxRuntime()` adapter
 
 **Files:**
 
-- Create: `packages/sandbox-anthropic/package.json`
-- Create: `packages/sandbox-anthropic/tsconfig.json`
-- Create: `packages/sandbox-anthropic/tsconfig.build.json`
-- Create: `packages/sandbox-anthropic/src/index.ts`
-- Test: `packages/sandbox-anthropic/test/sandboxRuntime.test.ts`
+- Create: `packages/sandbox-Takebox AI/package.json`
+- Create: `packages/sandbox-Takebox AI/tsconfig.json`
+- Create: `packages/sandbox-Takebox AI/tsconfig.build.json`
+- Create: `packages/sandbox-Takebox AI/src/index.ts`
+- Test: `packages/sandbox-Takebox AI/test/sandboxRuntime.test.ts`
 
-- [ ] **Step 1: Create `packages/sandbox-anthropic/package.json`**
+- [ ] **Step 1: Create `packages/sandbox-Takebox AI/package.json`**
 
 ```json
 {
-  "name": "@lite-agent/sandbox-anthropic",
+  "name": "@lite-agent/sandbox-Takebox AI",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -435,7 +435,7 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sandbox-runtime": "^0.0.55",
+    "@takebox-ai/sandbox-runtime": "^0.0.55",
     "@lite-agent/core": "workspace:*"
   },
   "devDependencies": {
@@ -447,7 +447,7 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 }
 ```
 
-- [ ] **Step 2: Create `packages/sandbox-anthropic/tsconfig.json`**
+- [ ] **Step 2: Create `packages/sandbox-Takebox AI/tsconfig.json`**
 
 ```json
 {
@@ -457,7 +457,7 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 }
 ```
 
-- [ ] **Step 3: Create `packages/sandbox-anthropic/tsconfig.build.json`**
+- [ ] **Step 3: Create `packages/sandbox-Takebox AI/tsconfig.build.json`**
 
 ```json
 {
@@ -469,9 +469,9 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 - [ ] **Step 4: Install**
 
 Run: `pnpm install`
-Expected: adds `@lite-agent/sandbox-anthropic`, installs `@anthropic-ai/sandbox-runtime` (no install scripts). Exit 0.
+Expected: adds `@lite-agent/sandbox-Takebox AI`, installs `@takebox-ai/sandbox-runtime` (no install scripts). Exit 0.
 
-- [ ] **Step 5: Write the failing test** — `packages/sandbox-anthropic/test/sandboxRuntime.test.ts`
+- [ ] **Step 5: Write the failing test** — `packages/sandbox-Takebox AI/test/sandboxRuntime.test.ts`
 
 ```ts
 import { expect, test, vi } from "vitest";
@@ -482,7 +482,7 @@ const { initialize, wrapWithSandbox, reset } = vi.hoisted(() => ({
   reset: vi.fn(async () => {}),
 }));
 
-vi.mock("@anthropic-ai/sandbox-runtime", () => ({
+vi.mock("@takebox-ai/sandbox-runtime", () => ({
   SandboxManager: { initialize, wrapWithSandbox, reset },
 }));
 
@@ -526,16 +526,16 @@ test("defaults: empty network, cwd-only write, sensible denyRead", async () => {
 
 - [ ] **Step 6: Run test to verify it fails**
 
-Run: `pnpm --filter @lite-agent/sandbox-anthropic test`
+Run: `pnpm --filter @lite-agent/sandbox-Takebox AI test`
 Expected: FAIL — `sandboxRuntime` not found.
 
-- [ ] **Step 7: Implement `packages/sandbox-anthropic/src/index.ts`**
+- [ ] **Step 7: Implement `packages/sandbox-Takebox AI/src/index.ts`**
 
 ```ts
 import {
   SandboxManager,
   type SandboxRuntimeConfig,
-} from "@anthropic-ai/sandbox-runtime";
+} from "@takebox-ai/sandbox-runtime";
 import type { Sandbox } from "@lite-agent/core";
 
 export interface SandboxRuntimeOptions {
@@ -571,29 +571,29 @@ export function sandboxRuntime(opts: SandboxRuntimeOptions = {}): Sandbox {
 }
 ```
 
-> If the installed `@anthropic-ai/sandbox-runtime` types name `SandboxRuntimeConfig`'s fields differently (e.g. `denyWrite` optionality), adjust the object to satisfy the real type — do NOT use `any`; read `node_modules/@anthropic-ai/sandbox-runtime/dist/*.d.ts` to confirm. The mapping behavior (and the test) must stay the same.
+> If the installed `@takebox-ai/sandbox-runtime` types name `SandboxRuntimeConfig`'s fields differently (e.g. `denyWrite` optionality), adjust the object to satisfy the real type — do NOT use `any`; read `node_modules/@takebox-ai/sandbox-runtime/dist/*.d.ts` to confirm. The mapping behavior (and the test) must stay the same.
 
 - [ ] **Step 8: Run test + typecheck + build**
 
-Run: `pnpm --filter @lite-agent/sandbox-anthropic test`
+Run: `pnpm --filter @lite-agent/sandbox-Takebox AI test`
 Expected: PASS (2 tests).
-Run: `pnpm --filter @lite-agent/sandbox-anthropic typecheck`
+Run: `pnpm --filter @lite-agent/sandbox-Takebox AI typecheck`
 Expected: clean.
-Run: `pnpm --filter @lite-agent/sandbox-anthropic build`
+Run: `pnpm --filter @lite-agent/sandbox-Takebox AI build`
 Expected: emits `dist/index.js` + `dist/index.d.ts`. Exit 0.
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add packages/sandbox-anthropic pnpm-lock.yaml
-git commit -m "feat(sandbox-anthropic): sandboxRuntime() adapter over @anthropic-ai/sandbox-runtime"
+git add packages/sandbox-Takebox AI pnpm-lock.yaml
+git commit -m "feat(sandbox-Takebox AI): sandboxRuntime() adapter over @takebox-ai/sandbox-runtime"
 ```
 
 ---
 
 ## Final verification (after all tasks)
 
-- [ ] `pnpm -r --filter "@lite-agent/core" --filter "@lite-agent/provider" --filter "lite-agent" --filter "@lite-agent/sandbox-anthropic" test` — all pass.
+- [ ] `pnpm -r --filter "@lite-agent/core" --filter "@lite-agent/provider" --filter "lite-agent" --filter "@lite-agent/sandbox-Takebox AI" test` — all pass.
 - [ ] `pnpm -r --filter "@lite-agent/*" typecheck` and root `pnpm typecheck` — clean.
 - [ ] `pnpm -r --filter "@lite-agent/*" build` — all emit dist.
 - [ ] Manual (optional, macOS/Linux with deps): wire `sandbox: sandboxRuntime({ allowedDomains: [...] })` into the CLI and confirm a denied-domain `curl` is blocked.

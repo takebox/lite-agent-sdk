@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@lite-agent/provider": "workspace:*",
-    "@lite-agent/sandbox-anthropic": "workspace:*",
+    "@lite-agent/sandbox-Takebox AI": "workspace:*",
     "@lite-agent/sdk": "workspace:*",
     "dotenv": "^17.3.1"
   },
