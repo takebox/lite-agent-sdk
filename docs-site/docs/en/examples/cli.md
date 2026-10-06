@@ -47,7 +47,7 @@ const agent = createLiteAgent({
   model: provider,                    // from @lite-agent/provider
   modelName,
   workdir: process.cwd(),             // the agent acts on your launch directory
-  skillsDir: join(exampleRoot, "tracks"),
+  tracksDir: join(exampleRoot, "tracks"),
   permission: policy({ ask: ["bash", "write_file", "edit_file"] }),
   onApproval,                         // ApprovalHandler — y/N prompt
   onAskUser,                          // InputHandler — [ask] prompt

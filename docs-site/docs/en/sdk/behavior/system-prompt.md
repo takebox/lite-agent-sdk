@@ -60,7 +60,7 @@ const agent = createLiteAgent({
 | `subagents` | `string` | Optional pre-rendered list of available subagents; adds a Subagents section. |
 
 :::warning
-When you override `system`, the SDK no longer injects the auto-generated lists of available tracks and subagents into the prompt. The `load_skill` and `Agent` tools still work, but the model only knows what to load if your prompt tells it.
+When you override `system`, the SDK no longer injects the auto-generated lists of available tracks and subagents into the prompt. The `load_track` and `Agent` tools still work, but the model only knows what to load if your prompt tells it.
 :::
 
 ## What the default prompt contains
@@ -71,7 +71,7 @@ When you override `system`, the SDK no longer injects the auto-generated lists o
 - **Core principles** — prefer tools over prose.
 - **Files** — use `read_file` / `write_file` / `edit_file` / `delete_file` instead of shell equivalents; use `bash` for running commands and searching.
 - **Task planning** — for 3+ step work, plan with `TaskCreate` and track with `TaskUpdate` (see [Tasks](/sdk/behavior/tasks)).
-- **Tracks** — pull specialized knowledge on demand with `load_skill`, followed by the auto-discovered track list.
+- **Tracks** — pull specialized knowledge on demand with `load_track`, followed by the auto-discovered track list.
 - **Subagents** — when subagents exist, how and when to delegate with the `Agent` tool (see [Subagents](/sdk/tools/subagents)).
 
 Two capabilities extend the prompt at assembly time rather than through `system`:

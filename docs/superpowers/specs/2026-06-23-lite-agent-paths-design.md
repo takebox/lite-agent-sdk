@@ -53,15 +53,15 @@ stores that write to them).
 
 ### 2. Tracks: global + project merge
 
-`SkillLoader` is extended to accept an **ordered list of directories**; later
+`TrackLoader` is extended to accept an **ordered list of directories**; later
 dirs override earlier ones on name collision.
 
 ```ts
-new SkillLoader(dirs: string | string[])   // string kept for back-compat
+new TrackLoader(dirs: string | string[])   // string kept for back-compat
 ```
 
-`createLiteAgent` loads `[globalSkillsDir, projectSkillsDir, ...(skillsDir ? [skillsDir] : [])]`.
-Precedence (low→high): **global < project < explicit `skillsDir`**. Missing dirs
+`createLiteAgent` loads `[globalSkillsDir, projectSkillsDir, ...(tracksDir ? [tracksDir] : [])]`.
+Precedence (low→high): **global < project < explicit `tracksDir`**. Missing dirs
 are skipped silently.
 
 ### 3. Default persistence in `createLiteAgent`
@@ -123,7 +123,7 @@ opt-out. Minor version bump (additive options, changed defaults).
 ## Testing plan (TDD)
 
 - `paths.ts`: home env override; hash stability/determinism; resolved subpaths.
-- `SkillLoader`: multi-dir load; later dir overrides earlier; missing dirs skipped.
+- `TrackLoader`: multi-dir load; later dir overrides earlier; missing dirs skipped.
 - `sweepStale`: deletes files older than cutoff, keeps fresh ones, tolerates a
   missing home, sweeps across multiple project dirs.
 - `createLiteAgent` defaults (with `LITE_AGENT_HOME` → tmpdir):

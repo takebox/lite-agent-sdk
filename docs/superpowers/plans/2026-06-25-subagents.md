@@ -4,7 +4,7 @@
 
 **Goal:** Add file-defined subagents (`agents/*.md`) dispatched by the main agent through a single parallel-capable `Agent` tool, with each subagent run persisted to disk and resumable.
 
-**Architecture:** All code lives in the **sdk** package; **core is untouched**. An `AgentLoader` (twin of `SkillLoader`) reads `.md` definitions from global + project + optional dirs. A batch `Agent` tool runs N child kernels concurrently (bounded pool) by re-invoking `createLiteAgent` per child with isolated context (`[{role:"user",content:prompt}]`), returning each child's final text. Persistence is the existing `jsonlStore`; resume is the kernel's existing `store.load(sessionId)` prepend.
+**Architecture:** All code lives in the **sdk** package; **core is untouched**. An `AgentLoader` (twin of `TrackLoader`) reads `.md` definitions from global + project + optional dirs. A batch `Agent` tool runs N child kernels concurrently (bounded pool) by re-invoking `createLiteAgent` per child with isolated context (`[{role:"user",content:prompt}]`), returning each child's final text. Persistence is the existing `jsonlStore`; resume is the kernel's existing `store.load(sessionId)` prepend.
 
 **Tech Stack:** TypeScript 6 (strict ESM, `verbatimModuleSyntax`, `noUncheckedIndexedAccess`), zod v4, gray-matter, vitest, `node:crypto`.
 

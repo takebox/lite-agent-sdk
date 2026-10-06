@@ -60,7 +60,7 @@ const agent = createLiteAgent({
 | `subagents` | `string` | 可选的预渲染可用 subagents 列表；追加 Subagents 小节。 |
 
 :::warning
-当你覆盖 `system` 时，SDK 不会再把自动生成的可用 tracks / subagents 列表注入提示词。`load_skill` 和 `Agent` 工具仍然可用，但只有你的提示词告诉模型，它才知道该加载什么。
+当你覆盖 `system` 时，SDK 不会再把自动生成的可用 tracks / subagents 列表注入提示词。`load_track` 和 `Agent` 工具仍然可用，但只有你的提示词告诉模型，它才知道该加载什么。
 :::
 
 ## 默认提示词包含什么
@@ -71,7 +71,7 @@ const agent = createLiteAgent({
 - **核心原则** —— 优先用工具而非空谈。
 - **文件操作** —— 用 `read_file` / `write_file` / `edit_file` / `delete_file` 代替 shell 等价命令；用 `bash` 执行命令和搜索。
 - **任务规划** —— 3 步以上的工作用 `TaskCreate` 规划、用 `TaskUpdate` 跟踪（见[任务清单](/zh/sdk/behavior/tasks)）。
-- **Tracks** —— 用 `load_skill` 按需加载专业知识，后附自动发现的 track 列表。
+- **Tracks** —— 用 `load_track` 按需加载专业知识，后附自动发现的 track 列表。
 - **Subagents** —— 存在 subagents 时，说明何时以及如何用 `Agent` 工具委派（见 [Subagents](/zh/sdk/tools/subagents)）。
 
 有两个能力在装配时扩展提示词，而不是通过 `system`：

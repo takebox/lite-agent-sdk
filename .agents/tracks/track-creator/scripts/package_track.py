@@ -14,7 +14,7 @@ import fnmatch
 import sys
 import zipfile
 from pathlib import Path
-from scripts.quick_validate import validate_skill
+from scripts.quick_validate import validate_track
 
 # Patterns to exclude when packaging tracks.
 EXCLUDE_DIRS = {"__pycache__", "node_modules"}
@@ -69,7 +69,7 @@ def package_track(track_path, output_dir=None):
 
     # Run validation before packaging
     print("🔍 Validating track...")
-    valid, message = validate_skill(track_path)
+    valid, message = validate_track(track_path)
     if not valid:
         print(f"❌ Validation failed: {message}")
         print("   Please fix the validation errors before packaging.")

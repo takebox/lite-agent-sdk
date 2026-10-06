@@ -119,7 +119,7 @@ inherited provider.
 ## Features
 
 - **Default tools** — `bash`, `read_file`, `write_file`, `edit_file`, `delete_file`, scoped to `workdir`, with atomic writes and pre-change snapshots so session restore can undo them.
-- **Tracks** — `TRACK.md` files loaded from `~/.lite-agent/tracks`, `<workdir>/.lite-agent/tracks`, or `skillsDir`; injected on demand via `load_skill`.
+- **Tracks** — `TRACK.md` files loaded from `~/.lite-agent/tracks`, `<workdir>/.lite-agent/tracks`, or `tracksDir`; injected on demand via `load_track`.
 - **Subagents** — detached, pooled `Agent` groups with one ordered aggregate result; a built-in `general-purpose` agent plus custom `agents/*.md` definitions (`agents: false` disables child dispatch and prevents recursion).
 - **Tasks** — persistent task list (`TaskCreate/Update/Get/List`) with a per-turn reminder (`tasks: false` to disable).
 - **Sessions** — event-sourced persistence via `fileCheckpointer`; swap in [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) or any `Checkpointer`.
@@ -143,7 +143,7 @@ inherited provider.
 | `policy`, `bashCommand`, `filePath`, `permissionFilePolicy` | Permission policies and content-level specifiers. |
 | `fileCheckpointer`, `jsonlStore`, `fileTaskStore`, `fileSpillStore`, `fileContextArchive` | File-backed persistence adapters. |
 | `jsonlEventSink`, `recordEventStream` | Event observability sinks. |
-| `SkillLoader`, `loadTrackTool`, `AgentLoader`, `builtinAgents` | Track and subagent loading. |
+| `TrackLoader`, `loadTrackTool`, `AgentLoader`, `builtinAgents` | Track and subagent loading. |
 | `* from @lite-agent/core` | Full re-export of the kernel: types, events, strategies, middleware helpers. |
 
 ## Related

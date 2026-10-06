@@ -236,7 +236,7 @@ Output from Benchmark mode. Located at `benchmarks/<timestamp>/benchmark.json`.
     {
       "eval_id": 1,
       "eval_name": "Ocean",
-      "configuration": "with_skill",
+      "configuration": "with_track",
       "run_number": 1,
       "result": {
         "pass_rate": 0.85,
@@ -259,12 +259,12 @@ Output from Benchmark mode. Located at `benchmarks/<timestamp>/benchmark.json`.
   ],
 
   "run_summary": {
-    "with_skill": {
+    "with_track": {
       "pass_rate": {"mean": 0.85, "stddev": 0.05, "min": 0.80, "max": 0.90},
       "time_seconds": {"mean": 45.0, "stddev": 12.0, "min": 32.0, "max": 58.0},
       "tokens": {"mean": 3800, "stddev": 400, "min": 3200, "max": 4100}
     },
-    "without_skill": {
+    "without_track": {
       "pass_rate": {"mean": 0.35, "stddev": 0.08, "min": 0.28, "max": 0.45},
       "time_seconds": {"mean": 32.0, "stddev": 8.0, "min": 24.0, "max": 42.0},
       "tokens": {"mean": 2100, "stddev": 300, "min": 1800, "max": 2500}
@@ -294,11 +294,11 @@ Output from Benchmark mode. Located at `benchmarks/<timestamp>/benchmark.json`.
 - `runs[]`: Individual run results
   - `eval_id`: Numeric eval identifier
   - `eval_name`: Human-readable eval name (used as section header in the viewer)
-  - `configuration`: Must be `"with_skill"` or `"without_skill"` (the viewer uses this exact string for grouping and color coding)
+  - `configuration`: Must be `"with_track"` or `"without_track"` (the viewer uses this exact string for grouping and color coding)
   - `run_number`: Integer run number (1, 2, 3...)
   - `result`: Nested object with `pass_rate`, `passed`, `total`, `time_seconds`, `tokens`, `errors`
 - `run_summary`: Statistical aggregates per configuration
-  - `with_skill` / `without_skill`: Each contains `pass_rate`, `time_seconds`, `tokens` objects with `mean` and `stddev` fields
+  - `with_track` / `without_track`: Each contains `pass_rate`, `time_seconds`, `tokens` objects with `mean` and `stddev` fields
   - `delta`: Difference strings like `"+0.50"`, `"+13.0"`, `"+1700"`
 - `notes`: Freeform observations from the analyzer
 
@@ -389,8 +389,8 @@ Output from post-hoc analyzer. Located at `<grading-dir>/analysis.json`.
 {
   "comparison_summary": {
     "winner": "A",
-    "winner_skill": "path/to/winner/track",
-    "loser_skill": "path/to/loser/track",
+    "winner_track": "path/to/winner/track",
+    "loser_track": "path/to/loser/track",
     "comparator_reasoning": "Brief summary of why comparator chose winner"
   },
   "winner_strengths": [

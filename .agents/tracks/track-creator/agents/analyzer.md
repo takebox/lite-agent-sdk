@@ -11,9 +11,9 @@ After the blind comparator determines a winner, the Post-hoc Analyzer "unblids" 
 You receive these parameters in your prompt:
 
 - **winner**: "A" or "B" (from blind comparison)
-- **winner_skill_path**: Path to the track that produced the winning output
+- **winner_track_path**: Path to the track that produced the winning output
 - **winner_transcript_path**: Path to the execution transcript for the winner
-- **loser_skill_path**: Path to the track that produced the losing output
+- **loser_track_path**: Path to the track that produced the losing output
 - **loser_transcript_path**: Path to the execution transcript for the loser
 - **comparison_result_path**: Path to the blind comparator's output JSON
 - **output_path**: Where to save the analysis results
@@ -96,8 +96,8 @@ Write a JSON file with this structure:
 {
   "comparison_summary": {
     "winner": "A",
-    "winner_skill": "path/to/winner/track",
-    "loser_skill": "path/to/loser/track",
+    "winner_track": "path/to/winner/track",
+    "loser_track": "path/to/loser/track",
     "comparator_reasoning": "Brief summary of why comparator chose winner"
   },
   "winner_strengths": [
@@ -205,7 +205,7 @@ You receive these parameters in your prompt:
 ### Step 1: Read Benchmark Data
 
 1. Read the benchmark.json containing all run results
-2. Note the configurations tested (with_skill, without_skill)
+2. Note the configurations tested (with_track, without_track)
 3. Understand the run_summary aggregates already calculated
 
 ### Step 2: Analyze Per-Assertion Patterns

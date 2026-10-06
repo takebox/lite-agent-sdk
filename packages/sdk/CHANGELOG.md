@@ -256,7 +256,7 @@
 
   `createLiteAgent`/`query` adopt a Haijun Code–style home (`$LITE_AGENT_HOME` || `~/.lite-agent`) and turn persistence on by default (all opt-out). This is a behavior change: `createLiteAgent`/`query` now write to disk and sweep stale files by default.
   - **Paths** (`resolveProjectPaths` / `liteAgentHome` / `projectHash`): per-project runtime artifacts under `~/.lite-agent/projects/<sha1(workdir)>/{spill,sessions}`; global tracks under `~/.lite-agent/tracks`; project tracks under `<workdir>/.lite-agent/tracks`.
-  - **Tracks**: loaded from global < project < explicit `skillsDir` (later overrides earlier). `SkillLoader`'s constructor now accepts `string | string[]`, and its public `skillsDir` field was renamed to `dirs` (no external consumer in-repo; pre-1.0).
+  - **Tracks**: loaded from global < project < explicit `tracksDir` (later overrides earlier). `TrackLoader`'s constructor now accepts `string | string[]`, and its public `tracksDir` field was renamed to `dirs` (no external consumer in-repo; pre-1.0).
   - **Defaults** (each overridable): `sessions` → `jsonlStore`, `spill` → `fileSpillStore` + `read_spilled`, `compactor` → deterministic `defaultCompactor` (no LLM), `cleanup` → `sweepStale` (30-day sweep). Opt out via `sessions:false` / `spill:false` / `compactor:false` / `cleanup:false`; an explicit `store`/`compactor` overrides the default. New `home?` option overrides the home for both `createLiteAgent` and `query`.
 
   > Note: cleanup sweeps by file mtime at startup. Resuming a session whose transcript has been untouched for longer than the cleanup window (30 days by default) will have that transcript swept before it loads, so its history is dropped. Active sessions bump their mtime each turn and are never at risk; raise `cleanup.maxAgeDays` or set `cleanup:false` to keep cold transcripts.
@@ -275,7 +275,7 @@
 
 - b9fb62c: refactor(sdk): parse `TRACK.md` frontmatter with `gray-matter`
 
-  `SkillLoader` now uses the `gray-matter` library instead of a hand-rolled line splitter, so track frontmatter is parsed as real YAML (arrays, quoted values, nested keys) rather than flat `key: value` strings.
+  `TrackLoader` now uses the `gray-matter` library instead of a hand-rolled line splitter, so track frontmatter is parsed as real YAML (arrays, quoted values, nested keys) rather than flat `key: value` strings.
 
 - Updated dependencies [b30f11b]
   - @lite-agent/core@0.2.0

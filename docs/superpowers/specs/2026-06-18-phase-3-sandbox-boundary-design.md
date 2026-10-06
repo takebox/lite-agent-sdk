@@ -157,7 +157,7 @@ import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
 const agent = createLiteAgent({
   model: Takebox AI(),
   workdir: process.cwd(),
-  skillsDir: "tracks",
+  tracksDir: "tracks",
   // 闸门(Phase 3)
   // permission: policy({ allow: ["read_file"], ask: ["bash", "write_file"], deny: ["rm *"] }),
   // 边界(本文)

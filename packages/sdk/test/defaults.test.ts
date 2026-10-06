@@ -79,7 +79,7 @@ test("a project track shadows a same-named global track", async () => {
   writeFileSync(join(globalSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: g\n---\nGLOBAL BODY");
   writeFileSync(join(projectSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: p\n---\nPROJECT BODY");
 
-  const agent = createLiteAgent({ model: callTool("load_skill", { name: "demo" }), workdir });
+  const agent = createLiteAgent({ model: callTool("load_track", { name: "demo" }), workdir });
   const res = await toolResults(agent);
   expect(res).toContain("PROJECT BODY");
   expect(res).not.toContain("GLOBAL BODY");

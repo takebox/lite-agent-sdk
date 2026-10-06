@@ -994,7 +994,7 @@ git commit -m "feat(sdk): bash + todo tools and defaultTools set"
 
 ---
 
-## Task 6: SkillLoader + load_skill tool
+## Task 6: TrackLoader + load_track tool
 
 **Files:**
 
@@ -1010,7 +1010,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ToolContext } from "@lite-agent/core";
-import { SkillLoader } from "../src/tracks/loader";
+import { TrackLoader } from "../src/tracks/loader";
 import { loadTrackTool } from "../src/tracks/loadTrackTool";
 
 const ctx: ToolContext = {
@@ -1019,7 +1019,7 @@ const ctx: ToolContext = {
   emit: () => {},
 };
 
-test("loads frontmatter and serves the body via load_skill", async () => {
+test("loads frontmatter and serves the body via load_track", async () => {
   const root = mkdtempSync(join(tmpdir(), "sk-"));
   mkdirSync(join(root, "demo"));
   writeFileSync(
@@ -1027,7 +1027,7 @@ test("loads frontmatter and serves the body via load_skill", async () => {
     "---\nname: demo\ndescription: a demo track\n---\nBODY HERE",
   );
 
-  const loader = new SkillLoader(root);
+  const loader = new TrackLoader(root);
   expect(loader.getDescriptions()).toContain("demo: a demo track");
 
   const tool = loadTrackTool(loader);
@@ -1036,7 +1036,7 @@ test("loads frontmatter and serves the body via load_skill", async () => {
 });
 
 test("empty/missing dir yields a placeholder description", () => {
-  const loader = new SkillLoader(join(tmpdir(), "does-not-exist-xyz"));
+  const loader = new TrackLoader(join(tmpdir(), "does-not-exist-xyz"));
   expect(loader.getDescriptions()).toBe("(no tracks available)");
 });
 ```
@@ -1044,7 +1044,7 @@ test("empty/missing dir yields a placeholder description", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `pnpm --filter lite-agent test tracks`
-Expected: FAIL — `SkillLoader` not found.
+Expected: FAIL — `TrackLoader` not found.
 
 - [ ] **Step 3: Implement `packages/sdk/src/tracks/loader.ts`**
 
@@ -1052,29 +1052,29 @@ Expected: FAIL — `SkillLoader` not found.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-interface SkillMeta {
+interface TrackMeta {
   name?: string;
   description?: string;
   tags?: string;
   [k: string]: string | undefined;
 }
 interface Track {
-  meta: SkillMeta;
+  meta: TrackMeta;
   body: string;
   path: string;
 }
 
-export class SkillLoader {
-  readonly skillsDir: string;
+export class TrackLoader {
+  readonly tracksDir: string;
   private tracks: Record<string, Track> = {};
 
-  constructor(skillsDir: string) {
-    this.skillsDir = skillsDir;
+  constructor(tracksDir: string) {
+    this.tracksDir = tracksDir;
     this.loadAll();
   }
 
   private loadAll(): void {
-    if (!existsSync(this.skillsDir)) return;
+    if (!existsSync(this.tracksDir)) return;
     const walk = (dir: string): void => {
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
         const p = join(dir, entry.name);
@@ -1086,13 +1086,13 @@ export class SkillLoader {
         }
       }
     };
-    walk(this.skillsDir);
+    walk(this.tracksDir);
   }
 
-  private parse(text: string): { meta: SkillMeta; body: string } {
+  private parse(text: string): { meta: TrackMeta; body: string } {
     const m = text.match(/^---\n(.*?)\n---\n(.*)/s);
     if (!m) return { meta: {}, body: text };
-    const meta: SkillMeta = {};
+    const meta: TrackMeta = {};
     for (const line of m[1]!.trim().split("\n")) {
       const i = line.indexOf(":");
       if (i > 0) meta[line.slice(0, i).trim()] = line.slice(i + 1).trim();
@@ -1127,11 +1127,11 @@ export class SkillLoader {
 import { z } from "zod";
 import { defineTool } from "@lite-agent/core";
 import type { Tool } from "@lite-agent/core";
-import type { SkillLoader } from "./loader";
+import type { TrackLoader } from "./loader";
 
-export function loadTrackTool(loader: SkillLoader): Tool {
+export function loadTrackTool(loader: TrackLoader): Tool {
   return defineTool({
-    name: "load_skill",
+    name: "load_track",
     description:
       "Load a track's full instructions by name before tackling an unfamiliar task.",
     schema: z.object({ name: z.string() }),
@@ -1151,7 +1151,7 @@ Expected: clean.
 
 ```bash
 git add packages/sdk
-git commit -m "feat(sdk): SkillLoader + load_skill tool"
+git commit -m "feat(sdk): TrackLoader + load_track tool"
 ```
 
 ---
@@ -1177,7 +1177,7 @@ git commit -m "feat(sdk): SkillLoader + load_skill tool"
 import { expect, test } from "vitest";
 import { buildSystemPrompt } from "../src/system";
 
-test("system prompt embeds workdir, model, tracks, and load_skill hint", () => {
+test("system prompt embeds workdir, model, tracks, and load_track hint", () => {
   const s = buildSystemPrompt({
     workdir: "/w",
     modelName: "m1",
@@ -1186,7 +1186,7 @@ test("system prompt embeds workdir, model, tracks, and load_skill hint", () => {
   expect(s).toContain("/w");
   expect(s).toContain("m1");
   expect(s).toContain("- demo: x");
-  expect(s).toContain("load_skill");
+  expect(s).toContain("load_track");
 });
 ```
 
@@ -1213,7 +1213,7 @@ test("runs with default tools wired", async () => {
   expect((await agent.send("hi")).text).toBe("ok");
 });
 
-test("load_skill is wired when skillsDir is set", async () => {
+test("load_track is wired when tracksDir is set", async () => {
   const root = mkdtempSync(join(tmpdir(), "sk-"));
   mkdirSync(join(root, "demo"));
   writeFileSync(
@@ -1228,7 +1228,7 @@ test("load_skill is wired when skillsDir is set", async () => {
           {
             type: "tool_call",
             id: "t1",
-            name: "load_skill",
+            name: "load_track",
             input: { name: "demo" },
           },
         ],
@@ -1242,7 +1242,7 @@ test("load_skill is wired when skillsDir is set", async () => {
   const agent = createLiteAgent({
     model: fp,
     workdir: process.cwd(),
-    skillsDir: root,
+    tracksDir: root,
   });
   const results: string[] = [];
   for await (const ev of agent.run("hi"))
@@ -1353,7 +1353,7 @@ ${modelLine}
 - Mark todos as in_progress before starting each step, and completed when done.
 
 ## Tracks
-Use load_skill to access specialized knowledge before tackling unfamiliar topics.
+Use load_track to access specialized knowledge before tackling unfamiliar topics.
 Available tracks:
 ${opts.tracks}`;
 }
@@ -1365,7 +1365,7 @@ ${opts.tracks}`;
 import { createAgent, nativeCodec } from "@lite-agent/core";
 import type { Agent, Middleware, ModelProvider, Tool } from "@lite-agent/core";
 import { defaultTools } from "./tools";
-import { SkillLoader } from "./tracks/loader";
+import { TrackLoader } from "./tracks/loader";
 import { loadTrackTool } from "./tracks/loadTrackTool";
 import { buildSystemPrompt } from "./system";
 
@@ -1373,7 +1373,7 @@ export interface CreateLiteAgentConfig {
   model: ModelProvider;
   modelName?: string;
   workdir: string;
-  skillsDir?: string;
+  tracksDir?: string;
   tools?: Tool[];
   system?: string;
   allowedTools?: string[];
@@ -1387,8 +1387,8 @@ export function createLiteAgent(cfg: CreateLiteAgentConfig): Agent {
   let tools: Tool[] = [...defaultTools(cfg.workdir)];
   let tracks = "(no tracks available)";
 
-  if (cfg.skillsDir) {
-    const loader = new SkillLoader(cfg.skillsDir);
+  if (cfg.tracksDir) {
+    const loader = new TrackLoader(cfg.tracksDir);
     tools.push(loadTrackTool(loader));
     tracks = loader.getDescriptions();
   }
@@ -1438,7 +1438,7 @@ export interface QueryOptions {
   modelName?: string;
   cwd?: string;
   systemPrompt?: string;
-  skillsDir?: string;
+  tracksDir?: string;
   tools?: Tool[];
   allowedTools?: string[];
   disallowedTools?: string[];
@@ -1456,7 +1456,7 @@ export function query(
     model: opts.model,
     modelName: opts.modelName,
     workdir: opts.cwd ?? process.cwd(),
-    skillsDir: opts.skillsDir,
+    tracksDir: opts.tracksDir,
     tools: opts.tools,
     system: opts.systemPrompt,
     allowedTools: opts.allowedTools,
@@ -1508,7 +1508,7 @@ export {
   todoTool,
   makeSafePath,
 } from "./tools";
-export { SkillLoader } from "./tracks/loader";
+export { TrackLoader } from "./tracks/loader";
 export { loadTrackTool } from "./tracks/loadTrackTool";
 ```
 
@@ -1597,7 +1597,7 @@ const agent = createLiteAgent({
   model: Takebox AI(),
   modelName: process.env["MODEL_ID"],
   workdir,
-  skillsDir: join(workdir, "tracks"),
+  tracksDir: join(workdir, "tracks"),
 });
 
 function render(ev: AgentEvent): void {

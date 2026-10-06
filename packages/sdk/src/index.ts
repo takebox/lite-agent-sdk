@@ -33,7 +33,7 @@ export { permissionFilePolicy } from "./permission/files";
 export type { PermissionFileOptions, PermissionFileStatus, FilePermissionPolicy } from "./permission/files";
 export { jsonlEventSink, recordEventStream } from "./observability";
 export type { EventRecord, EventSink, JsonlEventSinkOptions } from "./observability";
-export { SkillLoader } from "./tracks/loader";
+export { TrackLoader } from "./tracks/loader";
 export { loadTrackTool } from "./tracks/loadTrackTool";
 export { jsonlStore, newSessionId, isSessionStore } from "./store";
 export type { JsonlStoreOptions, SessionStore, SessionInfo } from "./store";

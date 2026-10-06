@@ -16,7 +16,7 @@ import uuid
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
-from scripts.utils import parse_skill_md
+from scripts.utils import parse_track_md
 
 
 def find_project_root() -> Path:
@@ -43,7 +43,7 @@ def run_single_query(
     """Run a single query and return whether the track was triggered.
 
     Creates a command file in .haijun/commands/ so it appears in Haijun's
-    available_skills list, then runs `haijun -p` with the raw query.
+    available_tracks list, then runs `haijun -p` with the raw query.
     Uses --include-partial-messages to detect triggering early from
     stream events (content_block_start) rather than waiting for the
     full assistant message, which only arrives after tool execution.
@@ -276,7 +276,7 @@ def main():
         print(f"Error: No TRACK.md found at {track_path}", file=sys.stderr)
         sys.exit(1)
 
-    name, original_description, content = parse_skill_md(track_path)
+    name, original_description, content = parse_track_md(track_path)
     description = args.description or original_description
     project_root = find_project_root()
 

@@ -96,7 +96,7 @@ completion 轮次严格串行，进程重启后不会恢复未完成工作。`qu
 ## 特性
 
 - **默认工具** —— `bash`、`read_file`、`write_file`、`edit_file`、`delete_file`，限定在 `workdir` 内；原子写 + 变更前快照，会话恢复可撤销这些修改。
-- **技能（Tracks）** —— 从 `~/.lite-agent/tracks`、`<workdir>/.lite-agent/tracks` 或 `skillsDir` 加载 `TRACK.md`；通过 `load_skill` 按需注入。
+- **技能（Tracks）** —— 从 `~/.lite-agent/tracks`、`<workdir>/.lite-agent/tracks` 或 `tracksDir` 加载 `TRACK.md`；通过 `load_track` 按需注入。
 - **子 Agent** —— detached、pooled 的 `Agent` 组，只送达一次按输入顺序排列的聚合结果；内置 `general-purpose` agent，可用 `agents/*.md` 自定义（`agents: false` 关闭 child 派发并阻止递归）。
 - **任务（Tasks）** —— 持久化任务列表（`TaskCreate/Update/Get/List`），带每轮提醒（`tasks: false` 关闭）。
 - **会话（Sessions）** —— 通过 `fileCheckpointer` 做事件溯源持久化；可替换为 [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) 或任意 `Checkpointer`。
@@ -120,7 +120,7 @@ completion 轮次严格串行，进程重启后不会恢复未完成工作。`qu
 | `policy`、`bashCommand`、`filePath`、`permissionFilePolicy` | 权限策略与内容级 specifier。 |
 | `fileCheckpointer`、`jsonlStore`、`fileTaskStore`、`fileSpillStore`、`fileContextArchive` | 基于文件的持久化适配器。 |
 | `jsonlEventSink`、`recordEventStream` | 事件可观测性 sink。 |
-| `SkillLoader`、`loadTrackTool`、`AgentLoader`、`builtinAgents` | 技能与子 Agent 加载。 |
+| `TrackLoader`、`loadTrackTool`、`AgentLoader`、`builtinAgents` | 技能与子 Agent 加载。 |
 | `* from @lite-agent/core` | 完整重导出内核：类型、事件、策略、中间件辅助函数。 |
 
 ## 相关链接

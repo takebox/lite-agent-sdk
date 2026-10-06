@@ -87,7 +87,7 @@ At startup the provider probes `GET {baseURL}/models` and fails fast if the serv
 
 ## Permissions
 
-Permissions are deny-by-default: only the read-only built-ins (`read_file`, `read_spilled`, `load_skill`, `TaskGet`, `TaskList`, `BashOutput`) and the interactive `ask_user`/`final_answer` tools are allowed out of the box. Every mutating tool needs an explicit `ask` or `allow` rule.
+Permissions are deny-by-default: only the read-only built-ins (`read_file`, `read_spilled`, `load_track`, `TaskGet`, `TaskList`, `BashOutput`) and the interactive `ask_user`/`final_answer` tools are allowed out of the box. Every mutating tool needs an explicit `ask` or `allow` rule.
 
 ### Discovery order
 

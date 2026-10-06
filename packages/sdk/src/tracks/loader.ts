@@ -2,10 +2,10 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import matter from "gray-matter";
 
-interface SkillMeta { name?: string; description?: string; tags?: string | string[]; [k: string]: unknown; }
-interface Track { meta: SkillMeta; body: string; path: string; }
+interface TrackMeta { name?: string; description?: string; tags?: string | string[]; [k: string]: unknown; }
+interface Track { meta: TrackMeta; body: string; path: string; }
 
-export class SkillLoader {
+export class TrackLoader {
   readonly dirs: string[];
   private tracks: Record<string, Track> = {};
 
@@ -32,10 +32,10 @@ export class SkillLoader {
     }
   }
 
-  private parse(text: string): { meta: SkillMeta; body: string } {
+  private parse(text: string): { meta: TrackMeta; body: string } {
     const { data, content } = matter(text);
     // gray-matter returns data: Record<string, any>; cast is safe for well-formed TRACK.md.
-    return { meta: data as SkillMeta, body: content.trim() };
+    return { meta: data as TrackMeta, body: content.trim() };
   }
 
   getDescriptions(): string {

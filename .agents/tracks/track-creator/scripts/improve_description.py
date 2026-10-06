@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from scripts.utils import parse_skill_md
+from scripts.utils import parse_track_md
 
 
 def _call_haijun(prompt: str, model: str | None, timeout: int = 300) -> str:
@@ -78,7 +78,7 @@ def improve_description(
 
     prompt = f"""You are optimizing a track description for a Haijun Code track called "{track_name}". A "track" is sort of like a prompt, but with progressive disclosure -- there's a title and description that Haijun sees when deciding whether to use the track, and then if it does use the track, it reads the .md file which has lots more details and potentially links to other resources in the track folder like helper files and scripts and additional documentation or examples.
 
-The description appears in Haijun's "available_skills" list. When a user sends a query, Haijun decides whether to invoke the track based solely on the title and on this description. Your goal is to write a description that triggers for relevant queries, and doesn't trigger for irrelevant ones.
+The description appears in Haijun's "available_tracks" list. When a user sends a query, Haijun decides whether to invoke the track based solely on the title and on this description. Your goal is to write a description that triggers for relevant queries, and doesn't trigger for irrelevant ones.
 
 Here's the current description:
 <current_description>
@@ -210,7 +210,7 @@ def main():
     if args.history:
         history = json.loads(Path(args.history).read_text())
 
-    name, _, content = parse_skill_md(track_path)
+    name, _, content = parse_track_md(track_path)
     current_description = eval_results["description"]
 
     if args.verbose:

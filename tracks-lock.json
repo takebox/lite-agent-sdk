@@ -4,7 +4,7 @@
     "apple-design": {
       "source": "emilkowalski/tracks",
       "sourceType": "github",
-      "skillPath": "tracks/apple-design/TRACK.md",
+      "trackPath": "tracks/apple-design/TRACK.md",
       "computedHash": "8b94db67cb9edaad5f1501010804caa610131f1d2dfda0a27664b2e858deade3"
     }
   }

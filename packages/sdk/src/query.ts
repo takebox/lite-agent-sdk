@@ -34,7 +34,7 @@ export interface QueryOptions {
   defaultModel?: ModelTier;
   cwd?: string;
   systemPrompt?: string;
-  skillsDir?: string;
+  tracksDir?: string;
   tools?: Tool[];
   codec?: ToolCallCodec;
   allowedTools?: string[];
@@ -92,7 +92,7 @@ export function query(
     models: opts.models,
     defaultModel: opts.defaultModel,
     workdir: opts.cwd ?? process.cwd(),
-    skillsDir: opts.skillsDir,
+    tracksDir: opts.tracksDir,
     tools: opts.tools,
     codec: opts.codec,
     system: opts.systemPrompt,

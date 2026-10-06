@@ -36,7 +36,7 @@ test("runs with default tools wired", async () => {
   expect((await agent.send("hi")).text).toBe("ok");
 });
 
-test("load_skill is wired when skillsDir is set", async () => {
+test("load_track is wired when tracksDir is set", async () => {
   const root = mkdtempSync(join(tmpdir(), "sk-"));
   mkdirSync(join(root, "demo"));
   writeFileSync(
@@ -51,7 +51,7 @@ test("load_skill is wired when skillsDir is set", async () => {
           {
             type: "tool_call",
             id: "t1",
-            name: "load_skill",
+            name: "load_track",
             input: { name: "demo" },
           },
         ],
@@ -65,7 +65,7 @@ test("load_skill is wired when skillsDir is set", async () => {
   const agent = createLiteAgent({
     model: fp,
     workdir: process.cwd(),
-    skillsDir: root,
+    tracksDir: root,
   });
   const results: string[] = [];
   for await (const ev of agent.run("hi"))

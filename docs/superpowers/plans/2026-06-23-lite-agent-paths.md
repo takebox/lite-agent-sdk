@@ -16,7 +16,7 @@
 |---|---|
 | **Create** `packages/sdk/src/paths.ts` | Pure path computation: `liteAgentHome()`, `projectHash()`, `resolveProjectPaths()` → `ProjectPaths`. No fs side effects. |
 | **Create** `packages/sdk/src/cleanup.ts` | `sweepStale()` — age-based delete of stale `spill`/`sessions` files across all projects. |
-| **Modify** `packages/sdk/src/tracks/loader.ts` | `SkillLoader` accepts `string \| string[]` (later dir overrides earlier); add `names()`. |
+| **Modify** `packages/sdk/src/tracks/loader.ts` | `TrackLoader` accepts `string \| string[]` (later dir overrides earlier); add `names()`. |
 | **Modify** `packages/sdk/src/createLiteAgent.ts` | Resolve paths once; default-on `sessions`/`spill`/`compactor`/`cleanup`; merge track dirs; new `home` option. |
 | **Modify** `packages/sdk/src/query.ts` | Pass new options (`home`/`sessions`/`spill`/`cleanup`, widen `compactor`) through to `createLiteAgent`. |
 | **Modify** `packages/sdk/src/index.ts` | Export `resolveProjectPaths`/`liteAgentHome`/`projectHash`/`ProjectPaths`/`sweepStale`. |
@@ -154,7 +154,7 @@ git commit -m "feat(sdk): add paths.ts (.lite-agent home + project path resoluti
 
 ---
 
-## Task 2: `SkillLoader` — multi-dir merge + `names()`
+## Task 2: `TrackLoader` — multi-dir merge + `names()`
 
 **Files:**
 - Modify: `packages/sdk/src/tracks/loader.ts`
@@ -173,7 +173,7 @@ test("a later dir overrides an earlier dir on name collision", () => {
   writeFileSync(join(a, "demo", "TRACK.md"), "---\nname: demo\ndescription: from A\n---\nBODY A");
   writeFileSync(join(b, "demo", "TRACK.md"), "---\nname: demo\ndescription: from B\n---\nBODY B");
 
-  const loader = new SkillLoader([a, b]);
+  const loader = new TrackLoader([a, b]);
   expect(loader.getContent("demo")).toContain("BODY B");
   expect(loader.getContent("demo")).not.toContain("BODY A");
 });
@@ -183,7 +183,7 @@ test("names() lists loaded tracks; a missing dir in the list is skipped", () => 
   mkdirSync(join(a, "demo"));
   writeFileSync(join(a, "demo", "TRACK.md"), "---\nname: demo\ndescription: d\n---\nB");
 
-  const loader = new SkillLoader([join(tmpdir(), "missing-xyz"), a]);
+  const loader = new TrackLoader([join(tmpdir(), "missing-xyz"), a]);
   expect(loader.names()).toEqual(["demo"]);
 });
 ```
@@ -191,14 +191,14 @@ test("names() lists loaded tracks; a missing dir in the list is skipped", () => 
 - [ ] **Step 2: Run the tests to verify they fail**
 
 Run: `pnpm --filter @lite-agent/sdk test -- tracks`
-Expected: FAIL — `new SkillLoader([a, b])` passes an array where a `string` is expected (the loader stringifies it / `existsSync` on the array fails), and `loader.names` is not a function.
+Expected: FAIL — `new TrackLoader([a, b])` passes an array where a `string` is expected (the loader stringifies it / `existsSync` on the array fails), and `loader.names` is not a function.
 
 - [ ] **Step 3: Write the minimal implementation**
 
 In `packages/sdk/src/tracks/loader.ts`, replace the field + constructor + `loadAll` (lines 8–30) with:
 
 ```ts
-export class SkillLoader {
+export class TrackLoader {
   readonly dirs: string[];
   private tracks: Record<string, Track> = {};
 
@@ -243,7 +243,7 @@ Expected: PASS — including the existing two tracks tests (string constructor s
 
 ```bash
 git add packages/sdk/src/tracks/loader.ts packages/sdk/test/tracks.test.ts
-git commit -m "feat(sdk): SkillLoader accepts ordered dir list (later overrides) + names()"
+git commit -m "feat(sdk): TrackLoader accepts ordered dir list (later overrides) + names()"
 ```
 
 ---
@@ -540,7 +540,7 @@ test("a project track shadows a same-named global track", async () => {
   writeFileSync(join(globalSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: g\n---\nGLOBAL BODY");
   writeFileSync(join(projectSkillsDir, "demo", "TRACK.md"), "---\nname: demo\ndescription: p\n---\nPROJECT BODY");
 
-  const agent = createLiteAgent({ model: callTool("load_skill", { name: "demo" }), workdir });
+  const agent = createLiteAgent({ model: callTool("load_track", { name: "demo" }), workdir });
   const res = await toolResults(agent);
   expect(res).toContain("PROJECT BODY");
   expect(res).not.toContain("GLOBAL BODY");
@@ -599,7 +599,7 @@ import type {
   Tool,
 } from "@lite-agent/core";
 import { defaultTools, askUserTool } from "./tools";
-import { SkillLoader } from "./tracks/loader";
+import { TrackLoader } from "./tracks/loader";
 import { loadTrackTool } from "./tracks/loadTrackTool";
 import { buildSystemPrompt } from "./system";
 import { resolveProjectPaths } from "./paths";
@@ -611,7 +611,7 @@ export interface CreateLiteAgentConfig {
   model: ModelProvider;
   modelName?: string;
   workdir: string;
-  skillsDir?: string;
+  tracksDir?: string;
   tools?: Tool[];
   system?: string;
   allowedTools?: string[];
@@ -649,11 +649,11 @@ export function createLiteAgent(cfg: CreateLiteAgentConfig): Agent {
 
   let tools: Tool[] = [...defaultTools(cfg.workdir)];
 
-  // Tracks: global < project < explicit skillsDir (later overrides earlier).
-  const loader = new SkillLoader([
+  // Tracks: global < project < explicit tracksDir (later overrides earlier).
+  const loader = new TrackLoader([
     paths.globalSkillsDir,
     paths.projectSkillsDir,
-    ...(cfg.skillsDir ? [cfg.skillsDir] : []),
+    ...(cfg.tracksDir ? [cfg.tracksDir] : []),
   ]);
   let tracks = "(no tracks available)";
   if (loader.names().length > 0) {
@@ -831,7 +831,7 @@ feat(sdk): `.lite-agent` home, default persistence, and age-based cleanup
 `createLiteAgent`/`query` adopt a Haijun Code–style home (`$LITE_AGENT_HOME` || `~/.lite-agent`) and turn persistence on by default (all opt-out):
 
 - **Paths** (`resolveProjectPaths` / `liteAgentHome` / `projectHash`): per-project runtime artifacts under `~/.lite-agent/projects/<sha1(workdir)>/{spill,sessions}`; global tracks under `~/.lite-agent/tracks`; project tracks under `<workdir>/.lite-agent/tracks`.
-- **Tracks**: loaded from global < project < explicit `skillsDir` (later overrides earlier).
+- **Tracks**: loaded from global < project < explicit `tracksDir` (later overrides earlier).
 - **Defaults** (each overridable): `sessions` → `jsonlStore`, `spill` → `fileSpillStore` + `read_spilled`, `compactor` → deterministic `defaultCompactor` (no LLM), `cleanup` → `sweepStale` (30-day sweep). Opt out via `sessions:false` / `spill:false` / `compactor:false` / `cleanup:false`; an explicit `store`/`compactor` overrides the default.
 
 No core changes — built entirely on the existing `Store` / `SpillStore` / `Compactor` strategies.
@@ -847,7 +847,7 @@ Expected: PASS — all packages build; sdk gains the new tests (paths 3, tracks 
 Re-read `docs/superpowers/specs/2026-06-23-lite-agent-paths-design.md` and confirm each requirement maps to a task:
 - Directory layout / `<hash>` → Task 1 (`resolveProjectPaths`, `projectHash`).
 - `paths.ts` API → Task 1.
-- SkillLoader multi-dir, global<project<explicit → Task 2 + Task 5.
+- TrackLoader multi-dir, global<project<explicit → Task 2 + Task 5.
 - Default persistence table (`sessions`/`spill`/`compactor`/`cleanup`/`home`) + precedence (explicit store/compactor win; `spill:false` drops store+tool; default compaction = deterministic only) → Task 5.
 - `sweepStale` global age sweep, guarded, once at construction → Task 3 + Task 5.
 - Testability (`LITE_AGENT_HOME` + setupFiles tmpdir) → Task 4.

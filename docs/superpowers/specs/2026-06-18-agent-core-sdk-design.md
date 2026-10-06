@@ -371,7 +371,7 @@ class AgentError extends Error {}
 
 | 老功能 | 落成 | 机制 |
 |---|---|---|
-| tracks | beforeAgent 注入技能描述的 middleware + `load_skill` 工具 | Middleware + Tool |
+| tracks | beforeAgent 注入技能描述的 middleware + `load_track` 工具 | Middleware + Tool |
 | background | `background_run/check/stop` 工具 + 完成 `emit` 事件 + 回灌结果的 beforeModel middleware | Tool + Event + Middleware |
 | monitor | 纯事件流消费者 + 进程指标,起 HTTP/SSE,**零侵入** | Event only |
 | worktree | git 操作工具组 | Tool |

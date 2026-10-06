@@ -4,7 +4,7 @@ Aggregate individual run results into benchmark summary statistics.
 
 Reads grading.json files from run directories and produces:
 - run_summary with mean, stddev, min, max for each metric
-- delta between with_skill and without_skill configurations
+- delta between with_track and without_track configurations
 
 Usage:
     python aggregate_benchmark.py <benchmark_dir>
@@ -17,10 +17,10 @@ The script supports two directory layouts:
     Workspace layout (from track-creator iterations):
     <benchmark_dir>/
     └── eval-N/
-        ├── with_skill/
+        ├── with_track/
         │   ├── run-1/grading.json
         │   └── run-2/grading.json
-        └── without_skill/
+        └── without_track/
             ├── run-1/grading.json
             └── run-2/grading.json
 
@@ -28,9 +28,9 @@ The script supports two directory layouts:
     <benchmark_dir>/
     └── runs/
         └── eval-N/
-            ├── with_skill/
+            ├── with_track/
             │   └── run-1/grading.json
-            └── without_skill/
+            └── without_track/
                 └── run-1/grading.json
 """
 
@@ -68,8 +68,8 @@ def load_run_results(benchmark_dir: Path) -> dict:
     """
     Load all run results from a benchmark directory.
 
-    Returns dict keyed by config name (e.g. "with_skill"/"without_skill",
-    or "new_skill"/"old_skill"), each containing a list of run results.
+    Returns dict keyed by config name (e.g. "with_track"/"without_track",
+    or "new_track"/"old_track"), each containing a list of run results.
     """
     # Support both layouts: eval dirs directly under benchmark_dir, or under runs/
     runs_dir = benchmark_dir / "runs"

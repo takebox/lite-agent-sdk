@@ -80,7 +80,7 @@ const agent = createLiteAgent({
   model: provider,
   modelName,
   workdir,
-  skillsDir: join(exampleRoot, "tracks"),
+  tracksDir: join(exampleRoot, "tracks"),
   permission: policy({ ask: ["bash", "write_file", "edit_file"] }),
   onApproval,
   onAskUser,

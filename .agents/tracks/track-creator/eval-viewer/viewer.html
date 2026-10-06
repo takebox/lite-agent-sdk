@@ -713,10 +713,10 @@
 
       // Config badge
       const badge = document.getElementById("config-badge");
-      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      const configMatch = run.id.match(/(with_track|without_track|new_track|old_track)/);
       if (configMatch) {
         const config = configMatch[1];
-        const isBaseline = config === "without_skill" || config === "old_skill";
+        const isBaseline = config === "without_track" || config === "old_track";
         badge.textContent = config.replace(/_/g, " ");
         badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
         badge.style.display = "inline-block";

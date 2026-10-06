@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
 import { buildSystemPrompt } from "../src/system";
 
-test("system prompt embeds workdir, model, tracks, and load_skill hint", () => {
+test("system prompt embeds workdir, model, tracks, and load_track hint", () => {
   const s = buildSystemPrompt({ workdir: "/w", modelName: "m1", tracks: "  - demo: x" });
   expect(s).toContain("/w");
   expect(s).toContain("m1");
   expect(s).toContain("- demo: x");
-  expect(s).toContain("load_skill");
+  expect(s).toContain("load_track");
   expect(s).toContain("TaskCreate");
   expect(s).toContain("delete_file");
 });

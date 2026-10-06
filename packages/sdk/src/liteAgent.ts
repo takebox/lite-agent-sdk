@@ -41,7 +41,7 @@ export type ContextOptions = {
 
 export interface CreateLiteAgentConfig extends ModelConfiguration {
   workdir: string;
-  skillsDir?: string;
+  tracksDir?: string;
   tools?: Tool[];
   /** Tool-call protocol. Default nativeCodec. */
   codec?: ToolCallCodec;

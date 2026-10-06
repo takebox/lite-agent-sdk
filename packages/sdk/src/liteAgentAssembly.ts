@@ -14,7 +14,7 @@ import {
 import type { BackgroundTasks, Checkpointer, Compactor, Middleware, Tool } from "@lite-agent/core";
 import { tool } from "./tool";
 import { askUserTool, defaultTools } from "./tools";
-import { SkillLoader } from "./tracks/loader";
+import { TrackLoader } from "./tracks/loader";
 import { loadTrackTool } from "./tracks/loadTrackTool";
 import { buildSystemPrompt } from "./system";
 import { fileCheckpointer } from "./checkpoint";
@@ -54,15 +54,15 @@ export function assembleLiteAgent({
     ...defaultTools(cfg.workdir, { files: cfg.fileTools, bash: cfg.bash }),
   ];
 
-  const skillLoader = new SkillLoader([
+  const trackLoader = new TrackLoader([
     paths.globalSkillsDir,
     paths.projectSkillsDir,
-    ...(cfg.skillsDir ? [cfg.skillsDir] : []),
+    ...(cfg.tracksDir ? [cfg.tracksDir] : []),
   ]);
   let tracks = "(no tracks available)";
-  if (skillLoader.names().length > 0) {
-    tools.push(loadTrackTool(skillLoader));
-    tracks = skillLoader.getDescriptions();
+  if (trackLoader.names().length > 0) {
+    tools.push(loadTrackTool(trackLoader));
+    tracks = trackLoader.getDescriptions();
   }
 
   const spillEnabled = cfg.spill !== false;

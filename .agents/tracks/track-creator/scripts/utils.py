@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 
-def parse_skill_md(track_path: Path) -> tuple[str, str, str]:
+def parse_track_md(track_path: Path) -> tuple[str, str, str]:
     """Parse a TRACK.md file, returning (name, description, full_content)."""
     content = (track_path / "TRACK.md").read_text()
     lines = content.split("\n")

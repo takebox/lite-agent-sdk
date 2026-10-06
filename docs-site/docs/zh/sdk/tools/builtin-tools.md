@@ -13,7 +13,7 @@
 | `delete_file` | 删除文件（先快照，因此 `restore()` 可以恢复它）。 |
 | `TaskCreate` / `TaskUpdate` / `TaskGet` / `TaskList` | 面向多步工作的持久化任务清单。 |
 | `Agent` | 把子任务委派给[子代理](/zh/sdk/tools/subagents)。 |
-| `load_skill` | 按需把某个 [track](/zh/sdk/tools/tracks) 的正文加载进上下文。 |
+| `load_track` | 按需把某个 [track](/zh/sdk/tools/tracks) 的正文加载进上下文。 |
 | `BashOutput` | 按 `bg_…` id 读取后台 `bash` 命令的增量输出。 |
 | `KillBackground` | 按 id 取消一个正在运行的后台任务。 |
 | `ask_user` | 运行中途向用户提问——仅在设置了 `onAskUser` 时注册。 |
@@ -52,5 +52,5 @@ const agent = createLiteAgent({
 
 - [自定义工具](/zh/sdk/tools/custom-tools)——用 `tool()` 添加你自己的工具。
 - [子代理](/zh/sdk/tools/subagents)——`Agent` 工具委派的目标。
-- [Tracks](/zh/sdk/tools/tracks)——`load_skill` 加载的内容。
+- [Tracks](/zh/sdk/tools/tracks)——`load_track` 加载的内容。
 - [权限](/zh/sdk/control/permissions)——用 allow / ask / deny 规则门控工具调用。

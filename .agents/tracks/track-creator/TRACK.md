@@ -177,13 +177,13 @@ Execute this task:
 - Track path: <path-to-track>
 - Task: <eval prompt>
 - Input files: <eval files if any, or "none">
-- Save outputs to: <workspace>/iteration-<N>/eval-<ID>/with_skill/outputs/
+- Save outputs to: <workspace>/iteration-<N>/eval-<ID>/with_track/outputs/
 - Outputs to save: <what the user cares about — e.g., "the .docx file", "the final CSV">
 ```
 
 **Baseline run** (same prompt, but the baseline depends on context):
-- **Creating a new track**: no track at all. Same prompt, no track path, save to `without_skill/outputs/`.
-- **Improving an existing track**: the old version. Before editing, snapshot the track (`cp -r <track-path> <workspace>/track-snapshot/`), then point the baseline subagent at the snapshot. Save to `old_skill/outputs/`.
+- **Creating a new track**: no track at all. Same prompt, no track path, save to `without_track/outputs/`.
+- **Improving an existing track**: the old version. Before editing, snapshot the track (`cp -r <track-path> <workspace>/track-snapshot/`), then point the baseline subagent at the snapshot. Save to `old_track/outputs/`.
 
 Write an `eval_metadata.json` for each test case (assertions can be empty for now). Give each eval a descriptive name based on what it's testing — not just "eval-0". Use this name for the directory too. If this iteration uses new or modified eval prompts, create these files for each new eval directory — don't assume they carry over from previous iterations.
 
@@ -229,7 +229,7 @@ Once all runs are done:
    python -m scripts.aggregate_benchmark <workspace>/iteration-N --track-name <name>
    ```
    This produces `benchmark.json` and `benchmark.md` with pass_rate, time, and tokens for each configuration, with mean ± stddev and the delta. If generating benchmark.json manually, see `references/schemas.md` for the exact schema the viewer expects.
-Put each with_skill version before its baseline counterpart.
+Put each with_track version before its baseline counterpart.
 
 3. **Do an analyst pass** — read the benchmark data and surface patterns the aggregate stats might hide. See `agents/analyzer.md` (the "Analyzing Benchmark Results" section) for what to look for — things like assertions that always pass regardless of track (non-discriminating), high-variance evals (possibly flaky), and time/token tradeoffs.
 
@@ -271,9 +271,9 @@ When the user tells you they're done, read `feedback.json`:
 ```json
 {
   "reviews": [
-    {"run_id": "eval-0-with_skill", "feedback": "the chart is missing axis labels", "timestamp": "..."},
-    {"run_id": "eval-1-with_skill", "feedback": "", "timestamp": "..."},
-    {"run_id": "eval-2-with_skill", "feedback": "perfect, love this", "timestamp": "..."}
+    {"run_id": "eval-0-with_track", "feedback": "the chart is missing axis labels", "timestamp": "..."},
+    {"run_id": "eval-1-with_track", "feedback": "", "timestamp": "..."},
+    {"run_id": "eval-2-with_track", "feedback": "perfect, love this", "timestamp": "..."}
   ],
   "status": "complete"
 }
@@ -310,7 +310,7 @@ This task is pretty important (we are trying to create billions a year in econom
 After improving the track:
 
 1. Apply your improvements to the track
-2. Rerun all test cases into a new `iteration-<N+1>/` directory, including baseline runs. If you're creating a new track, the baseline is always `without_skill` (no track) — that stays the same across iterations. If you're improving an existing track, use your judgment on what makes sense as the baseline: the original version the user came in with, or the previous iteration.
+2. Rerun all test cases into a new `iteration-<N+1>/` directory, including baseline runs. If you're creating a new track, the baseline is always `without_track` (no track) — that stays the same across iterations. If you're improving an existing track, use your judgment on what makes sense as the baseline: the original version the user came in with, or the previous iteration.
 3. Launch the reviewer with `--previous-workspace` pointing at the previous iteration
 4. Wait for the user to review and tell you they're done
 5. Read the new feedback, improve again, repeat
@@ -364,8 +364,8 @@ Present the eval set to the user for review using the HTML template:
 1. Read the template from `assets/eval_review.html`
 2. Replace the placeholders:
    - `__EVAL_DATA_PLACEHOLDER__` → the JSON array of eval items (no quotes around it — it's a JS variable assignment)
-   - `__SKILL_NAME_PLACEHOLDER__` → the track's name
-   - `__SKILL_DESCRIPTION_PLACEHOLDER__` → the track's current description
+   - `__TRACK_NAME_PLACEHOLDER__` → the track's name
+   - `__TRACK_DESCRIPTION_PLACEHOLDER__` → the track's current description
 3. Write to a temp file (e.g., `/tmp/eval_review_<track-name>.html`) and open it: `open /tmp/eval_review_<track-name>.html`
 4. The user can edit queries, toggle should-trigger, add/remove entries, then click "Export Eval Set"
 5. The file downloads to `~/Downloads/eval_set.json` — check the Downloads folder for the most recent version in case there are multiple (e.g., `eval_set (1).json`)
@@ -395,7 +395,7 @@ This handles the full optimization loop automatically. It splits the eval set in
 
 ### How track triggering works
 
-Understanding the triggering mechanism helps design better eval queries. Tracks appear in Haijun's `available_skills` list with their name + description, and Haijun decides whether to consult a track based on that description. The important thing to know is that Haijun only consults tracks for tasks it can't easily handle on its own — simple, one-step queries like "read this PDF" may not trigger a track even if the description matches perfectly, because Haijun can handle them directly with basic tools. Complex, multi-step, or specialized queries reliably trigger tracks when the description matches.
+Understanding the triggering mechanism helps design better eval queries. Tracks appear in Haijun's `available_tracks` list with their name + description, and Haijun decides whether to consult a track based on that description. The important thing to know is that Haijun only consults tracks for tasks it can't easily handle on its own — simple, one-step queries like "read this PDF" may not trigger a track even if the description matches perfectly, because Haijun can handle them directly with basic tools. Complex, multi-step, or specialized queries reliably trigger tracks when the description matches.
 
 This means your eval queries should be substantive enough that Haijun would actually benefit from consulting a track. Simple queries like "read file X" are poor test cases — they won't trigger tracks regardless of description quality.
 

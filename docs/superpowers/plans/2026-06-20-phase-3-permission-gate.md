@@ -528,7 +528,7 @@ const agent = createLiteAgent({
   model: Takebox AI(),
   modelName: process.env["MODEL_ID"],
   workdir,
-  skillsDir: join(workdir, "tracks"),
+  tracksDir: join(workdir, "tracks"),
   permission: policy({ ask: ["bash", "write_file"] }),
   onApproval,
 });

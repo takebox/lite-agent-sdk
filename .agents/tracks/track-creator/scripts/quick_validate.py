@@ -9,7 +9,7 @@ import re
 import yaml
 from pathlib import Path
 
-def validate_skill(track_path):
+def validate_track(track_path):
     """Basic validation of a track"""
     track_path = Path(track_path)
 
@@ -98,6 +98,6 @@ if __name__ == "__main__":
         print("Usage: python quick_validate.py <track_directory>")
         sys.exit(1)
     
-    valid, message = validate_skill(sys.argv[1])
+    valid, message = validate_track(sys.argv[1])
     print(message)
     sys.exit(0 if valid else 1)

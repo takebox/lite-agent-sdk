@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { defineTool } from "@lite-agent/core";
 import type { Tool } from "@lite-agent/core";
-import type { SkillLoader } from "./loader";
+import type { TrackLoader } from "./loader";
 
-export function loadTrackTool(loader: SkillLoader): Tool {
+export function loadTrackTool(loader: TrackLoader): Tool {
   return defineTool({
-    name: "load_skill",
+    name: "load_track",
     description:
       "Load a track's full instructions by name before tackling an unfamiliar task.",
     schema: z.object({ name: z.string() }),

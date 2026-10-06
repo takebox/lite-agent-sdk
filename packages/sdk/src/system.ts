@@ -29,7 +29,7 @@ ${modelLine}
 - Call TaskUpdate to set a task in_progress before starting it and completed only when fully done; use TaskList/TaskGet to review state.
 
 ## Tracks
-Use load_skill to access specialized knowledge before tackling unfamiliar topics.
+Use load_track to access specialized knowledge before tackling unfamiliar topics.
 Available tracks:
 ${opts.tracks}${subagentsSection}`;
 }

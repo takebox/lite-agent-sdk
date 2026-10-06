@@ -82,20 +82,20 @@ Two responsibilities, split into pure functions for testability:
     `workdir` (workspace confinement) and the 50KB read cap.
   - `todoTool()` — closes over a fresh in-memory `TodoManager` (no global singleton).
   - `defaultTools(workdir)` returns all five.
-- **Tracks:** `SkillLoader` (ported, no global singleton — constructed by the factory) +
+- **Tracks:** `TrackLoader` (ported, no global singleton — constructed by the factory) +
   `loadTrackTool(loader)` returning the track body by name. Track **descriptions** are injected
   into the system prompt at construction time (tracks are static at startup), so no middleware.
 - **System prompt:** `buildSystemPrompt({ workdir, modelName, tracks })` — a slim prompt
-  (identity, work-in-workdir, todo-planning, tracks list + `load_skill` hint). The old
+  (identity, work-in-workdir, todo-planning, tracks list + `load_track` hint). The old
   team/subagent sections are dropped.
 - **Factory:** `createLiteAgent(cfg)` wires `nativeCodec` + default tools + optional
-  `load_skill` + system prompt and returns a core `Agent` (the reusable handle the CLI keeps
+  `load_track` + system prompt and returns a core `Agent` (the reusable handle the CLI keeps
   across turns):
 
   ```ts
   createLiteAgent({
     model: ModelProvider; modelName?: string; workdir: string;
-    skillsDir?: string; tools?: Tool[]; system?: string;
+    tracksDir?: string; tools?: Tool[]; system?: string;
     allowedTools?: string[]; disallowedTools?: string[];
     maxTurns?: number; maxTokens?: number; use?: Middleware[];
   }): Agent
@@ -107,7 +107,7 @@ To feel familiar to `haijun-agent-sdk` users, `lite-agent` also exports:
 
 - **`query(opts): AsyncGenerator<AgentEvent, RunResult>`** — a one-shot facade mirroring
   `haijun-agent-sdk`'s `query({ prompt, options })`. `opts = { prompt, model, modelName?, cwd?,
-systemPrompt?, allowedTools?, disallowedTools?, tools?, skillsDir?, maxTurns?, maxTokens?,
+systemPrompt?, allowedTools?, disallowedTools?, tools?, tracksDir?, maxTurns?, maxTokens?,
 use?, signal?, sessionId? }`. Internally: `createLiteAgent({...}).run(prompt, { signal, sessionId })`.
   (`cwd` maps to `workdir`, `systemPrompt` to `system`.)
 - **`tool(name, description, schema, handler)`** — a positional helper matching
@@ -128,7 +128,7 @@ on one package for both the batteries and the core types (`Message`, `AgentEvent
 
 - Removed: `src/agent/`, `src/tools/`, `src/prompt/`, `src/monitor.ts`; `src/main.ts` rewritten.
 - `main.ts`: load `.env` → `Takebox AI()` provider → `createLiteAgent({ model, modelName: MODEL_ID,
-workdir: cwd, skillsDir: <cwd>/tracks })` → REPL.
+workdir: cwd, tracksDir: <cwd>/tracks })` → REPL.
 - **Multi-turn** without a `Store`: the app keeps `history: Message[]`. Each turn pushes the user
   message, drives `agent.run(history, { signal, sessionId })`, renders events, and sets
   `history = result.messages` (the generator's return value).
@@ -158,8 +158,8 @@ workdir: cwd, skillsDir: <cwd>/tracks })` → REPL.
   `message_done` (assembled blocks + usage). No network.
 - **sdk tools** (`tools.test.ts`): `safePath` confinement, bash dangerous-command block, todo render.
 - **sdk factory** (`createLiteAgent.test.ts`): with `fakeProvider`, assert the agent runs and that
-  default tools + `load_skill` + track descriptions are wired (a track-listing in `system`, a
-  `load_skill` call resolves); assert `allowedTools`/`disallowedTools` filter the registered set.
+  default tools + `load_track` + track descriptions are wired (a track-listing in `system`, a
+  `load_track` call resolves); assert `allowedTools`/`disallowedTools` filter the registered set.
 - **sdk facade** (`query.test.ts`): with `fakeProvider`, assert `query({ prompt, model, ... })`
   streams the same events as `createLiteAgent().run()`; assert `tool(name, desc, schema, handler)`
   produces a working `Tool`.

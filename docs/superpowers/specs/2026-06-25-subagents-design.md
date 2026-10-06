@@ -13,7 +13,7 @@ subagent run **persisted** to disk and **resumable** — the model Haijun Code u
 All new code lives in the **sdk** package (orchestration = batteries; see the
 `multi-agent-goes-in-sdk` memory). **core is unchanged** — `createLiteAgent`,
 `runKernel` (which already loads-and-prepends a session by id), `jsonlStore`,
-`sweepStale`, and the existing `SkillLoader`/path helpers are sufficient. The
+`sweepStale`, and the existing `TrackLoader`/path helpers are sufficient. The
 subagent tool closes over the model provider + agent registry (because
 `ToolContext` carries none of that), exactly as `taskTools(store)` closes over its
 store.
@@ -34,7 +34,7 @@ store.
   finished subagent be **resumed** (multi-turn continuity). Isolation always holds;
   the transcript always persists; resume is opt-in.
 
-This maps almost 1:1 onto lite-agent: an `AgentLoader` is a twin of `SkillLoader`;
+This maps almost 1:1 onto lite-agent: an `AgentLoader` is a twin of `TrackLoader`;
 the durable transcript is the existing `jsonlStore` swept by `sweepStale` (whose
 30-day default already matches); resume is the kernel's existing
 `store.load(sessionId)` prepend.
@@ -57,7 +57,7 @@ Extends the existing per-project home, mirroring the tracks dirs exactly:
 - **project** `projectAgentsDir = join(resolve(workdir), ".lite-agent", "agents")`
 - precedence (project overrides global on name collision), plus an optional
   explicit `agentsDir` option appended last (overrides both) — same ordering rule
-  as `SkillLoader`.
+  as `TrackLoader`.
 
 ## Data model (`sdk/src/agents/types.ts`)
 
@@ -92,7 +92,7 @@ Pure path computation, no fs side effects (as today).
 
 ### 2. `agents/loader.ts` — `AgentLoader`
 
-A near-twin of `SkillLoader`: walk each dir (later dirs override earlier on name
+A near-twin of `TrackLoader`: walk each dir (later dirs override earlier on name
 collision), parse each `*.md` with `gray-matter`, `name` from frontmatter or
 filename.
 

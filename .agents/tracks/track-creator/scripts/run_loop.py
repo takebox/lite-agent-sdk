@@ -18,7 +18,7 @@ from pathlib import Path
 from scripts.generate_report import generate_html
 from scripts.improve_description import improve_description
 from scripts.run_eval import find_project_root, run_eval
-from scripts.utils import parse_skill_md
+from scripts.utils import parse_track_md
 
 
 def split_eval_set(eval_set: list[dict], holdout: float, seed: int = 42) -> tuple[list[dict], list[dict]]:
@@ -61,7 +61,7 @@ def run_loop(
 ) -> dict:
     """Run the eval + improvement loop."""
     project_root = find_project_root()
-    name, original_description, content = parse_skill_md(track_path)
+    name, original_description, content = parse_track_md(track_path)
     current_description = description_override or original_description
 
     # Split into train/test if holdout > 0
@@ -265,7 +265,7 @@ def main():
         print(f"Error: No TRACK.md found at {track_path}", file=sys.stderr)
         sys.exit(1)
 
-    name, _, _ = parse_skill_md(track_path)
+    name, _, _ = parse_track_md(track_path)
 
     # Set up live report path
     if args.report != "none":

@@ -87,7 +87,7 @@ codec: "auto" | "native" | "json" | "react" | ToolCallCodec
 
 ## 权限
 
-权限是 deny-by-default：开箱即用的只有只读内建工具（`read_file`、`read_spilled`、`load_skill`、`TaskGet`、`TaskList`、`BashOutput`）和交互式的 `ask_user`/`final_answer`。所有会修改状态的工具都需要显式的 `ask` 或 `allow` 规则。
+权限是 deny-by-default：开箱即用的只有只读内建工具（`read_file`、`read_spilled`、`load_track`、`TaskGet`、`TaskList`、`BashOutput`）和交互式的 `ask_user`/`final_answer`。所有会修改状态的工具都需要显式的 `ask` 或 `allow` 规则。
 
 ### 发现顺序
 
