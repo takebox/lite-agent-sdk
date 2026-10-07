@@ -1,4 +1,4 @@
-export { Takebox AI } from "./Takebox AI";
-export type { JuglowProviderOptions, JuglowClientLike } from "./Takebox AI";
+export { Juglow } from "./juglow";
+export type { JuglowProviderOptions, JuglowClientLike } from "./juglow";
 export { openai } from "./openai";
 export type { OpenAIProviderOptions, OpenAIClientLike } from "./openai";

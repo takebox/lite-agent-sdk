@@ -18,13 +18,13 @@ pnpm add @lite-agent/checkpoint-sqlite
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { sqliteCheckpointer } from "@lite-agent/checkpoint-sqlite";
 
 const checkpointer = sqliteCheckpointer({ file: "./sessions.db" }); // 或 ":memory:"
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   checkpointer,

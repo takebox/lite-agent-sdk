@@ -213,7 +213,7 @@ type ProviderContextCapabilities = {
 };
 ```
 
-The generic core does not contain Takebox AI beta request shapes. Takebox AI
+The generic core does not contain Juglow beta request shapes. Juglow
 adapters may implement token counting, clear edits, compaction blocks, exact
 rendered-prefix fingerprints, cache breakpoints, and cache usage. OpenAI/local
 adapters may expose only what they support and fall back to the local estimator.

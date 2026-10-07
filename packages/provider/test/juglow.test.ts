@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type { ModelChunk } from "@lite-agent/core";
 import { ProviderError } from "@lite-agent/core";
-import { Takebox AI } from "../src/Takebox AI";
-import type { JuglowClientLike } from "../src/Takebox AI";
+import { Juglow } from "../src/juglow";
+import type { JuglowClientLike } from "../src/juglow";
 
 test("provider streams ModelChunks via an injected client and forwards params", async () => {
-  let captured: Takebox AI.MessageCreateParamsStreaming | undefined;
+  let captured: Juglow.MessageCreateParamsStreaming | undefined;
   const fakeClient: JuglowClientLike = {
     messages: {
       create(params) {
@@ -34,12 +34,12 @@ test("provider streams ModelChunks via an injected client and forwards params", 
           };
           yield { type: "message_stop" };
         }
-        return gen() as unknown as AsyncIterable<Takebox AI.RawMessageStreamEvent>;
+        return gen() as unknown as AsyncIterable<Juglow.RawMessageStreamEvent>;
       },
     },
   };
 
-  const provider = Takebox AI({ client: fakeClient });
+  const provider = Juglow({ client: fakeClient });
   expect(provider.id).toBe("juglow");
 
   const chunks: ModelChunk[] = [];
@@ -69,7 +69,7 @@ test("wraps client errors in ProviderError preserving status", async () => {
       },
     },
   };
-  const provider = Takebox AI({ client: failing });
+  const provider = Juglow({ client: failing });
   await expect(async () => {
     for await (const chunk of provider.stream({
       model: "m",

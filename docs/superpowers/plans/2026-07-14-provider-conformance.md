@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a small reusable `ModelProvider` contract suite, run it offline against Takebox AI and OpenAI, and add an explicitly opt-in OpenAI-compatible endpoint probe with honest bilingual support documentation.
+**Goal:** Add a small reusable `ModelProvider` contract suite, run it offline against Juglow and OpenAI, and add an explicitly opt-in OpenAI-compatible endpoint probe with honest bilingual support documentation.
 
 **Architecture:** Keep the existing Strategy (`ModelProvider`), Adapter (provider mapping/stream translators), and Dependency Injection (`client`) boundaries unchanged. Add one flat, framework-neutral Contract Test array in core, two explicit provider-specific fixture drivers in provider tests, and one separately discovered Vitest smoke profile. Do not add production provider abstractions or refactor adapters to remove test-only duplication.
 
-**Tech Stack:** TypeScript 6 strict ESM, Node.js 20+, Vitest 2, pnpm 10.12.4, `node:assert/strict`, existing Takebox AI and OpenAI SDK client seams.
+**Tech Stack:** TypeScript 6 strict ESM, Node.js 20+, Vitest 2, pnpm 10.12.4, `node:assert/strict`, existing Juglow and OpenAI SDK client seams.
 
 ## Global Constraints
 
@@ -15,7 +15,7 @@
 - No new runtime dependency, provider SDK, provider factory, normalized model capability, registry, base class, capability resolver, plugin framework, test DSL, builder, or generic fixture engine.
 - Reuse the existing `ModelProvider` Strategy, provider Adapter files, injected `client` seam, and flat `checkpointerConformance` Contract Test pattern.
 - Keep provider-native request mapping and stream-fragment edge cases in their existing adapter-specific tests.
-- Keep the current malformed-tool-JSON behaviors unchanged: Takebox AI rejects malformed JSON; OpenAI falls back to `{}`.
+- Keep the current malformed-tool-JSON behaviors unchanged: Juglow rejects malformed JSON; OpenAI falls back to `{}`.
 - Default package and workspace tests must never discover or execute the network-capable compatibility smoke file.
 - The compatibility probe must not persist credentials, prompts, endpoint output, or test results.
 - Build `@lite-agent/core` before testing the dependent `@lite-agent/provider` package.
@@ -30,7 +30,7 @@ packages/core/src/index.ts                              # public exports only
 packages/core/test/provider-conformance.test.ts         # contract-suite self-test
 packages/provider/test/conformance.test.ts              # runs shared cases for maintained adapters
 packages/provider/test/support/openaiConformance.ts     # OpenAI injected-client fixture driver
-packages/provider/test/support/juglowConformance.ts  # Takebox AI injected-client fixture driver
+packages/provider/test/support/juglowConformance.ts  # Juglow injected-client fixture driver
 packages/provider/test/compat/openai-compatible.smoke.ts # opt-in real-endpoint assertions
 packages/provider/vitest.compat.config.ts               # discovers only the smoke file
 packages/provider/package.json                          # test:compat command
@@ -508,17 +508,17 @@ git commit -m "test(provider): apply conformance suite to OpenAI"
 
 ---
 
-### Task 3: Takebox AI adapter conformance driver
+### Task 3: Juglow adapter conformance driver
 
 **Files:**
 - Create: `packages/provider/test/support/juglowConformance.ts`
 - Modify: `packages/provider/test/conformance.test.ts`
 
 **Interfaces:**
-- Consumes: the Task 1 contract types and existing `Takebox AI({ client })` injection seam.
+- Consumes: the Task 1 contract types and existing `Juglow({ client })` injection seam.
 - Produces: `juglowConformance`, a test-only `ProviderConformanceFactory`; the shared entry point runs every case for both maintained adapters.
 
-- [ ] **Step 1: Register Takebox AI before its driver exists**
+- [ ] **Step 1: Register Juglow before its driver exists**
 
 Replace `packages/provider/test/conformance.test.ts` with:
 
@@ -558,20 +558,20 @@ pnpm --filter @lite-agent/provider test -- conformance
 
 Expected: FAIL because `./support/juglowConformance` does not exist.
 
-- [ ] **Step 3: Implement the explicit injected Takebox AI client driver**
+- [ ] **Step 3: Implement the explicit injected Juglow client driver**
 
 Create `packages/provider/test/support/juglowConformance.ts`:
 
 ```ts
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type {
   ProviderConformanceFactory,
   ProviderConformanceScenario,
 } from "@lite-agent/core";
-import { Takebox AI } from "../../src/Takebox AI";
-import type { JuglowClientLike } from "../../src/Takebox AI";
+import { Juglow } from "../../src/juglow";
+import type { JuglowClientLike } from "../../src/juglow";
 
-type Event = Takebox AI.RawMessageStreamEvent;
+type Event = Juglow.RawMessageStreamEvent;
 
 const event = (value: unknown): Event => value as Event;
 
@@ -678,27 +678,27 @@ export const juglowConformance: ProviderConformanceFactory = (scenario) => {
       },
     },
   };
-  return Takebox AI({ client });
+  return Juglow({ client });
 };
 ```
 
-- [ ] **Step 4: Run both adapter suites and existing Takebox AI tests**
+- [ ] **Step 4: Run both adapter suites and existing Juglow tests**
 
 Run:
 
 ```bash
 pnpm --filter @lite-agent/provider test -- conformance
-pnpm --filter @lite-agent/provider test -- Takebox AI
+pnpm --filter @lite-agent/provider test -- Juglow
 pnpm --filter @lite-agent/provider typecheck
 ```
 
-Expected: twelve shared conformance cases pass; existing Takebox AI mapping, stream, and factory tests pass; provider typecheck succeeds.
+Expected: twelve shared conformance cases pass; existing Juglow mapping, stream, and factory tests pass; provider typecheck succeeds.
 
-- [ ] **Step 5: Commit the Takebox AI driver**
+- [ ] **Step 5: Commit the Juglow driver**
 
 ```bash
 git add packages/provider/test/conformance.test.ts packages/provider/test/support/juglowConformance.ts
-git commit -m "test(provider): apply conformance suite to Takebox AI"
+git commit -m "test(provider): apply conformance suite to Juglow"
 ```
 
 ---
@@ -933,7 +933,7 @@ Insert before the monorepo architecture link in `packages/provider/README.md`:
 
 | Integration | Level | Notes |
 | --- | --- | --- |
-| Takebox AI Messages | Maintained adapter | Text streaming, tool calls, normalized usage, abort propagation, and `ProviderError` normalization are covered offline. |
+| Juglow Messages | Maintained adapter | Text streaming, tool calls, normalized usage, abort propagation, and `ProviderError` normalization are covered offline. |
 | OpenAI Chat Completions | Maintained adapter | The same shared offline contract is applied. |
 | Ollama, vLLM, LM Studio, llama.cpp | Maintained preset in [`@lite-agent/local`](../local) | Uses the OpenAI-compatible adapter; native tool and usage support depend on the selected runtime and model. |
 | Other OpenAI-compatible endpoints | Compatible endpoint | Not verified by default; run the profile below against the exact endpoint and model. |
@@ -959,7 +959,7 @@ other non-empty values are rejected before client construction. Set it to
 that profile proves named forced-tool selection; it does not claim that every
 native tool-choice mode is supported.
 
-The adapters currently differ on malformed streamed tool JSON: Takebox AI
+The adapters currently differ on malformed streamed tool JSON: Juglow
 surfaces a provider error, while OpenAI falls back to an empty input object and
 lets downstream tool-schema validation reject it.
 ```
@@ -987,7 +987,7 @@ Insert before the monorepo architecture link:
 
 | 集成 | 等级 | 说明 |
 | --- | --- | --- |
-| Takebox AI Messages | 维护中的适配器 | 离线覆盖文本流、工具调用、归一化 usage、取消传播和 `ProviderError`。 |
+| Juglow Messages | 维护中的适配器 | 离线覆盖文本流、工具调用、归一化 usage、取消传播和 `ProviderError`。 |
 | OpenAI Chat Completions | 维护中的适配器 | 应用相同的离线共享合约。 |
 | Ollama、vLLM、LM Studio、llama.cpp | [`@lite-agent/local`](../local) 中维护的预设 | 复用 OpenAI 兼容适配器；原生工具和 usage 能力取决于运行时及模型。 |
 | 其他 OpenAI 兼容端点 | 兼容端点 | 默认未经验证；请对确切端点和模型运行下面的探测。 |
@@ -1011,7 +1011,7 @@ pnpm --filter @lite-agent/provider test:compat
 工具的更强探测。通过该探测只证明具名强制工具选择可用，不代表所有原生工具选择
 模式都可用。
 
-两个适配器目前对流式工具 JSON 损坏的处理不同：Takebox AI 会抛出 provider
+两个适配器目前对流式工具 JSON 损坏的处理不同：Juglow 会抛出 provider
 错误；OpenAI 会退化为空输入对象，再由下游工具 schema 校验拒绝。
 ```
 

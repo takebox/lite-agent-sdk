@@ -111,17 +111,17 @@
 **Files:**
 - Modify: `packages/core/src/types.ts`
 - Modify: `packages/core/src/strategies.ts`
-- Modify: `packages/provider/src/Takebox AI/Takebox AI.ts`
-- Modify: `packages/provider/src/Takebox AI/mapping.ts`
-- Modify: `packages/provider/src/Takebox AI/stream.ts`
+- Modify: `packages/provider/src/juglow/juglow.ts`
+- Modify: `packages/provider/src/juglow/mapping.ts`
+- Modify: `packages/provider/src/juglow/stream.ts`
 - Modify: `packages/provider/src/openai/openai.ts`
 - Create: `packages/provider/test/context-capabilities.test.ts`
-- Modify: `packages/provider/test/Takebox AI-mapping.test.ts`
-- Modify: `packages/provider/test/Takebox AI-stream.test.ts`
+- Modify: `packages/provider/test/juglow-mapping.test.ts`
+- Modify: `packages/provider/test/juglow-stream.test.ts`
 
 - [ ] **Step 1: Write RED tests** for optional count-token support, cache read/creation usage normalization, deterministic canonical tool/system ordering, and exact prefix snapshots across a tool loop.
 - [ ] **Step 2: Run provider focused tests and verify the absent capability/usage fields fail.
-- [ ] **Step 3: Implement the minimal optional capability object; map Takebox AI cache breakpoints and `messages.countTokens` when the injected client supports them; preserve graceful fallback for OpenAI/local providers; retain unknown native blocks instead of converting them to summaries.
+- [ ] **Step 3: Implement the minimal optional capability object; map Juglow cache breakpoints and `messages.countTokens` when the injected client supports them; preserve graceful fallback for OpenAI/local providers; retain unknown native blocks instead of converting them to summaries.
 - [ ] **Step 4: Run provider build/test/typecheck and re-run core prefix integration tests.
 
 ### Task 6: Verification and cleanup

@@ -2,23 +2,23 @@
 
 Sandbox 把 agent 运行的每条 shell 命令关进一道 **OS 边界**——macOS 的 **Seatbelt** 或 Linux 的 **bubblewrap**——并限制其文件系统与网络访问。[权限闸门](/zh/sdk/control/permissions)决定命令*能不能跑*，sandbox 约束它*运行时能碰到什么*——由于边界由 OS 在运行进程上强制执行，无论模型决定跑什么它都成立，无法用巧妙的命令字符串绕过。这是纵深防御中独立的第二层。
 
-适配器是 [`@lite-agent/sandbox-Takebox AI`](https://github.com/takebox/sandbox-runtime)，底层基于 `@takebox-ai/sandbox-runtime`。
+适配器是 [`@lite-agent/sandbox-haijun`](https://github.com/takebox/sandbox-runtime)，底层基于 `@takebox-ai/sandbox-runtime`。
 
 ## 开启
 
 ```bash
-pnpm add @lite-agent/sandbox-Takebox AI
+pnpm add @lite-agent/sandbox-haijun
 ```
 
 通过 `sandbox` 选项把 `sandboxRuntime()` 传给 `createLiteAgent` / `query`：
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
+import { Juglow } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-haijun";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   sandbox: sandboxRuntime({
@@ -108,7 +108,7 @@ lite-agent 把"这条命令该不该跑？"和"跑起来后能碰到什么？"�
 
 ```ts
 createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   // Gate: pre-exec decisions

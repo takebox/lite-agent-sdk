@@ -5,7 +5,7 @@
 
 ## 1. Decision
 
-Do not add another first-party model provider yet. Keep Takebox AI Messages and
+Do not add another first-party model provider yet. Keep Juglow Messages and
 OpenAI Chat Completions as the two maintained protocol families, and make their
 support boundary measurable before expanding the provider count.
 
@@ -26,7 +26,7 @@ another mandatory SDK dependency in `@lite-agent/provider`.
 The repository has two first-party factories, but they cover more than two
 model brands:
 
-- `Takebox AI()` implements Takebox AI Messages.
+- `Juglow()` implements Juglow Messages.
 - `openai()` implements OpenAI Chat Completions and accepts a custom `baseURL`.
 - `localOpenAI()` already supplies presets for Ollama, vLLM, LM Studio, and
   llama.cpp through the OpenAI-compatible path.
@@ -65,7 +65,7 @@ No kernel, codec, or middleware change is needed.
 
 ### Success criteria
 
-- Takebox AI and OpenAI pass the same conformance cases without network access.
+- Juglow and OpenAI pass the same conformance cases without network access.
 - Existing provider-specific mapping and stream tests remain in place and pass.
 - A maintainer can probe a configured OpenAI-compatible endpoint with one pnpm
   command and explicit environment variables.
@@ -187,7 +187,7 @@ The required cases are:
    iteration reject with `ProviderError`; a numeric HTTP `status` is preserved.
 
 The suite deliberately does not standardize malformed provider-native tool
-JSON in this slice. Takebox AI currently rejects it while OpenAI currently falls
+JSON in this slice. Juglow currently rejects it while OpenAI currently falls
 back to `{}`. Changing that behavior requires a separate decision because it
 can alter whether failure is classified as a provider error or tool-schema
 error. The difference will be documented as a known adapter behavior rather
@@ -281,7 +281,7 @@ matrix and definitions:
 
 The initial matrix records only evidence present in this repository:
 
-- Takebox AI Messages — maintained adapter.
+- Juglow Messages — maintained adapter.
 - OpenAI Chat Completions — maintained adapter.
 - Ollama, vLLM, LM Studio, llama.cpp — maintained local presets through
   `localOpenAI`; not a blanket claim that every model supports native tools or
@@ -339,7 +339,7 @@ Implementation follows TDD:
 
 1. Add a failing core self-test that exercises the intended conformance cases.
 2. Implement and export the framework-neutral suite.
-3. Add failing Takebox AI and OpenAI conformance drivers, then make both pass
+3. Add failing Juglow and OpenAI conformance drivers, then make both pass
    without changing observable behavior except where an actual contract defect
    is exposed and separately approved.
 4. Add the opt-in smoke probe; verify the default suite does not discover it

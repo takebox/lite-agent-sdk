@@ -8,14 +8,14 @@ Agent 做的每件事本来就是一条带类型的 `AgentEvent` 流——文本
 
 ```ts
 import { query, jsonlEventSink, recordEventStream } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const sink = jsonlEventSink({ file: "./audit/events.jsonl" });
 
 const stream = recordEventStream(
   query({
     prompt: "Summarize package.json",
-    model: Takebox AI(),
+    model: Juglow(),
     modelName: "haijun-sonnet-4-6",
     cwd: process.cwd(),
   }),

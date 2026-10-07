@@ -10,7 +10,7 @@ Agent 发起的每次工具调用在运行前都要经过一道**权限闸门**�
 import { createLiteAgent, policy, bashCommand, filePath } from "@lite-agent/sdk";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   permission: policy({

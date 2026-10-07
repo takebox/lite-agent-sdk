@@ -1,4 +1,4 @@
-# @lite-agent/sandbox-Takebox AI
+# @lite-agent/sandbox-haijun
 
 [English](./README.md) | **简体中文**
 
@@ -7,7 +7,7 @@
 ## 安装
 
 ```bash
-pnpm add @lite-agent/sandbox-Takebox AI
+pnpm add @lite-agent/sandbox-haijun
 ```
 
 ## 快速开始
@@ -16,11 +16,11 @@ pnpm add @lite-agent/sandbox-Takebox AI
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
+import { Juglow } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-haijun";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   sandbox: sandboxRuntime({

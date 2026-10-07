@@ -13,7 +13,7 @@ SDK 完整转出 `@lite-agent/core`，因此你可以随时下沉一层——写
 
 ```ts
 import { createLiteAgent, type Middleware } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const logging: Middleware = {
   name: "logging",
@@ -26,7 +26,7 @@ const logging: Middleware = {
 };
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   use: [logging], // extra middleware around the kernel loop
@@ -53,5 +53,5 @@ const agent = createLiteAgent({
 
 - [快速上手](/zh/sdk/getting-started) —— 安装并运行你的第一个 agent。
 - [核心策略](/zh/core/strategies) —— SDK 所组装的九个可替换部件。
-- [模型 provider](/zh/core/providers) —— Takebox AI、OpenAI 及 OpenAI 兼容端点。
+- [模型 provider](/zh/core/providers) —— Juglow、OpenAI 及 OpenAI 兼容端点。
 - [CLI 示例](/zh/examples/cli) —— 基于这些 API 构建的完整交互式 agent。

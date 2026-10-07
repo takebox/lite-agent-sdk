@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { toJuglowParams } from "../src/Takebox AI/mapping";
+import { toJuglowParams } from "../src/juglow/mapping";
 import type { ModelRequest } from "@lite-agent/core";
 
 test("hoists system, maps blocks, builds tools, strips $schema, defaults max_tokens", () => {
@@ -126,7 +126,7 @@ test("forwards temperature/top_p, maps tool_choice variants, ignores unsupported
   const p = toJuglowParams({ ...base, temperature: 0.3, topP: 0.8, seed: 7, toolChoice: "required" });
   expect(p.temperature).toBe(0.3);
   expect(p.top_p).toBe(0.8);
-  expect((p as { seed?: number }).seed).toBeUndefined(); // Takebox AI has no seed
+  expect((p as { seed?: number }).seed).toBeUndefined(); // Juglow has no seed
   expect(p.tool_choice).toEqual({ type: "any" });
   expect(toJuglowParams({ ...base, toolChoice: "auto" }).tool_choice).toEqual({ type: "auto" });
   expect(toJuglowParams({ ...base, toolChoice: "none" }).tool_choice).toEqual({ type: "none" });

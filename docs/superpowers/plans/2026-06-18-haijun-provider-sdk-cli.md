@@ -1,8 +1,8 @@
-# Takebox AI Provider + SDK + CLI Slice — Implementation Plan
+# Juglow Provider + SDK + CLI Slice — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Deliver the first end-to-end runnable CLI on top of `@lite-agent/core`: a real Takebox AI model provider, a batteries-included SDK (default tools + tracks) whose API is shaped after `@takebox-ai/haijun-agent-sdk`, and a rewritten `src/` app — with all old demo code removed.
+**Goal:** Deliver the first end-to-end runnable CLI on top of `@lite-agent/core`: a real Juglow model provider, a batteries-included SDK (default tools + tracks) whose API is shaped after `@takebox-ai/haijun-agent-sdk`, and a rewritten `src/` app — with all old demo code removed.
 
 **Architecture:** Three layers. `@lite-agent/provider` wraps the raw `@takebox-ai/sdk` Messages API into a `ModelProvider`. `lite-agent` adds default tools, track loading, a `createLiteAgent` factory, and `query()`/`tool()` ergonomics. The outer `src/` CLI wires a provider + the SDK into an event-stream REPL.
 
@@ -12,7 +12,7 @@
 
 ## Reference design
 
-Spec: `docs/superpowers/specs/2026-06-18-Takebox AI-provider-sdk-cli-design.md`.
+Spec: `docs/superpowers/specs/2026-06-18-Juglow-provider-sdk-cli-design.md`.
 
 ## Setup notes (read once before Task 1)
 
@@ -29,12 +29,12 @@ Spec: `docs/superpowers/specs/2026-06-18-Takebox AI-provider-sdk-cli-design.md`.
 
 **Files:**
 
-- Create: `packages/provider-Takebox AI/package.json`
-- Create: `packages/provider-Takebox AI/tsconfig.json`
-- Create: `packages/provider-Takebox AI/src/mapping.ts`
-- Test: `packages/provider-Takebox AI/test/mapping.test.ts`
+- Create: `packages/provider-juglow/package.json`
+- Create: `packages/provider-juglow/tsconfig.json`
+- Create: `packages/provider-juglow/src/mapping.ts`
+- Test: `packages/provider-juglow/test/mapping.test.ts`
 
-- [ ] **Step 1: Create `packages/provider-Takebox AI/package.json`**
+- [ ] **Step 1: Create `packages/provider-juglow/package.json`**
 
 ```json
 {
@@ -66,7 +66,7 @@ Spec: `docs/superpowers/specs/2026-06-18-Takebox AI-provider-sdk-cli-design.md`.
 }
 ```
 
-- [ ] **Step 2: Create `packages/provider-Takebox AI/tsconfig.json`**
+- [ ] **Step 2: Create `packages/provider-juglow/tsconfig.json`**
 
 ```json
 {
@@ -81,7 +81,7 @@ Spec: `docs/superpowers/specs/2026-06-18-Takebox AI-provider-sdk-cli-design.md`.
 Run: `pnpm install`
 Expected: adds `@lite-agent/provider`, links `@lite-agent/core`. Exit 0.
 
-- [ ] **Step 4: Write the failing test** — `packages/provider-Takebox AI/test/mapping.test.ts`
+- [ ] **Step 4: Write the failing test** — `packages/provider-juglow/test/mapping.test.ts`
 
 ```ts
 import { expect, test } from "vitest";
@@ -168,10 +168,10 @@ test("uses provided maxTokens and omits tools/system when absent", () => {
 Run: `pnpm --filter @lite-agent/provider test`
 Expected: FAIL — `toJuglowParams` not found.
 
-- [ ] **Step 6: Implement `packages/provider-Takebox AI/src/mapping.ts`**
+- [ ] **Step 6: Implement `packages/provider-juglow/src/mapping.ts`**
 
 ```ts
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type {
   ContentBlock,
   Message,
@@ -181,7 +181,7 @@ import type {
 
 const DEFAULT_MAX_TOKENS = 4096;
 
-function toBlockParam(b: ContentBlock): Takebox AI.ContentBlockParam {
+function toBlockParam(b: ContentBlock): Juglow.ContentBlockParam {
   if (b.type === "text") return { type: "text", text: b.text };
   if (b.type === "tool_call") {
     return {
@@ -201,7 +201,7 @@ function toBlockParam(b: ContentBlock): Takebox AI.ContentBlockParam {
     : { type: "tool_result", tool_use_id: b.id, content: b.content };
 }
 
-function toMessageParam(m: Message): Takebox AI.MessageParam {
+function toMessageParam(m: Message): Juglow.MessageParam {
   const role: "user" | "assistant" =
     m.role === "assistant" ? "assistant" : "user";
   const content =
@@ -211,12 +211,12 @@ function toMessageParam(m: Message): Takebox AI.MessageParam {
 
 function toInputSchema(
   parameters: Record<string, unknown>,
-): Takebox AI.Tool.InputSchema {
+): Juglow.Tool.InputSchema {
   const { $schema: _drop, ...rest } = parameters;
-  return rest as Takebox AI.Tool.InputSchema;
+  return rest as Juglow.Tool.InputSchema;
 }
 
-function toTool(spec: ToolSpec): Takebox AI.Tool {
+function toTool(spec: ToolSpec): Juglow.Tool {
   return {
     name: spec.name,
     description: spec.description,
@@ -226,8 +226,8 @@ function toTool(spec: ToolSpec): Takebox AI.Tool {
 
 export function toJuglowParams(
   req: ModelRequest,
-): Takebox AI.MessageCreateParamsStreaming {
-  const params: Takebox AI.MessageCreateParamsStreaming = {
+): Juglow.MessageCreateParamsStreaming {
+  const params: Juglow.MessageCreateParamsStreaming = {
     model: req.model,
     max_tokens: req.maxTokens ?? DEFAULT_MAX_TOKENS,
     messages: req.messages
@@ -255,8 +255,8 @@ Expected: clean (no errors). If `@lite-agent/core` types fail to resolve, run `p
 - [ ] **Step 9: Commit**
 
 ```bash
-git add packages/provider-Takebox AI pnpm-lock.yaml pnpm-workspace.yaml
-git commit -m "feat(provider-Takebox AI): scaffold package + request mapping"
+git add packages/provider-juglow pnpm-lock.yaml pnpm-workspace.yaml
+git commit -m "feat(provider-juglow): scaffold package + request mapping"
 ```
 
 ---
@@ -265,18 +265,18 @@ git commit -m "feat(provider-Takebox AI): scaffold package + request mapping"
 
 **Files:**
 
-- Create: `packages/provider-Takebox AI/src/stream.ts`
-- Test: `packages/provider-Takebox AI/test/stream.test.ts`
+- Create: `packages/provider-juglow/src/stream.ts`
+- Test: `packages/provider-juglow/test/stream.test.ts`
 
-- [ ] **Step 1: Write the failing test** — `packages/provider-Takebox AI/test/stream.test.ts`
+- [ ] **Step 1: Write the failing test** — `packages/provider-juglow/test/stream.test.ts`
 
 ```ts
 import { expect, test } from "vitest";
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type { ModelChunk } from "@lite-agent/core";
 import { translateStream } from "../src/stream";
 
-async function* gen(events: Takebox AI.RawMessageStreamEvent[]) {
+async function* gen(events: Juglow.RawMessageStreamEvent[]) {
   for (const e of events) yield e;
 }
 
@@ -324,7 +324,7 @@ test("translates text + tool_use stream into ModelChunks", async () => {
       usage: { output_tokens: 7 },
     },
     { type: "message_stop" },
-  ] as unknown as Takebox AI.RawMessageStreamEvent[];
+  ] as unknown as Juglow.RawMessageStreamEvent[];
 
   const chunks: ModelChunk[] = [];
   for await (const c of translateStream(gen(events))) chunks.push(c);
@@ -351,10 +351,10 @@ test("translates text + tool_use stream into ModelChunks", async () => {
 Run: `pnpm --filter @lite-agent/provider test stream`
 Expected: FAIL — `translateStream` not found.
 
-- [ ] **Step 3: Implement `packages/provider-Takebox AI/src/stream.ts`**
+- [ ] **Step 3: Implement `packages/provider-juglow/src/stream.ts`**
 
 ```ts
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type {
   AssistantMessage,
   ContentBlock,
@@ -363,7 +363,7 @@ import type {
 } from "@lite-agent/core";
 
 export async function* translateStream(
-  events: AsyncIterable<Takebox AI.RawMessageStreamEvent>,
+  events: AsyncIterable<Juglow.RawMessageStreamEvent>,
 ): AsyncGenerator<ModelChunk> {
   const blocks: (ContentBlock | undefined)[] = [];
   const toolJson: string[] = [];
@@ -438,8 +438,8 @@ Run: `pnpm --filter @lite-agent/provider typecheck`
 Expected: clean.
 
 ```bash
-git add packages/provider-Takebox AI
-git commit -m "feat(provider-Takebox AI): translate Takebox AI stream events to ModelChunks"
+git add packages/provider-juglow
+git commit -m "feat(provider-juglow): translate Juglow stream events to ModelChunks"
 ```
 
 ---
@@ -448,21 +448,21 @@ git commit -m "feat(provider-Takebox AI): translate Takebox AI stream events to 
 
 **Files:**
 
-- Create: `packages/provider-Takebox AI/src/Takebox AI.ts`
-- Create: `packages/provider-Takebox AI/src/index.ts`
-- Test: `packages/provider-Takebox AI/test/Takebox AI.test.ts`
+- Create: `packages/provider-juglow/src/juglow.ts`
+- Create: `packages/provider-juglow/src/index.ts`
+- Test: `packages/provider-juglow/test/juglow.test.ts`
 
-- [ ] **Step 1: Write the failing test** — `packages/provider-Takebox AI/test/Takebox AI.test.ts`
+- [ ] **Step 1: Write the failing test** — `packages/provider-juglow/test/juglow.test.ts`
 
 ```ts
 import { expect, test } from "vitest";
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type { ModelChunk } from "@lite-agent/core";
-import { Takebox AI } from "../src/index";
+import { Juglow } from "../src/index";
 import type { JuglowClientLike } from "../src/index";
 
 test("provider streams ModelChunks via an injected client and forwards params", async () => {
-  let captured: Takebox AI.MessageCreateParamsStreaming | undefined;
+  let captured: Juglow.MessageCreateParamsStreaming | undefined;
   const fakeClient: JuglowClientLike = {
     messages: {
       create(params) {
@@ -490,12 +490,12 @@ test("provider streams ModelChunks via an injected client and forwards params", 
           };
           yield { type: "message_stop" };
         }
-        return gen() as unknown as AsyncIterable<Takebox AI.RawMessageStreamEvent>;
+        return gen() as unknown as AsyncIterable<Juglow.RawMessageStreamEvent>;
       },
     },
   };
 
-  const provider = Takebox AI({ client: fakeClient });
+  const provider = Juglow({ client: fakeClient });
   expect(provider.id).toBe("juglow");
 
   const chunks: ModelChunk[] = [];
@@ -518,13 +518,13 @@ test("provider streams ModelChunks via an injected client and forwards params", 
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `pnpm --filter @lite-agent/provider test Takebox AI`
-Expected: FAIL — `Takebox AI` / `JuglowClientLike` not found.
+Run: `pnpm --filter @lite-agent/provider test Juglow`
+Expected: FAIL — `Juglow` / `JuglowClientLike` not found.
 
-- [ ] **Step 3: Implement `packages/provider-Takebox AI/src/Takebox AI.ts`**
+- [ ] **Step 3: Implement `packages/provider-juglow/src/juglow.ts`**
 
 ```ts
-import Takebox AI from "@takebox-ai/sdk";
+import Juglow from "@takebox-ai/sdk";
 import type { ModelChunk, ModelProvider, ModelRequest } from "@lite-agent/core";
 import { toJuglowParams } from "./mapping";
 import { translateStream } from "./stream";
@@ -533,11 +533,11 @@ import { translateStream } from "./stream";
 export interface JuglowClientLike {
   messages: {
     create(
-      params: Takebox AI.MessageCreateParamsStreaming,
+      params: Juglow.MessageCreateParamsStreaming,
       options?: { signal?: AbortSignal },
     ):
-      | Promise<AsyncIterable<Takebox AI.RawMessageStreamEvent>>
-      | AsyncIterable<Takebox AI.RawMessageStreamEvent>;
+      | Promise<AsyncIterable<Juglow.RawMessageStreamEvent>>
+      | AsyncIterable<Juglow.RawMessageStreamEvent>;
   };
 }
 
@@ -547,10 +547,10 @@ export interface JuglowProviderOptions {
   client?: JuglowClientLike;
 }
 
-export function Takebox AI(opts: JuglowProviderOptions = {}): ModelProvider {
+export function Juglow(opts: JuglowProviderOptions = {}): ModelProvider {
   const client: JuglowClientLike =
     opts.client ??
-    (new Takebox AI({
+    (new Juglow({
       apiKey: opts.apiKey ?? process.env["JUGLOW_API_KEY"],
       baseURL: opts.baseURL ?? process.env["BASE_URL"],
     }) as unknown as JuglowClientLike);
@@ -572,14 +572,14 @@ export function Takebox AI(opts: JuglowProviderOptions = {}): ModelProvider {
 }
 ```
 
-- [ ] **Step 4: Implement `packages/provider-Takebox AI/src/index.ts`**
+- [ ] **Step 4: Implement `packages/provider-juglow/src/index.ts`**
 
 ```ts
-export { Takebox AI } from "./Takebox AI";
+export { Juglow } from "./juglow";
 export type {
   JuglowProviderOptions,
   JuglowClientLike,
-} from "./Takebox AI";
+} from "./juglow";
 export { toJuglowParams } from "./mapping";
 export { translateStream } from "./stream";
 ```
@@ -599,8 +599,8 @@ Expected: emits `dist/index.js` + `dist/index.d.ts`. Exit 0.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add packages/provider-Takebox AI
-git commit -m "feat(provider-Takebox AI): assemble ModelProvider + public exports"
+git add packages/provider-juglow
+git commit -m "feat(provider-juglow): assemble ModelProvider + public exports"
 ```
 
 ---
@@ -1587,14 +1587,14 @@ Replace the file with (sets the app to ESM, swaps deps to the workspace packages
 import "dotenv/config";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { createLiteAgent } from "lite-agent";
 import type { AgentEvent, Message } from "lite-agent";
 
 const workdir = process.cwd();
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: process.env["MODEL_ID"],
   workdir,
   tracksDir: join(workdir, "tracks"),
@@ -1730,13 +1730,13 @@ Expected: clean (the app resolves `lite-agent` + `@lite-agent/provider` types fr
 - [ ] **Step 6: Smoke-run the REPL (no network)**
 
 Run: `printf 'q\n' | JUGLOW_API_KEY=test MODEL_ID=test pnpm dev`
-Expected: prints `lite-agent >> ` then exits 0 (constructs the Takebox AI client and agent, reads `q`, quits — the client never makes a network call).
+Expected: prints `lite-agent >> ` then exits 0 (constructs the Juglow client and agent, reads `q`, quits — the client never makes a network call).
 
 - [ ] **Step 7: Commit**
 
 ```bash
 git add -A
-git commit -m "feat(app): rewrite CLI on lite-agent + provider-Takebox AI; remove old demo"
+git commit -m "feat(app): rewrite CLI on lite-agent + provider-juglow; remove old demo"
 ```
 
 ---

@@ -100,12 +100,12 @@ createLiteAgent({
 });
 ```
 
-## 4. `sandboxRuntime()` 适配器 —— 独立包 `@lite-agent/sandbox-Takebox AI`
+## 4. `sandboxRuntime()` 适配器 —— 独立包 `@lite-agent/sandbox-haijun`
 
-封装 Takebox AI 官方 [`@takebox-ai/sandbox-runtime`]()(Haijun Code `/sandbox` 同款,OS 级、无容器)。**单独成包**,把实验性依赖挡在 core/sdk 之外(与 `@lite-agent/provider` 平行):
+封装 Juglow 官方 [`@takebox-ai/sandbox-runtime`]()(Haijun Code `/sandbox` 同款,OS 级、无容器)。**单独成包**,把实验性依赖挡在 core/sdk 之外(与 `@lite-agent/provider` 平行):
 
 ```ts
-// packages/sandbox-Takebox AI/src/index.ts
+// packages/sandbox-haijun/src/index.ts
 import {
   SandboxManager,
   type SandboxRuntimeConfig,
@@ -151,11 +151,11 @@ export function sandboxRuntime(opts: SandboxRuntimeOptions = {}): Sandbox {
 
 ```ts
 import { createLiteAgent } from "lite-agent";
-import { Takebox AI } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
+import { Juglow } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-haijun";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   workdir: process.cwd(),
   tracksDir: "tracks",
   // 闸门(Phase 3)
@@ -182,7 +182,7 @@ const agent = createLiteAgent({
 
 - **接口/默认**(core):`noopSandbox().wrap(cmd) === cmd`;kernel 默认把 `noopSandbox` 注入 `ToolContext`。
 - **bashTool 集成**(sdk):注入一个**假 `Sandbox`**(`wrap = c => `FAKE(${c})``),断言 `execSync` 收到被包裹后的命令 → 证明接入点正确,**不打真实 OS 沙箱、不依赖 bubblewrap**。
-- **适配器**(sandbox-Takebox AI):`SandboxRuntimeOptions → SandboxRuntimeConfig` 的纯映射单测(域名/读写白名单/默认 denyRead);`wrap` 只 mock `SandboxManager` 验证"懒初始化一次 + 调用 `wrapWithSandbox`"。真实 OS 边界靠手动/CI 在 macOS+Linux 验。
+- **适配器**(sandbox-haijun):`SandboxRuntimeOptions → SandboxRuntimeConfig` 的纯映射单测(域名/读写白名单/默认 denyRead);`wrap` 只 mock `SandboxManager` 验证"懒初始化一次 + 调用 `wrapWithSandbox`"。真实 OS 边界靠手动/CI 在 macOS+Linux 验。
 - 不为实验性外部库写端到端网络/文件越权用例(脆弱、平台相关),改为文档化手动验收清单。
 
 ## 8. 开放问题(实现期再定)

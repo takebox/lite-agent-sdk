@@ -33,7 +33,7 @@
 | 维度 | 决策 |
 |---|---|
 | 交付形态 | 公开可复用 SDK,`createAgent({...})`,公共 API/插件边界按公开库标准 |
-| 模型层 | `ModelProvider` 抽象(Takebox AI + OpenAI 兼容)+ **可插拔工具调用 codec**(native → JSON/ReAct 回退) |
+| 模型层 | `ModelProvider` 抽象(Juglow + OpenAI 兼容)+ **可插拔工具调用 codec**(native → JSON/ReAct 回退) |
 | 权限 | 统一 `PermissionPolicy`(allow/deny/ask),白/黑名单是规则;`ask` → 进程内异步审批 |
 | 审批模型 | 进程内「中断 → 人批 → 恢复」,**不做持久化挂起 / checkpoint** |
 | 输出模型 | **流式 + 事件驱动**(async generator of events),顶层薄封装 `send()` |
@@ -77,7 +77,7 @@ packages/
   core/               # @x/agent —— kernel + 接口 + 事件类型 + createAgent + 内置中间件
                       #   依赖: 仅 zod (工具入参 schema & 类型推导)
                       #   src/{kernel, events, types, middleware, strategies(接口), builtins(permission/compaction/retry), tools(ask_user/subagent)}
-  provider-Takebox AI/ # @x/agent-Takebox AI  (Adapter → @takebox-ai/sdk)
+  provider-juglow/ # @x/agent-Juglow  (Adapter → @takebox-ai/sdk)
   provider-openai/    # @x/agent-openai     (Adapter → 覆盖 vLLM/Ollama/LM Studio/llama.cpp)
 examples/
   cli/                # 交互式 CLI + cliApprover + cliAsker
@@ -253,7 +253,7 @@ interface Store {
 
 ### 本地小模型闭环
 `ModelProvider` 只翻译协议、不碰工具语义;`ToolCallCodec` 负责「工具调用怎么编进请求、怎么从输出里解出来」。于是:
-- 强模型(Takebox AI/GPT)→ `nativeCodec` + 对应 provider;
+- 强模型(Juglow/GPT)→ `nativeCodec` + 对应 provider;
 - function-calling 不靠谱的本地 7B → **同一个 OpenAI 兼容 provider,只把 codec 换成 `jsonCodec` 或 `reactCodec`**,kernel / 工具 / 权限 / 压缩**全不动**。
 
 ---
@@ -398,7 +398,7 @@ class AgentError extends Error {}
 ```ts
 const agent = createAgent({
   // ── 策略(可替换部件)──
-  model: openai({ baseURL, model, apiKey }),       // | Takebox AI({ model, apiKey })
+  model: openai({ baseURL, model, apiKey }),       // | Juglow({ model, apiKey })
   codec: nativeCodec(),                            // | jsonCodec() | reactCodec()
   tools: [readFile, writeFile, bash, askUserTool(), subagentTool()],
   compactor: defaultCompactor({ microTrigger: 80_000, autoTrigger: 150_000 }),

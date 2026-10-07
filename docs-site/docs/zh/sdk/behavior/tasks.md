@@ -10,10 +10,10 @@
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   taskListId: "release-0.4", // which list to use; default "default"
@@ -44,7 +44,7 @@ const agent = createLiteAgent({
 
 ```ts
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   tasks: false,

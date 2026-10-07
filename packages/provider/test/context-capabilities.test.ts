@@ -1,10 +1,10 @@
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type { ModelRequest } from "@lite-agent/core";
 import { expect, test } from "vitest";
-import { Takebox AI } from "../src/Takebox AI";
-import type { JuglowClientLike } from "../src/Takebox AI";
+import { Juglow } from "../src/juglow";
+import type { JuglowClientLike } from "../src/juglow";
 
-async function* emptyStream(): AsyncIterable<Takebox AI.RawMessageStreamEvent> {}
+async function* emptyStream(): AsyncIterable<Juglow.RawMessageStreamEvent> {}
 
 const request: ModelRequest = {
   model: "haijun-test",
@@ -25,14 +25,14 @@ test("advertises automatic prompt caching without requiring token counting", () 
     messages: { create: () => emptyStream() },
   };
 
-  const provider = Takebox AI({ client });
+  const provider = Juglow({ client });
 
   expect(provider.context).toEqual({
     promptCache: { mode: "automatic" },
   });
 });
 
-test("uses Takebox AI beta context edits without changing the normalized request", async () => {
+test("uses Juglow beta context edits without changing the normalized request", async () => {
   let captured: Record<string, unknown> | undefined;
   const client: JuglowClientLike = {
     messages: { create: () => emptyStream() },
@@ -45,7 +45,7 @@ test("uses Takebox AI beta context edits without changing the normalized request
       },
     },
   };
-  const provider = Takebox AI({ client });
+  const provider = Juglow({ client });
   const edit = provider.context?.clearToolUses;
   expect(edit).toBeDefined();
   const edited = await edit!(request);
@@ -82,7 +82,7 @@ test("maps clear-thinking and compact edits together and keeps the native compac
       },
     },
   };
-  const provider = Takebox AI({ client });
+  const provider = Juglow({ client });
   const req = await provider.context?.clearThinking?.(request);
   const compacted = await provider.context?.compact?.(req!);
   const chunks = [];
@@ -104,8 +104,8 @@ test("maps clear-thinking and compact edits together and keeps the native compac
   });
 });
 
-test("counts the mapped Takebox AI request without generation-only fields", async () => {
-  let captured: Takebox AI.MessageCountTokensParams | undefined;
+test("counts the mapped Juglow request without generation-only fields", async () => {
+  let captured: Juglow.MessageCountTokensParams | undefined;
   let capturedSignal: AbortSignal | undefined;
   const client: JuglowClientLike = {
     messages: {
@@ -117,7 +117,7 @@ test("counts the mapped Takebox AI request without generation-only fields", asyn
       },
     },
   };
-  const provider = Takebox AI({ client });
+  const provider = Juglow({ client });
   const controller = new AbortController();
 
   const count = await provider.context?.countTokens?.(

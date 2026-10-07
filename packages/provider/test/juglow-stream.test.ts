@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type { ModelChunk } from "@lite-agent/core";
-import { translateStream } from "../src/Takebox AI/stream";
+import { translateStream } from "../src/juglow/stream";
 
-async function* gen(events: Takebox AI.RawMessageStreamEvent[]) {
+async function* gen(events: Juglow.RawMessageStreamEvent[]) {
   for (const e of events) yield e;
 }
 
@@ -63,7 +63,7 @@ test("translates text + tool_use stream into ModelChunks", async () => {
       },
     },
     { type: "message_stop" },
-  ] as unknown as Takebox AI.RawMessageStreamEvent[];
+  ] as unknown as Juglow.RawMessageStreamEvent[];
 
   const chunks: ModelChunk[] = [];
   for await (const c of translateStream(gen(events))) chunks.push(c);
@@ -99,7 +99,7 @@ test("keeps compaction and unknown native blocks typed for checkpoint round-trip
     { type: "content_block_stop", index: 1 },
     { type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 1 } },
     { type: "message_stop" },
-  ] as unknown as Takebox AI.RawMessageStreamEvent[];
+  ] as unknown as Juglow.RawMessageStreamEvent[];
 
   const chunks: ModelChunk[] = [];
   for await (const c of translateStream(gen(events))) chunks.push(c);

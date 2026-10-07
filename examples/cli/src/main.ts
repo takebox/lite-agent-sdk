@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
-import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
+import { sandboxRuntime } from "@lite-agent/sandbox-haijun";
 import { createLiteAgent, policy } from "@lite-agent/sdk";
 import type {
   AgentEvent,

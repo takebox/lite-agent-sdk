@@ -1,4 +1,4 @@
-import { Takebox AI, openai } from "@lite-agent/provider";
+import { Juglow, openai } from "@lite-agent/provider";
 import type { ModelProvider } from "@lite-agent/sdk";
 
 export type Protocol = "juglow" | "openai";
@@ -34,7 +34,7 @@ export function resolveModel(): ResolvedModel {
   );
   const provider =
     protocol === "juglow"
-      ? Takebox AI({ apiKey, baseURL })
+      ? Juglow({ apiKey, baseURL })
       : openai({ apiKey, baseURL });
   return { provider, modelName, protocol };
 }

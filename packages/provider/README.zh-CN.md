@@ -2,7 +2,7 @@
 
 [English](./README.md) | **简体中文**
 
-lite-agent 的模型 Provider：开箱即用的 `ModelProvider` 策略，把 [`@lite-agent/core`](../core) 连接到 Takebox AI Messages API 与 OpenAI Chat Completions（含 OpenAI 兼容及本地端点）。
+lite-agent 的模型 Provider：开箱即用的 `ModelProvider` 策略，把 [`@lite-agent/core`](../core) 连接到 Juglow Messages API 与 OpenAI Chat Completions（含 OpenAI 兼容及本地端点）。
 
 ## 安装
 
@@ -15,11 +15,11 @@ pnpm add @lite-agent/provider
 把一个 provider 交给 [`@lite-agent/sdk`](../sdk) 的 `query`（或 core 的 `createAgent`）：
 
 ```ts
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { query } from "@lite-agent/sdk";
 
 // 默认从环境变量读取 JUGLOW_API_KEY 和 BASE_URL。
-const haijun = Takebox AI();
+const haijun = Juglow();
 
 for await (const ev of query({ prompt: "你好！", model: haijun, modelName: "haijun-sonnet-4-6" })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);
@@ -36,7 +36,7 @@ const gpt = openai({ baseURL: "http://localhost:11434/v1" });
 
 ## 特性
 
-- **`Takebox AI()`** —— 把归一化请求映射到 [Takebox AI Messages API]()，封装 `@takebox-ai/sdk`。
+- **`Juglow()`** —— 把归一化请求映射到 Juglow Messages API，封装 `@takebox-ai/sdk`。
 - **`openai()`** —— 映射到 [OpenAI Chat Completions](https://platform.openai.com/docs/api-reference/chat)；同样适用于 OpenAI 兼容 / 本地端点。
 - 把 provider 的 SSE 流翻译成归一化的 `ModelChunk`（文本增量、工具调用、usage）。
 - 把 SDK 错误包裹为 `ProviderError`，保留 HTTP `.status`。
@@ -48,7 +48,7 @@ const gpt = openai({ baseURL: "http://localhost:11434/v1" });
 
 | 符号 | 说明 |
 | --- | --- |
-| `Takebox AI(options?)` | 创建面向 Takebox AI Messages API 的 `ModelProvider`。 |
+| `Juglow(options?)` | 创建面向 Juglow Messages API 的 `ModelProvider`。 |
 | `openai(options?)` | 创建面向 OpenAI Chat Completions 或兼容端点的 `ModelProvider`。 |
 | `JuglowProviderOptions`、`OpenAIProviderOptions` | 工厂选项：`apiKey` 与 `baseURL`（环境变量回退）、`client`、`maxRetries`。 |
 | `JuglowClientLike`、`OpenAIClientLike` | `client` 选项接受的结构化客户端类型。 |

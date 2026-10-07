@@ -67,7 +67,7 @@ export type ModelCatalog = {
 Example:
 
 ```ts
-const haijun = Takebox AI({ apiKey });
+const haijun = Juglow({ apiKey });
 
 const agent = createLiteAgent({
   models: {
@@ -254,7 +254,7 @@ Not included:
 
 - an automatic difficulty classifier;
 - automatic escalation or retry across tiers;
-- coupling tiers to Takebox AI/OpenAI-specific reasoning parameters;
+- coupling tiers to Juglow/OpenAI-specific reasoning parameters;
 - changing the core kernel or provider strategy interfaces;
 - a global model registry, pricing database, or capability discovery service;
 - changing permissions, sandboxing, concurrency, or context policy based on tier.

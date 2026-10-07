@@ -14,7 +14,7 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -26,7 +26,7 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
@@ -125,7 +125,7 @@ inherited provider.
 - **Sessions** — event-sourced persistence via `fileCheckpointer`; swap in [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) or any `Checkpointer`.
 - **Compaction** — deterministic default compactor (no LLM call), reactive overflow net, and disk spill for oversized tool results.
 - **Permission gate** — `policy({ allow, ask, deny })` matched by tool-name glob (`deny > ask > allow`); pair with `onApproval` for human-in-the-loop and `permissionAudit: true` to persist redacted decisions.
-- **Sandbox** — pass a `Sandbox` (e.g. [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI)) to run `bash` inside an OS boundary.
+- **Sandbox** — pass a `Sandbox` (e.g. [`@lite-agent/sandbox-haijun`](../sandbox-haijun)) to run `bash` inside an OS boundary.
 - **Human input** — an `ask_user` tool is registered when `onAskUser` is set, letting the model ask questions mid-run.
 - **Structured output** — set `outputSchema` (a Zod object) to force a validated final answer, surfaced as `result.output`.
 - **Background tasks** — enabled by default (`background: false` disables them); Agent groups continue across turns and report `completed` / `partial` / `failed` / `cancelled`, while `bash_output` / `kill_background` observe and control background Bash.
@@ -149,6 +149,6 @@ inherited provider.
 ## Related
 
 - [`@lite-agent/core`](../core) — the provider-agnostic kernel this package assembles.
-- [`@lite-agent/provider`](../provider) — model providers (Takebox AI, …).
-- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) · [`@lite-agent/local`](../local) — pluggable backends and hardening.
+- [`@lite-agent/provider`](../provider) — model providers (Juglow, …).
+- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-haijun`](../sandbox-haijun) · [`@lite-agent/local`](../local) — pluggable backends and hardening.
 - [Monorepo root](../..) — architecture overview; [`examples/cli`](../../examples/cli) — a full interactive REPL wiring provider + sandbox + permission + `ask_user`.

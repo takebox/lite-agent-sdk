@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-TRACK: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax.
 
-**Goal:** Add a pluggable `Sandbox` strategy that gives `bash` (and future process tools) an OS-level runtime boundary, defaulting to a no-op so the core stays lean and cross-platform; ship a `@lite-agent/sandbox-Takebox AI` adapter wrapping `@takebox-ai/sandbox-runtime`.
+**Goal:** Add a pluggable `Sandbox` strategy that gives `bash` (and future process tools) an OS-level runtime boundary, defaulting to a no-op so the core stays lean and cross-platform; ship a `@lite-agent/sandbox-haijun` adapter wrapping `@takebox-ai/sandbox-runtime`.
 
-**Architecture:** `Sandbox` is the 9th pluggable strategy. Core defines the interface + `noopSandbox()` and threads it through `ToolContext`. The `bash` tool wraps its command via `ctx.sandbox.wrap()` before `execSync`. The Takebox AI adapter lives in its own package so the experimental dependency stays out of core/sdk. Pairs with the (separately designed) `PermissionPolicy` gate as Phase 3's boundary layer.
+**Architecture:** `Sandbox` is the 9th pluggable strategy. Core defines the interface + `noopSandbox()` and threads it through `ToolContext`. The `bash` tool wraps its command via `ctx.sandbox.wrap()` before `execSync`. The Juglow adapter lives in its own package so the experimental dependency stays out of core/sdk. Pairs with the (separately designed) `PermissionPolicy` gate as Phase 3's boundary layer.
 
 **Tech Stack:** TS6 ESM (moduleResolution Bundler, verbatimModuleSyntax, strict, noUncheckedIndexedAccess), pnpm workspace, tsup, vitest, zod 4. Adapter deps on `@takebox-ai/sandbox-runtime` ^0.0.55 (no install scripts; runtime-only OS deps, mocked in tests).
 
@@ -405,21 +405,21 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 
 ---
 
-## Task 3: New package `@lite-agent/sandbox-Takebox AI` — `sandboxRuntime()` adapter
+## Task 3: New package `@lite-agent/sandbox-haijun` — `sandboxRuntime()` adapter
 
 **Files:**
 
-- Create: `packages/sandbox-Takebox AI/package.json`
-- Create: `packages/sandbox-Takebox AI/tsconfig.json`
-- Create: `packages/sandbox-Takebox AI/tsconfig.build.json`
-- Create: `packages/sandbox-Takebox AI/src/index.ts`
-- Test: `packages/sandbox-Takebox AI/test/sandboxRuntime.test.ts`
+- Create: `packages/sandbox-haijun/package.json`
+- Create: `packages/sandbox-haijun/tsconfig.json`
+- Create: `packages/sandbox-haijun/tsconfig.build.json`
+- Create: `packages/sandbox-haijun/src/index.ts`
+- Test: `packages/sandbox-haijun/test/sandboxRuntime.test.ts`
 
-- [ ] **Step 1: Create `packages/sandbox-Takebox AI/package.json`**
+- [ ] **Step 1: Create `packages/sandbox-haijun/package.json`**
 
 ```json
 {
-  "name": "@lite-agent/sandbox-Takebox AI",
+  "name": "@lite-agent/sandbox-haijun",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -447,7 +447,7 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 }
 ```
 
-- [ ] **Step 2: Create `packages/sandbox-Takebox AI/tsconfig.json`**
+- [ ] **Step 2: Create `packages/sandbox-haijun/tsconfig.json`**
 
 ```json
 {
@@ -457,7 +457,7 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 }
 ```
 
-- [ ] **Step 3: Create `packages/sandbox-Takebox AI/tsconfig.build.json`**
+- [ ] **Step 3: Create `packages/sandbox-haijun/tsconfig.build.json`**
 
 ```json
 {
@@ -469,9 +469,9 @@ git commit -m "feat(sdk): bash wraps commands via configured Sandbox; createLite
 - [ ] **Step 4: Install**
 
 Run: `pnpm install`
-Expected: adds `@lite-agent/sandbox-Takebox AI`, installs `@takebox-ai/sandbox-runtime` (no install scripts). Exit 0.
+Expected: adds `@lite-agent/sandbox-haijun`, installs `@takebox-ai/sandbox-runtime` (no install scripts). Exit 0.
 
-- [ ] **Step 5: Write the failing test** — `packages/sandbox-Takebox AI/test/sandboxRuntime.test.ts`
+- [ ] **Step 5: Write the failing test** — `packages/sandbox-haijun/test/sandboxRuntime.test.ts`
 
 ```ts
 import { expect, test, vi } from "vitest";
@@ -526,10 +526,10 @@ test("defaults: empty network, cwd-only write, sensible denyRead", async () => {
 
 - [ ] **Step 6: Run test to verify it fails**
 
-Run: `pnpm --filter @lite-agent/sandbox-Takebox AI test`
+Run: `pnpm --filter @lite-agent/sandbox-haijun test`
 Expected: FAIL — `sandboxRuntime` not found.
 
-- [ ] **Step 7: Implement `packages/sandbox-Takebox AI/src/index.ts`**
+- [ ] **Step 7: Implement `packages/sandbox-haijun/src/index.ts`**
 
 ```ts
 import {
@@ -575,25 +575,25 @@ export function sandboxRuntime(opts: SandboxRuntimeOptions = {}): Sandbox {
 
 - [ ] **Step 8: Run test + typecheck + build**
 
-Run: `pnpm --filter @lite-agent/sandbox-Takebox AI test`
+Run: `pnpm --filter @lite-agent/sandbox-haijun test`
 Expected: PASS (2 tests).
-Run: `pnpm --filter @lite-agent/sandbox-Takebox AI typecheck`
+Run: `pnpm --filter @lite-agent/sandbox-haijun typecheck`
 Expected: clean.
-Run: `pnpm --filter @lite-agent/sandbox-Takebox AI build`
+Run: `pnpm --filter @lite-agent/sandbox-haijun build`
 Expected: emits `dist/index.js` + `dist/index.d.ts`. Exit 0.
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add packages/sandbox-Takebox AI pnpm-lock.yaml
-git commit -m "feat(sandbox-Takebox AI): sandboxRuntime() adapter over @takebox-ai/sandbox-runtime"
+git add packages/sandbox-haijun pnpm-lock.yaml
+git commit -m "feat(sandbox-haijun): sandboxRuntime() adapter over @takebox-ai/sandbox-runtime"
 ```
 
 ---
 
 ## Final verification (after all tasks)
 
-- [ ] `pnpm -r --filter "@lite-agent/core" --filter "@lite-agent/provider" --filter "lite-agent" --filter "@lite-agent/sandbox-Takebox AI" test` — all pass.
+- [ ] `pnpm -r --filter "@lite-agent/core" --filter "@lite-agent/provider" --filter "lite-agent" --filter "@lite-agent/sandbox-haijun" test` — all pass.
 - [ ] `pnpm -r --filter "@lite-agent/*" typecheck` and root `pnpm typecheck` — clean.
 - [ ] `pnpm -r --filter "@lite-agent/*" build` — all emit dist.
 - [ ] Manual (optional, macOS/Linux with deps): wire `sandbox: sandboxRuntime({ allowedDomains: [...] })` into the CLI and confirm a denied-domain `curl` is blocked.

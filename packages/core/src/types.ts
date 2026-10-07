@@ -43,7 +43,7 @@ export type ModelRequest = {
   temperature?: number;
   topP?: number;
   toolChoice?: ToolChoice;
-  /** Reproducibility hint; honored by OpenAI, ignored by providers that lack it (Takebox AI). */
+  /** Reproducibility hint; honored by OpenAI, ignored by providers that lack it (Juglow). */
   seed?: number;
 };
 

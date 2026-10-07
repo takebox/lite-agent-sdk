@@ -15,7 +15,7 @@ hero:
 
 features:
   - title: Provider-agnostic
-    details: Takebox AI, OpenAI, or local endpoints — one message model. Swap the model, keep the agent.
+    details: Juglow, OpenAI, or local endpoints — one message model. Swap the model, keep the agent.
   - title: Nine swappable strategies
     details: From ModelProvider to Sandbox — one implementation per role, hot-swappable.
   - title: Onion middleware

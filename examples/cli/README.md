@@ -2,9 +2,9 @@
 
 Interactive REPL example built on [`lite-agent`](../../packages/sdk). Demonstrates the full stack:
 
-- streaming agent loop via `createLiteAgent` + the Takebox AI provider
+- streaming agent loop via `createLiteAgent` + the Juglow provider
 - **permission gate** — asks before `bash` / `write_file` / `edit_file`
-- **OS-level sandbox** (`@lite-agent/sandbox-Takebox AI`) — degrades to noop on unsupported environments
+- **OS-level sandbox** (`@lite-agent/sandbox-haijun`) — degrades to noop on unsupported environments
 - **`ask_user`** — the model can ask you questions (free text or numbered options)
 - multi-line paste, `ESC` to interrupt a run
 
@@ -24,7 +24,7 @@ LITE_AGENT_MODEL_ID=haijun-sonnet-4-6
 LITE_AGENT_MODEL_API_KEY=sk-...
 LITE_AGENT_BASE_URL=https://platform.juglow.my.id
 # Optional: force the protocol (inferred from the model id otherwise).
-# LITE_AGENT_MODEL_PROTOCOL=Takebox AI
+# LITE_AGENT_MODEL_PROTOCOL=Juglow
 ```
 
 The agent operates on the directory you launch it from (`process.cwd()`); tracks are loaded from this example's own `tracks/`.

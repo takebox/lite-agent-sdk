@@ -916,7 +916,7 @@ git commit -m "feat(sdk): replace todo tool with persistent Tasks API + per-turn
 "lite-agent": minor
 "@lite-agent/core": minor
 "@lite-agent/provider": minor
-"@lite-agent/sandbox-Takebox AI": minor
+"@lite-agent/sandbox-haijun": minor
 ---
 
 Replace the in-memory `todo` tool with a persistent Tasks API (`TaskCreate`/`TaskUpdate`/`TaskGet`/`TaskList`): one JSON file per task under `tasks/<listId>/`, bidirectional dependencies with cycle detection, cross-process file locking, and a per-turn `<system-reminder>` that re-injects the current task list without persisting it. New `createLiteAgent`/`query` options `tasks` (default on) and `taskListId`.
@@ -927,7 +927,7 @@ Replace the in-memory `todo` tool with a persistent Tasks API (`TaskCreate`/`Tas
 - [ ] **Step 2: Full build → test → typecheck (topological)**
 
 Run: `pnpm -r build && pnpm -r test && pnpm -r typecheck`
-Expected: all packages PASS. (`provider`/`sandbox-Takebox AI`/example don't depend on the task changes; this confirms nothing else broke.)
+Expected: all packages PASS. (`provider`/`sandbox-haijun`/example don't depend on the task changes; this confirms nothing else broke.)
 
 - [ ] **Step 3: Commit**
 

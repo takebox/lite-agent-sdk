@@ -15,8 +15,8 @@ A pluggable, lightweight **agent-core SDK**, structured as a pnpm monorepo. The 
 | [`@lite-agent/local`](./packages/local) | Strict single-host runtime: local models, SQLite, mandatory sandbox, managed permissions, resource limits, and local audit logs. |
 | [`@lite-agent/sdk`](./packages/sdk) | Batteries-included agent: tools, tracks, subagents, tasks, sessions, system prompt — `query()` / `createLiteAgent()` / `tool()`. |
 | [`@lite-agent/core`](./packages/core) | The kernel: strategy interfaces, middleware pipeline, normalized types, codecs, permission, sandbox, checkpointer primitives. |
-| [`@lite-agent/provider`](./packages/provider) | Model providers — Takebox AI Messages API + OpenAI Chat Completions (also OpenAI-compatible / local endpoints). |
-| [`@lite-agent/sandbox-Takebox AI`](./packages/sandbox-Takebox AI) | OS-level `Sandbox` adapter (macOS Seatbelt / Linux bubblewrap). |
+| [`@lite-agent/provider`](./packages/provider) | Model providers — Juglow Messages API + OpenAI Chat Completions (also OpenAI-compatible / local endpoints). |
+| [`@lite-agent/sandbox-haijun`](./packages/sandbox-haijun) | OS-level `Sandbox` adapter (macOS Seatbelt / Linux bubblewrap). |
 | [`@lite-agent/checkpoint-sqlite`](./packages/checkpoint-sqlite) | SQLite (WAL) `Checkpointer` — single-host, multi-process session persistence. |
 
 Plus [`examples/cli`](./examples/cli) — an interactive REPL demo wiring the full stack.
@@ -29,11 +29,11 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "List the files here and summarize what this project does.",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {

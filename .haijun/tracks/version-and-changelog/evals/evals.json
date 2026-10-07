@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "改动过的包的版本号和 changelog 更新一下,准备发版。",
-      "expected_output": "Detects the packages changed since the last release (core: compact feature; sdk: compact feature + UUID session-id), bumps only those (fixed-group note aside, it should bump core and sdk to 0.8.0 per feature=minor), prepends English CHANGELOG entries matching the existing changeset-style format, and leaves provider / sandbox-Takebox AI / checkpoint-sqlite (unchanged) at 0.7.0 with untouched changelogs.",
+      "expected_output": "Detects the packages changed since the last release (core: compact feature; sdk: compact feature + UUID session-id), bumps only those (fixed-group note aside, it should bump core and sdk to 0.8.0 per feature=minor), prepends English CHANGELOG entries matching the existing changeset-style format, and leaves provider / sandbox-haijun / checkpoint-sqlite (unchanged) at 0.7.0 with untouched changelogs.",
       "files": []
     },
     {

@@ -6,11 +6,11 @@
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "Summarize this project.",
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {

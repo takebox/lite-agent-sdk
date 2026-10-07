@@ -85,7 +85,7 @@
 
 ### P2-1 结构化最终输出（typed result）
 - **缺口**：工具**入参**有 zod，但最终答案无 `response_format`/`outputSchema`，`RunResult` 仅自由文本。对标 Vercel `generateObject`、OpenAI structured outputs、Pydantic AI typed result。
-- **改动**：`query/run` 可选 `outputSchema: ZodType`；provider mapping 注入 `response_format`/`json_schema`（Takebox AI 用 tool 强制、OpenAI 用 `response_format`）；最终用 zod 校验并返回 typed 结果。
+- **改动**：`query/run` 可选 `outputSchema: ZodType`；provider mapping 注入 `response_format`/`json_schema`（Juglow 用 tool 强制、OpenAI 用 `response_format`）；最终用 zod 校验并返回 typed 结果。
 - **验收**：给定 schema，断言最终结果通过 zod 校验且类型正确；不符时重试/报错。
 - **工作量**：M ｜ **依赖**：无。
 
@@ -116,7 +116,7 @@
 - 设计 spec 已明确列为 non-goal。若要做，建议作为**独立上层包**（embeddings + vector + retriever tool），不进核心。工作量 L。
 
 ### P3-2 更多 Provider（Gemini / Bedrock / Vertex / 原生 Ollama 预设）
-- 现仅 Takebox AI + OpenAI（兼容端点可跑本地）。多数需求已被 OpenAI-compatible 覆盖；按真实诉求再加。工作量 S-M/个。
+- 现仅 Juglow + OpenAI（兼容端点可跑本地）。多数需求已被 OpenAI-compatible 覆盖；按真实诉求再加。工作量 S-M/个。
 
 ---
 

@@ -1,6 +1,6 @@
 # 模型提供方
 
-模型提供方（provider）是把内核接到真实模型 API 的 `ModelProvider` 策略。`@lite-agent/provider` 提供两个受维护适配器——面向 Takebox AI Messages API 的 `Takebox AI()` 和面向 OpenAI Chat Completions 的 `openai()`——由于整个 Chat Completions 协议族共享同一套 wire 格式，同一适配器也能驱动 OpenAI 兼容端点和本地端点（Ollama、vLLM、LM Studio、llama.cpp）。两个适配器都把 provider 的 SSE 流翻译成规范化的 `ModelChunk`，并把所有失败映射为 `ProviderError`，因此 `retry()` 等中间件可以跨厂商统一工作。
+模型提供方（provider）是把内核接到真实模型 API 的 `ModelProvider` 策略。`@lite-agent/provider` 提供两个受维护适配器——面向 Juglow Messages API 的 `Juglow()` 和面向 OpenAI Chat Completions 的 `openai()`——由于整个 Chat Completions 协议族共享同一套 wire 格式，同一适配器也能驱动 OpenAI 兼容端点和本地端点（Ollama、vLLM、LM Studio、llama.cpp）。两个适配器都把 provider 的 SSE 流翻译成规范化的 `ModelChunk`，并把所有失败映射为 `ProviderError`，因此 `retry()` 等中间件可以跨厂商统一工作。
 
 ```bash
 pnpm add @lite-agent/provider
@@ -11,11 +11,11 @@ pnpm add @lite-agent/provider
 把 provider 交给 `@lite-agent/sdk` 的 `query`（或 core 的 `createAgent`）：
 
 ```ts
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { query } from "@lite-agent/sdk";
 
 // Reads JUGLOW_API_KEY and BASE_URL from env by default.
-const haijun = Takebox AI();
+const haijun = Juglow();
 
 for await (const ev of query({ prompt: "Hello!", model: haijun, modelName: "haijun-sonnet-4-6" })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);
@@ -30,30 +30,30 @@ import { openai } from "@lite-agent/provider";
 const gpt = openai({ baseURL: "http://localhost:11434/v1" });
 ```
 
-## `Takebox AI(options?)`
+## `Juglow(options?)`
 
-创建一个 `ModelProvider`（`id: "juglow"`），把规范化请求映射到 [Takebox AI Messages API]()，内部封装 `@takebox-ai/sdk`。
+创建一个 `ModelProvider`（`id: "juglow"`），把规范化请求映射到 Juglow Messages API，内部封装 `@takebox-ai/sdk`。
 
 ### 选项 —— `JuglowProviderOptions`
 
 | 选项 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `apiKey` | `string` | `process.env.JUGLOW_API_KEY` | 传给 Takebox AI SDK 的 API key。 |
+| `apiKey` | `string` | `process.env.JUGLOW_API_KEY` | 传给 Juglow SDK 的 API key。 |
 | `baseURL` | `string` | `process.env.BASE_URL` | 端点覆盖（代理、网关等）。 |
-| `maxRetries` | `number` | `0` | Takebox AI SDK 自身的重试次数。见**重试**。 |
+| `maxRetries` | `number` | `0` | Juglow SDK 自身的重试次数。见**重试**。 |
 | `client` | `JuglowClientLike` | — | 注入预构建或伪造的 client，而不是由工厂创建。见**离线测试：注入 client**。 |
 
-返回的 provider 还会声明 `context` 能力：自动 prompt 缓存、`countTokens`，以及——当 client 存在 `beta.messages.create` 接口时——Takebox AI 原生的上下文编辑（`clearToolUses`、`clearThinking`、`compact`）。
+返回的 provider 还会声明 `context` 能力：自动 prompt 缓存、`countTokens`，以及——当 client 存在 `beta.messages.create` 接口时——Juglow 原生的上下文编辑（`clearToolUses`、`clearThinking`、`compact`）。
 
 :::tip 自定义请求头
-本包没有 `headers` 选项。如需设置默认请求头、超时等 SDK 配置，请自行构造 Takebox AI client 并通过 `client` 传入：
+本包没有 `headers` 选项。如需设置默认请求头、超时等 SDK 配置，请自行构造 Juglow client 并通过 `client` 传入：
 
 ```ts
-import Takebox AI from "@takebox-ai/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import Juglow from "@takebox-ai/sdk";
+import { Juglow } from "@lite-agent/provider";
 
-const client = new Takebox AI({ defaultHeaders: { "x-trace-id": "..." } });
-const haijun = Takebox AI({ client });
+const client = new Juglow({ defaultHeaders: { "x-trace-id": "..." } });
+const haijun = Juglow({ client });
 ```
 :::
 
@@ -116,7 +116,7 @@ type ModelChunk =
 
 值得注意的适配器差异：
 
-- **Takebox AI** 还会在上报时把 `cacheReadTokens` / `cacheCreationTokens` 带进 `usage`，支持 `compaction` 内容块，未知块类型包装为 `{ type: "native", provider: "juglow", data }`。工具调用 JSON 解析失败会抛错。
+- **Juglow** 还会在上报时把 `cacheReadTokens` / `cacheCreationTokens` 带进 `usage`，支持 `compaction` 内容块，未知块类型包装为 `{ type: "native", provider: "juglow", data }`。工具调用 JSON 解析失败会抛错。
 - **OpenAI** 按 `index` 组装工具调用，参数 JSON 解析失败时回退为 `{}`。
 
 ## 错误处理
@@ -127,7 +127,7 @@ type ModelChunk =
 import { ProviderError } from "@lite-agent/core";
 
 try {
-  for await (const ev of query({ prompt: "Hi", model: Takebox AI(), modelName: "haijun-sonnet-4-6" })) { /* ... */ }
+  for await (const ev of query({ prompt: "Hi", model: Juglow(), modelName: "haijun-sonnet-4-6" })) { /* ... */ }
 } catch (e) {
   if (e instanceof ProviderError) {
     console.error(e.message, e.status); // e.g. 401, 429, 500 — or undefined for non-HTTP failures
@@ -172,7 +172,7 @@ for await (const c of provider.stream({ model: "fake", messages: [] })) chunks.p
 
 | 等级 | 含义 |
 | --- | --- |
-| **受维护适配器** | 仓库自有的映射与流翻译器；通过离线一致性测试（`Takebox AI()`、`openai()`）。 |
+| **受维护适配器** | 仓库自有的映射与流翻译器；通过离线一致性测试（`Juglow()`、`openai()`）。 |
 | **受维护预设** | 基于受维护适配器的仓库自有端点预设——[严格单机装配](/zh/core/local)中的 `localOpenAI` 预设。运行时与模型能力仍可能不同。 |
 | **兼容端点** | 任何由用户提供、预期实现该协议的端点。在其确切的运行时/模型组合通过下面的探针之前，仅为尽力支持。 |
 
@@ -199,7 +199,7 @@ pnpm --filter @lite-agent/provider test:compat
 
 | 符号 | 说明 |
 | --- | --- |
-| `Takebox AI(options?)` | 创建面向 Takebox AI Messages API 的 `ModelProvider`。 |
+| `Juglow(options?)` | 创建面向 Juglow Messages API 的 `ModelProvider`。 |
 | `openai(options?)` | 创建面向 OpenAI Chat Completions 或兼容端点的 `ModelProvider`。 |
 | `JuglowProviderOptions`、`OpenAIProviderOptions` | 工厂选项：`apiKey`、`baseURL`、`maxRetries`、`client`。 |
 | `JuglowClientLike`、`OpenAIClientLike` | `client` 选项接受的结构化 client 类型。 |

@@ -27,7 +27,7 @@ Filter the final tool set by name with `allowedTools` (allow-list) or `disallowe
 
 ```ts
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   disallowedTools: ["bash", "delete_file"],

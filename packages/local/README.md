@@ -69,5 +69,5 @@ Runtime data lives under the SDK project directory: `sessions.sqlite3` and `logs
 - [`@lite-agent/sdk`](../sdk) — the general-purpose assembly this package hardens for single-host use.
 - [`@lite-agent/provider`](../provider) — model providers used by `localOpenAI`.
 - [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) — the SQLite checkpointer used here.
-- [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) — the OS sandbox runtime used here.
+- [`@lite-agent/sandbox-haijun`](../sandbox-haijun) — the OS sandbox runtime used here.
 - [Monorepo root](../..) — full architecture write-up.

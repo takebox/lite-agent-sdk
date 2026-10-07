@@ -13,7 +13,7 @@ The SDK re-exports all of `@lite-agent/core`, so you can drop down a level — w
 
 ```ts
 import { createLiteAgent, type Middleware } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const logging: Middleware = {
   name: "logging",
@@ -26,7 +26,7 @@ const logging: Middleware = {
 };
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   use: [logging], // extra middleware around the kernel loop
@@ -53,5 +53,5 @@ This section documents the SDK capability by capability:
 
 - [Getting started](/sdk/getting-started) — install and run your first agent.
 - [Core strategies](/core/strategies) — the nine swappable parts the SDK assembles.
-- [Model providers](/core/providers) — Takebox AI, OpenAI, and OpenAI-compatible endpoints.
+- [Model providers](/core/providers) — Juglow, OpenAI, and OpenAI-compatible endpoints.
 - [CLI example](/examples/cli) — a full interactive agent built on these APIs.

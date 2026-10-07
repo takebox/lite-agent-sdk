@@ -8,14 +8,14 @@ Wrap any event stream with `recordEventStream` to tee every event into an `Event
 
 ```ts
 import { query, jsonlEventSink, recordEventStream } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const sink = jsonlEventSink({ file: "./audit/events.jsonl" });
 
 const stream = recordEventStream(
   query({
     prompt: "Summarize package.json",
-    model: Takebox AI(),
+    model: Juglow(),
     modelName: "haijun-sonnet-4-6",
     cwd: process.cwd(),
   }),

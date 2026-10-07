@@ -10,10 +10,10 @@ To scope a run to a named list, or turn the capability off:
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   taskListId: "release-0.4", // which list to use; default "default"
@@ -44,7 +44,7 @@ Set `tasks: false` to remove all four tools **and** the reminder middleware:
 
 ```ts
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   tasks: false,

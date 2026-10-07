@@ -14,7 +14,7 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -26,7 +26,7 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
@@ -102,7 +102,7 @@ completion 轮次严格串行，进程重启后不会恢复未完成工作。`qu
 - **会话（Sessions）** —— 通过 `fileCheckpointer` 做事件溯源持久化；可替换为 [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) 或任意 `Checkpointer`。
 - **压缩（Compaction）** —— 确定性默认 compactor（不调用 LLM）、反应式溢出兜底，超大 tool_result 落盘 spill。
 - **权限门** —— `policy({ allow, ask, deny })`，按工具名 glob 匹配（`deny > ask > allow`）；配合 `onApproval` 实现人机协同，`permissionAudit: true` 持久化脱敏决策。
-- **沙箱** —— 传入一个 `Sandbox`（如 [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI)），让 `bash` 在操作系统边界内运行。
+- **沙箱** —— 传入一个 `Sandbox`（如 [`@lite-agent/sandbox-haijun`](../sandbox-haijun)），让 `bash` 在操作系统边界内运行。
 - **人工输入** —— 设置 `onAskUser` 后注册 `ask_user` 工具，允许模型在运行中向你提问。
 - **结构化输出** —— 设置 `outputSchema`（Zod object）强制返回经校验的最终答案，通过 `result.output` 暴露。
 - **后台任务** —— 默认启用（`background: false` 关闭）；Agent group 可跨轮次继续运行并报告 `completed` / `partial` / `failed` / `cancelled`，`bash_output` / `kill_background` 用于观察和控制后台 Bash。
@@ -126,6 +126,6 @@ completion 轮次严格串行，进程重启后不会恢复未完成工作。`qu
 ## 相关链接
 
 - [`@lite-agent/core`](../core) —— 本包所组装的、与 provider 无关的内核。
-- [`@lite-agent/provider`](../provider) —— 模型 provider（Takebox AI 等）。
-- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-Takebox AI`](../sandbox-Takebox AI) · [`@lite-agent/local`](../local) —— 可插拔后端与加固。
+- [`@lite-agent/provider`](../provider) —— 模型 provider（Juglow 等）。
+- [`@lite-agent/checkpoint-sqlite`](../checkpoint-sqlite) · [`@lite-agent/sandbox-haijun`](../sandbox-haijun) · [`@lite-agent/local`](../local) —— 可插拔后端与加固。
 - [Monorepo 根目录](../..) —— 架构总览；[`examples/cli`](../../examples/cli) —— 完整的交互式 REPL（串联 provider + 沙箱 + 权限 + `ask_user`）。

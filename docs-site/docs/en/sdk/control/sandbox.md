@@ -2,23 +2,23 @@
 
 The sandbox confines every shell command the agent runs inside an **OS boundary** — macOS **Seatbelt** or Linux **bubblewrap** — with restricted filesystem and network access. Where the [permission gate](/sdk/control/permissions) decides *whether* a command runs, the sandbox constrains *what it can touch* while running — and because the boundary is enforced by the OS on the running process, it holds regardless of what the model decided to run. It cannot be talked out of with clever command strings. This is the second, independent layer of defense in depth.
 
-The adapter is [`@lite-agent/sandbox-Takebox AI`](https://github.com/takebox/sandbox-runtime), backed by `@takebox-ai/sandbox-runtime`.
+The adapter is [`@lite-agent/sandbox-haijun`](https://github.com/takebox/sandbox-runtime), backed by `@takebox-ai/sandbox-runtime`.
 
 ## Enable it
 
 ```bash
-pnpm add @lite-agent/sandbox-Takebox AI
+pnpm add @lite-agent/sandbox-haijun
 ```
 
 Pass `sandboxRuntime()` to `createLiteAgent` / `query` via the `sandbox` option:
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
-import { sandboxRuntime } from "@lite-agent/sandbox-Takebox AI";
+import { Juglow } from "@lite-agent/provider";
+import { sandboxRuntime } from "@lite-agent/sandbox-haijun";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   sandbox: sandboxRuntime({
@@ -108,7 +108,7 @@ The gate decides before execution; the sandbox contains whatever the gate lets t
 
 ```ts
 createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   // Gate: pre-exec decisions

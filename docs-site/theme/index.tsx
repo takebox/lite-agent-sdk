@@ -4,11 +4,11 @@ import type { ComponentProps } from "react";
 const install = "pnpm add @lite-agent/sdk @lite-agent/provider zod";
 
 const example = `import { query } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "List the files here and summarize this project.",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {

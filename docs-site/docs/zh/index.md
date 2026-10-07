@@ -15,7 +15,7 @@ hero:
 
 features:
   - title: Provider 无关
-    details: Takebox AI、OpenAI 与本地端点，一套消息模型。换模型，不换 Agent。
+    details: Juglow、OpenAI 与本地端点，一套消息模型。换模型，不换 Agent。
   - title: 九种可替换策略
     details: 从 ModelProvider 到 Sandbox，每个角色一个实现，即插即换。
   - title: 洋葱式中间件

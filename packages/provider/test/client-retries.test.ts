@@ -9,18 +9,18 @@ vi.mock("openai", () => ({ default: class { constructor(o: Record<string, unknow
 vi.mock("@takebox-ai/sdk", () => ({ default: class { constructor(o: Record<string, unknown>) { juglowArgs.push(o); } } }));
 
 import { openai } from "../src/openai/openai";
-import { Takebox AI } from "../src/Takebox AI/Takebox AI";
+import { Juglow } from "../src/juglow/juglow";
 
 test("both providers default the SDK's internal retries to 0 (delegated to retry() middleware)", () => {
   openai({ apiKey: "k" });
-  Takebox AI({ apiKey: "k" });
+  Juglow({ apiKey: "k" });
   expect(openaiArgs.at(-1)?.maxRetries).toBe(0);
   expect(juglowArgs.at(-1)?.maxRetries).toBe(0);
 });
 
 test("both providers honor an explicit maxRetries", () => {
   openai({ apiKey: "k", maxRetries: 5 });
-  Takebox AI({ apiKey: "k", maxRetries: 3 });
+  Juglow({ apiKey: "k", maxRetries: 3 });
   expect(openaiArgs.at(-1)?.maxRetries).toBe(5);
   expect(juglowArgs.at(-1)?.maxRetries).toBe(3);
 });

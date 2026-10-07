@@ -73,7 +73,7 @@ interface AgentDefinition {
 ```
 
 `tools`/`model` reuse the parent `ModelProvider` — `model` only overrides the
-request-time `modelName` (works for the Takebox AI/OpenAI providers, which are
+request-time `modelName` (works for the Juglow/OpenAI providers, which are
 generic over model ids). No model-registry is introduced.
 
 ## Components (all in sdk)

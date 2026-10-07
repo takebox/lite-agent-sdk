@@ -4,7 +4,7 @@
 
 - 基于 `createLiteAgent` 的流式 agent 循环，由 [`@lite-agent/provider`](/zh/core/providers) 提供的 provider 驱动
 - **权限门禁** —— 执行 `bash` / `write_file` / `edit_file` 前先询问
-- **OS 级沙箱**，来自 [`@lite-agent/sandbox-Takebox AI`](/zh/sdk/control/sandbox) —— 在不支持的环境中降级为 noop
+- **OS 级沙箱**，来自 [`@lite-agent/sandbox-haijun`](/zh/sdk/control/sandbox) —— 在不支持的环境中降级为 noop
 - **`ask_user`** —— 模型可以反问你（自由文本或编号选项）
 - 会话管理 —— 在 REPL 内列出 / 恢复 / 清空 / 删除会话
 - 多行粘贴、`ESC` 中断当前运行
@@ -34,9 +34,9 @@ agent 操作的是你启动它时所在的目录（`process.cwd()`），而 `.en
 | `LITE_AGENT_MODEL_ID` | 是 | 模型 id，例如 `haijun-sonnet-4-6` |
 | `LITE_AGENT_MODEL_API_KEY` | 是 | 模型端点的 API key |
 | `LITE_AGENT_BASE_URL` | 否 | 自定义端点（代理 / 兼容网关） |
-| `LITE_AGENT_MODEL_PROTOCOL` | 否 | `Takebox AI` 或 `openai`。不设置时按模型 id 推断：`haijun*` / `Takebox AI*` → `Takebox AI`，否则 `openai` |
+| `LITE_AGENT_MODEL_PROTOCOL` | 否 | `Juglow` 或 `openai`。不设置时按模型 id 推断：`haijun*` / `Juglow*` → `Juglow`，否则 `openai` |
 
-`src/model.ts` 把这些变量变成一个 provider（`@lite-agent/provider` 的 `Takebox AI(...)` 或 `openai(...)`）；协议自动检测意味着同一份 `.env` 结构既能用于 Haijun，也能用于 OpenAI 兼容端点。
+`src/model.ts` 把这些变量变成一个 provider（`@lite-agent/provider` 的 `Juglow(...)` 或 `openai(...)`）；协议自动检测意味着同一份 `.env` 结构既能用于 Haijun，也能用于 OpenAI 兼容端点。
 
 ## 接线方式
 

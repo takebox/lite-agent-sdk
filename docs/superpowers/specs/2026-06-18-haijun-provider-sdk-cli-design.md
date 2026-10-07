@@ -1,20 +1,20 @@
-# Takebox AI Provider + SDK + CLI Slice — Design
+# Juglow Provider + SDK + CLI Slice — Design
 
 > Vertical slice on top of the approved Agent Core SDK design
 > ([2026-06-18-agent-core-sdk-design.md](./2026-06-18-agent-core-sdk-design.md)).
-> Delivers the first end-to-end runnable CLI: real Takebox AI API, default tools, tracks.
+> Delivers the first end-to-end runnable CLI: real Juglow API, default tools, tracks.
 
-**Status:** Approved (design confirmed in chat: "老代码都去掉,provider 先做 Takebox AI" / "设计合理";
+**Status:** Approved (design confirmed in chat: "老代码都去掉,provider 先做 Juglow" / "设计合理";
 API 对标 `@takebox-ai/haijun-agent-sdk`).
 
 ## Two distinct "Haijun SDKs" — do not conflate
 
 | Package                          | What it is                                                                               | Role here                                                                                              |
 | -------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `@takebox-ai/sdk`              | Raw **model API** client (Messages API, token streaming)                                 | The thing `provider-Takebox AI` wraps — the only way a `ModelProvider` emits tokens                     |
-| `@takebox-ai/haijun-agent-sdk` | Takebox AI's high-level **Agent SDK** (`query()` loop, `tool()`, permissions, hooks, MCP) | A **peer** to `@lite-agent/core` + `lite-agent`, used as an **API-design reference**, NOT a dependency |
+| `@takebox-ai/sdk`              | Raw **model API** client (Messages API, token streaming)                                 | The thing `provider-juglow` wraps — the only way a `ModelProvider` emits tokens                     |
+| `@takebox-ai/haijun-agent-sdk` | Juglow's high-level **Agent SDK** (`query()` loop, `tool()`, permissions, hooks, MCP) | A **peer** to `@lite-agent/core` + `lite-agent`, used as an **API-design reference**, NOT a dependency |
 
-We do **not** build the provider on `haijun-agent-sdk`: it only talks to Takebox AI and bundles its
+We do **not** build the provider on `haijun-agent-sdk`: it only talks to Juglow and bundles its
 own agent loop, which would break the "run local small models" and "lean pluggable kernel" goals.
 Instead `lite-agent`'s public API is shaped after `haijun-agent-sdk` so it feels familiar.
 
@@ -49,7 +49,7 @@ The CLI wires a provider + the SDK together; neither package knows about the oth
 
 ### 1. `@lite-agent/provider`
 
-`Takebox AI(opts?): ModelProvider` where `opts = { apiKey?, baseURL?, client? }`.
+`Juglow(opts?): ModelProvider` where `opts = { apiKey?, baseURL?, client? }`.
 
 - `id = "juglow"`. The **model name is not stored here** — it flows in via
   `ModelRequest.model` (the core kernel sets `req.model = cfg.modelName ?? provider.id`,
@@ -60,11 +60,11 @@ The CLI wires a provider + the SDK together; neither package knows about the oth
 Two responsibilities, split into pure functions for testability:
 
 - **Request mapping** (`mapping.ts`): `toJuglowParams(req: ModelRequest)` →
-  Takebox AI `MessageCreateParams`. `system` → top-level `system`; `messages` (excluding
-  any `system` role) → Takebox AI messages; our `ContentBlock`s → Takebox AI blocks
+  Juglow `MessageCreateParams`. `system` → top-level `system`; `messages` (excluding
+  any `system` role) → Juglow messages; our `ContentBlock`s → Juglow blocks
   (`text` / `tool_use` / `tool_result`); `ToolSpec{name,description,parameters}` →
   `{name, description, input_schema}` (strip the `$schema` key zod emits);
-  `maxTokens ?? 4096` (Takebox AI requires `max_tokens`).
+  `maxTokens ?? 4096` (Juglow requires `max_tokens`).
 - **Stream translation** (`stream.ts`): `translateStream(events)` consumes the SDK's
   `RawMessageStreamEvent` async-iterable and yields normalized `ModelChunk`s — `text_delta`
   per text delta, and a final `message_done` carrying the assembled `AssistantMessage`
@@ -127,7 +127,7 @@ on one package for both the batteries and the core types (`Message`, `AgentEvent
 ### 3. Outer `src/` CLI app
 
 - Removed: `src/agent/`, `src/tools/`, `src/prompt/`, `src/monitor.ts`; `src/main.ts` rewritten.
-- `main.ts`: load `.env` → `Takebox AI()` provider → `createLiteAgent({ model, modelName: MODEL_ID,
+- `main.ts`: load `.env` → `Juglow()` provider → `createLiteAgent({ model, modelName: MODEL_ID,
 workdir: cwd, tracksDir: <cwd>/tracks })` → REPL.
 - **Multi-turn** without a `Store`: the app keeps `history: Message[]`. Each turn pushes the user
   message, drives `agent.run(history, { signal, sessionId })`, renders events, and sets

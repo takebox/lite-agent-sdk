@@ -275,7 +275,7 @@ git add .changeset/part-a-library-swaps.md
 git commit -m "chore: changeset for p-limit/picomatch library swaps"
 ```
 
-> **Deferred (needs explicit user consent — do NOT run as part of this plan):** `pnpm version` (bumps the fixed group core/sdk/provider/sandbox-Takebox AI to the next patch and writes CHANGELOGs) and any publish. When versioning later, watch for `@lite-agent/checkpoint-sqlite` getting a cascade bump from its core dependency and pin it back, consistent with the prior decision to keep it independently versioned.
+> **Deferred (needs explicit user consent — do NOT run as part of this plan):** `pnpm version` (bumps the fixed group core/sdk/provider/sandbox-haijun to the next patch and writes CHANGELOGs) and any publish. When versioning later, watch for `@lite-agent/checkpoint-sqlite` getting a cascade bump from its core dependency and pin it back, consistent with the prior decision to keep it independently versioned.
 
 ---
 

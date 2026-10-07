@@ -8,10 +8,10 @@ With the default file backend there is nothing to configure — `createLiteAgent
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
 });
@@ -74,13 +74,13 @@ Pass the checkpointer to `createLiteAgent` (or `query`); it overrides the defaul
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { sqliteCheckpointer } from "@lite-agent/checkpoint-sqlite";
 
 const checkpointer = sqliteCheckpointer({ file: "./sessions.db" }); // or ":memory:"
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   checkpointer,

@@ -6,11 +6,11 @@
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { z } from "zod";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   outputSchema: z.object({
@@ -30,7 +30,7 @@ import { query } from "@lite-agent/sdk";
 
 const run = query({
   prompt: "Summarize package.json",
-  model: Takebox AI(),
+  model: Juglow(),
   cwd: process.cwd(),
   outputSchema: z.object({ name: z.string(), deps: z.number() }),
 });

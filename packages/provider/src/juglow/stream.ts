@@ -1,4 +1,4 @@
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type {
   AssistantMessage,
   ContentBlock,
@@ -7,7 +7,7 @@ import type {
 } from "@lite-agent/core";
 
 export async function* translateStream(
-  events: AsyncIterable<Takebox AI.RawMessageStreamEvent>,
+  events: AsyncIterable<Juglow.RawMessageStreamEvent>,
 ): AsyncGenerator<ModelChunk> {
   const blocks: (ContentBlock | undefined)[] = [];
   const toolJson: string[] = [];

@@ -1,5 +1,5 @@
 {
-  "name": "@lite-agent/sandbox-Takebox AI",
+  "name": "@lite-agent/sandbox-haijun",
   "version": "0.8.0",
   "description": "OS-level Sandbox adapter for @lite-agent/core over @takebox-ai/sandbox-runtime (Seatbelt / bubblewrap).",
   "license": "MIT",
@@ -30,7 +30,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takebox/lite-agent-sdk.git",
-    "directory": "packages/sandbox-Takebox AI"
+    "directory": "packages/sandbox-haijun"
   },
   "publishConfig": {
     "access": "public"

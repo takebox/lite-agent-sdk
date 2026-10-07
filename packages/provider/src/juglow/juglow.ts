@@ -1,4 +1,4 @@
-import Takebox AI from "@takebox-ai/sdk";
+import Juglow from "@takebox-ai/sdk";
 import type { ModelChunk, ModelProvider, ModelRequest, ProviderContextEdit } from "@lite-agent/core";
 import { ProviderError } from "@lite-agent/core";
 import { toJuglowParams } from "./mapping";
@@ -8,17 +8,17 @@ import { translateStream } from "./stream";
 export interface JuglowClientLike {
   messages: {
     create(
-      params: Takebox AI.MessageCreateParamsStreaming,
+      params: Juglow.MessageCreateParamsStreaming,
       options?: { signal?: AbortSignal },
     ):
-      | Promise<AsyncIterable<Takebox AI.RawMessageStreamEvent>>
-      | AsyncIterable<Takebox AI.RawMessageStreamEvent>;
+      | Promise<AsyncIterable<Juglow.RawMessageStreamEvent>>
+      | AsyncIterable<Juglow.RawMessageStreamEvent>;
     countTokens?(
-      params: Takebox AI.MessageCountTokensParams,
+      params: Juglow.MessageCountTokensParams,
       options?: { signal?: AbortSignal },
-    ): Promise<Takebox AI.MessageTokensCount> | Takebox AI.MessageTokensCount;
+    ): Promise<Juglow.MessageTokensCount> | Juglow.MessageTokensCount;
   };
-  /** Optional beta surface used only for Takebox AI-native context management. */
+  /** Optional beta surface used only for Juglow-native context management. */
   beta?: {
     messages?: {
       create(
@@ -34,7 +34,7 @@ export interface JuglowProviderOptions {
   baseURL?: string;
   client?: JuglowClientLike;
   /**
-   * The Takebox AI SDK's own internal retry count. Defaults to 0 so retry policy is
+   * The Juglow SDK's own internal retry count. Defaults to 0 so retry policy is
    * owned by the `retry()` middleware (otherwise the two compound). Set this to
    * restore SDK-level retries.
    */
@@ -51,10 +51,10 @@ function toProviderError(e: unknown): ProviderError {
   return new ProviderError(message, status);
 }
 
-export function Takebox AI(opts: JuglowProviderOptions = {}): ModelProvider {
+export function Juglow(opts: JuglowProviderOptions = {}): ModelProvider {
   const client: JuglowClientLike =
     opts.client ??
-    (new Takebox AI({
+    (new Juglow({
       apiKey: opts.apiKey ?? process.env["JUGLOW_API_KEY"],
       baseURL: opts.baseURL ?? process.env["BASE_URL"],
       maxRetries: opts.maxRetries ?? 0,
@@ -86,7 +86,7 @@ export function Takebox AI(opts: JuglowProviderOptions = {}): ModelProvider {
         toJuglowParams(req, { promptCache: true });
       try {
         const result = await countTokens(
-          params as Takebox AI.MessageCountTokensParams,
+          params as Juglow.MessageCountTokensParams,
           signal ? { signal } : undefined,
         );
         return result.input_tokens;
@@ -117,7 +117,7 @@ export function Takebox AI(opts: JuglowProviderOptions = {}): ModelProvider {
         const raw = edits?.length && betaCreate
           ? await betaCreate(params, signal ? { signal } : undefined)
           : await client.messages.create(params, signal ? { signal } : undefined);
-        yield* translateStream(raw as AsyncIterable<Takebox AI.RawMessageStreamEvent>);
+        yield* translateStream(raw as AsyncIterable<Juglow.RawMessageStreamEvent>);
       } catch (e) {
         throw toProviderError(e);
       }

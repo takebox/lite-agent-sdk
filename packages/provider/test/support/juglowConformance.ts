@@ -1,12 +1,12 @@
-import type Takebox AI from "@takebox-ai/sdk";
+import type Juglow from "@takebox-ai/sdk";
 import type {
   ProviderConformanceFactory,
   ProviderConformanceScenario,
 } from "@lite-agent/core";
-import { Takebox AI } from "../../src/Takebox AI";
-import type { JuglowClientLike } from "../../src/Takebox AI";
+import { Juglow } from "../../src/juglow";
+import type { JuglowClientLike } from "../../src/juglow";
 
-type Event = Takebox AI.RawMessageStreamEvent;
+type Event = Juglow.RawMessageStreamEvent;
 
 const event = (value: unknown): Event => value as Event;
 
@@ -113,5 +113,5 @@ export const juglowConformance: ProviderConformanceFactory = (scenario) => {
       },
     },
   };
-  return Takebox AI({ client });
+  return Juglow({ client });
 };

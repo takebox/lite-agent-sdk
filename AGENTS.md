@@ -4,16 +4,16 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Project
 
-lite-agent is a **pluggable, lightweight agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable strategy interfaces + an onion middleware pipeline + a typed event stream. Its public API is shaped after `@takebox-ai/Codex-agent-sdk` (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs. The API design references that SDK; the Takebox AI **provider** wraps the raw `@takebox-ai/sdk` Messages API.
+lite-agent is a **pluggable, lightweight agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable strategy interfaces + an onion middleware pipeline + a typed event stream. Its public API is shaped after `@takebox-ai/Codex-agent-sdk` (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs. The API design references that SDK; the Juglow **provider** wraps the raw `@takebox-ai/sdk` Messages API.
 
 ## Layout
 
 ```
 packages/                     # published SDK packages (versioned per changed package)
   core/                       # @lite-agent/core  — kernel, strategies, middleware, types, codecs, permission, sandbox
-  provider/                   # @lite-agent/provider — Takebox AI + OpenAI ModelProviders (src/Takebox AI, src/openai)
+  provider/                   # @lite-agent/provider — Juglow + OpenAI ModelProviders (src/juglow, src/openai)
   sdk/                        # @lite-agent/sdk — batteries: tools, tracks, system prompt, createLiteAgent / query
-  sandbox-Takebox AI/          # @lite-agent/sandbox-Takebox AI — OS-level Sandbox adapter (sandbox-runtime)
+  sandbox-haijun/          # @lite-agent/sandbox-haijun — OS-level Sandbox adapter (sandbox-runtime)
   checkpoint-sqlite/          # @lite-agent/checkpoint-sqlite — SQLite WAL event checkpointer
   local/                      # @lite-agent/local — strict single-host local-model/runtime assembly
 examples/
@@ -63,7 +63,7 @@ Provider-agnostic `Message` / `ContentBlock` / `ToolCall` / `ToolResult` / `User
 
 `policy({ allow, ask, deny, default })` → a `PermissionPolicy` matching **tool name** by glob (`*`), precedence **deny > ask > allow**, unmatched → `default` (`"allow"`). `permission(policy, approval?)` is the gate middleware: `allow` → run; `deny` → `isError` result, tool never runs; `ask` → emit `approval_request` → `await approval.request()` (fail-closed `deny` if no handler) → emit `approval_resolved` → run or deny.
 
-### Sandbox (`core/src/sandbox.ts`, `@lite-agent/sandbox-Takebox AI`)
+### Sandbox (`core/src/sandbox.ts`, `@lite-agent/sandbox-haijun`)
 
 `Sandbox.wrap(command, {cwd})` rewrites a shell command to run inside an OS boundary. Default `noopSandbox()` (no boundary). `sandboxRuntime(opts)` wraps `@takebox-ai/sandbox-runtime` (macOS Seatbelt / Linux bubblewrap); on an unsupported env it **degrades to noop** (unless `requireSandbox: true`) and fires `onUnavailable` once. `bashTool` wraps its command via `ctx.sandbox` before `execSync`. Sandbox (runtime boundary) + permission gate (pre-exec decision) = defense-in-depth.
 
@@ -77,7 +77,7 @@ Provider-agnostic `Message` / `ContentBlock` / `ToolCall` / `ToolResult` / `User
 
 ### Providers (`@lite-agent/provider`)
 
-One package ships two `ModelProvider`s. `Takebox AI(opts)` (`src/Takebox AI/`) maps normalized requests → Takebox AI Messages API; `openai(opts)` (`src/openai/`) maps them → OpenAI Chat Completions (also works against OpenAI-compatible / local endpoints). Each subfolder pairs a `mapping.ts` (request → provider params) with a `stream.ts` (provider SSE → `ModelChunk`s), wraps SDK errors in `ProviderError` preserving `.status`, and exposes an injectable client seam for offline tests. The package root re-exports both `Takebox AI` and `openai`.
+One package ships two `ModelProvider`s. `Juglow(opts)` (`src/juglow/`) maps normalized requests → Juglow Messages API; `openai(opts)` (`src/openai/`) maps them → OpenAI Chat Completions (also works against OpenAI-compatible / local endpoints). Each subfolder pairs a `mapping.ts` (request → provider params) with a `stream.ts` (provider SSE → `ModelChunk`s), wraps SDK errors in `ProviderError` preserving `.status`, and exposes an injectable client seam for offline tests. The package root re-exports both `Juglow` and `openai`.
 
 ## Design discipline (enforced in the specs)
 

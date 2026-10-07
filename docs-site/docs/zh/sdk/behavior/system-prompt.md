@@ -8,10 +8,10 @@
 
 ```ts
 import { createLiteAgent } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   system: "You are a release-notes assistant. Answer concisely, in Markdown.",
@@ -25,7 +25,7 @@ import { query } from "@lite-agent/sdk";
 
 for await (const ev of query({
   prompt: "Draft release notes for v0.4.0.",
-  model: Takebox AI(),
+  model: Juglow(),
   cwd: process.cwd(),
   systemPrompt: "You are a release-notes assistant. Answer concisely, in Markdown.",
 })) {
@@ -41,7 +41,7 @@ for await (const ev of query({
 import { createLiteAgent, buildSystemPrompt } from "@lite-agent/sdk";
 
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   system:

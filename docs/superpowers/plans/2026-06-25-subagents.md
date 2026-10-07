@@ -792,7 +792,7 @@ Create `.changeset/subagents.md` (verify the four package names against an exist
 "lite-agent": minor
 "@lite-agent/core": minor
 "@lite-agent/provider": minor
-"@lite-agent/sandbox-Takebox AI": minor
+"@lite-agent/sandbox-haijun": minor
 ---
 
 feat(sdk): file-defined subagents loaded from `agents/*.md` (global `~/.lite-agent/agents` + project `.lite-agent/agents`), dispatched via a parallel-capable `Agent` tool. Each subagent runs in an isolated, persisted, resumable session and may share the project task list. Default-on; disable with `agents: false`.

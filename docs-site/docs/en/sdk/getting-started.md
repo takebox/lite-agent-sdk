@@ -9,7 +9,7 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 ```
 
 - `@lite-agent/sdk` — the batteries-included agent (`query` / `createLiteAgent` / `tool`); re-exports all of `@lite-agent/core`.
-- `@lite-agent/provider` — model providers (`Takebox AI()` / `openai()`).
+- `@lite-agent/provider` — model providers (`Juglow()` / `openai()`).
 - `zod` — tool input schemas.
 
 ## 2. Your first `query()`
@@ -18,11 +18,11 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "List the files here and summarize what this project does.",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {
@@ -38,7 +38,7 @@ Define a tool from a Zod schema with `tool()`, pass it via `tools`, and gate the
 
 ```ts
 import { query, tool } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { z } from "zod";
 
 const weather = tool(
@@ -50,7 +50,7 @@ const weather = tool(
 
 for await (const ev of query({
   prompt: "What's the weather in Tokyo?",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   tools: [weather],
   allowedTools: ["get_weather", "read_file"],
@@ -67,11 +67,11 @@ for await (const ev of query({
 
 ```ts
 import { createLiteAgent, policy } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { createInterface } from "node:readline/promises";
 
 const agent = createLiteAgent({
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   // Every bash / write_file / edit_file call pauses for approval.
@@ -104,5 +104,5 @@ The `LiteAgent` also gives you session management: `resume(id)`, `clear()`, `lis
 - [Agent loop](/sdk/core-concepts/agent-loop) — how the kernel turn loop works.
 - [Events](/sdk/core-concepts/events) — the full `AgentEvent` reference.
 - [Permissions](/sdk/control/permissions) — content-level rules, auditing, and dry-run.
-- [Model providers](/core/providers) — Takebox AI, OpenAI, and OpenAI-compatible local endpoints.
+- [Model providers](/core/providers) — Juglow, OpenAI, and OpenAI-compatible local endpoints.
 - [Core strategies](/core/strategies) — build your own agent from kernel primitives.

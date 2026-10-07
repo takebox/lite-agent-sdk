@@ -31,7 +31,7 @@
     "@lite-agent/checkpoint-sqlite": "workspace:*",
     "@lite-agent/core": "workspace:*",
     "@lite-agent/provider": "workspace:*",
-    "@lite-agent/sandbox-Takebox AI": "workspace:*",
+    "@lite-agent/sandbox-haijun": "workspace:*",
     "@lite-agent/sdk": "workspace:*"
   },
   "devDependencies": {

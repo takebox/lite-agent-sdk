@@ -34,7 +34,7 @@ for (const test of providerConformance) {
 }
 ```
 
-受维护的 `Takebox AI()` 和 `openai()` 适配器通过注入 client 的接缝离线跑过这套套件。
+受维护的 `Juglow()` 和 `openai()` 适配器通过注入 client 的接缝离线跑过这套套件。
 
 ## `checkpointerConformance`
 

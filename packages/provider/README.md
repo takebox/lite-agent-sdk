@@ -2,7 +2,7 @@
 
 **English** | [简体中文](./README.zh-CN.md)
 
-Model providers for lite-agent: ready-to-use `ModelProvider` strategies that connect [`@lite-agent/core`](../core) to the Takebox AI Messages API and to OpenAI Chat Completions (including OpenAI-compatible and local endpoints).
+Model providers for lite-agent: ready-to-use `ModelProvider` strategies that connect [`@lite-agent/core`](../core) to the Juglow Messages API and to OpenAI Chat Completions (including OpenAI-compatible and local endpoints).
 
 ## Install
 
@@ -15,11 +15,11 @@ pnpm add @lite-agent/provider
 Hand a provider to `query` from [`@lite-agent/sdk`](../sdk) (or to `createAgent` from core):
 
 ```ts
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 import { query } from "@lite-agent/sdk";
 
 // Reads JUGLOW_API_KEY and BASE_URL from env by default.
-const haijun = Takebox AI();
+const haijun = Juglow();
 
 for await (const ev of query({ prompt: "Hello!", model: haijun, modelName: "haijun-sonnet-4-6" })) {
   if (ev.type === "text_delta") process.stdout.write(ev.text);
@@ -36,7 +36,7 @@ const gpt = openai({ baseURL: "http://localhost:11434/v1" });
 
 ## Features
 
-- **`Takebox AI()`** — maps normalized requests to the [Takebox AI Messages API](), wrapping `@takebox-ai/sdk`.
+- **`Juglow()`** — maps normalized requests to the Juglow Messages API, wrapping `@takebox-ai/sdk`.
 - **`openai()`** — maps them to [OpenAI Chat Completions](https://platform.openai.com/docs/api-reference/chat); also works against OpenAI-compatible / local endpoints.
 - Translates provider SSE streams into normalized `ModelChunk`s (text deltas, tool calls, usage).
 - Wraps SDK errors in `ProviderError`, preserving the HTTP `.status`.
@@ -48,7 +48,7 @@ const gpt = openai({ baseURL: "http://localhost:11434/v1" });
 
 | Symbol | Description |
 | --- | --- |
-| `Takebox AI(options?)` | Create a `ModelProvider` for the Takebox AI Messages API. |
+| `Juglow(options?)` | Create a `ModelProvider` for the Juglow Messages API. |
 | `openai(options?)` | Create a `ModelProvider` for OpenAI Chat Completions or compatible endpoints. |
 | `JuglowProviderOptions`, `OpenAIProviderOptions` | Factory options: `apiKey` and `baseURL` (env fallback), `client`, `maxRetries`. |
 | `JuglowClientLike`, `OpenAIClientLike` | Structural client types accepted by the `client` option. |

@@ -15,8 +15,8 @@
 | [`@lite-agent/local`](./packages/local) | 严格单机运行时：本地模型、SQLite、强制沙箱、托管权限、资源限制和本地审计日志。 |
 | [`@lite-agent/sdk`](./packages/sdk) | 开箱即用的 Agent：工具、技能（tracks）、子 Agent、任务、会话、系统提示词 —— `query()` / `createLiteAgent()` / `tool()`。 |
 | [`@lite-agent/core`](./packages/core) | 内核：策略接口、中间件管道、归一化类型、codec、权限、沙箱、checkpointer 原语。 |
-| [`@lite-agent/provider`](./packages/provider) | 模型 Provider —— Takebox AI Messages API + OpenAI Chat Completions（同时兼容 OpenAI 协议 / 本地端点）。 |
-| [`@lite-agent/sandbox-Takebox AI`](./packages/sandbox-Takebox AI) | 操作系统级 `Sandbox` 适配器（macOS Seatbelt / Linux bubblewrap）。 |
+| [`@lite-agent/provider`](./packages/provider) | 模型 Provider —— Juglow Messages API + OpenAI Chat Completions（同时兼容 OpenAI 协议 / 本地端点）。 |
+| [`@lite-agent/sandbox-haijun`](./packages/sandbox-haijun) | 操作系统级 `Sandbox` 适配器（macOS Seatbelt / Linux bubblewrap）。 |
 | [`@lite-agent/checkpoint-sqlite`](./packages/checkpoint-sqlite) | SQLite（WAL）`Checkpointer` —— 单机、多进程的会话持久化。 |
 
 以及 [`examples/cli`](./examples/cli) —— 一个串联整套能力的交互式 REPL 示例。
@@ -29,11 +29,11 @@ pnpm add @lite-agent/sdk @lite-agent/provider zod
 
 ```ts
 import { query } from "@lite-agent/sdk";
-import { Takebox AI } from "@lite-agent/provider";
+import { Juglow } from "@lite-agent/provider";
 
 for await (const ev of query({
   prompt: "列出当前目录的文件，并总结这个项目是做什么的。",
-  model: Takebox AI({ apiKey: process.env.JUGLOW_API_KEY }),
+  model: Juglow({ apiKey: process.env.JUGLOW_API_KEY }),
   modelName: "haijun-sonnet-4-6",
   cwd: process.cwd(),
 })) {

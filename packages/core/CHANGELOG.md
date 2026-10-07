@@ -150,9 +150,9 @@
   `toolChoice` is normalized as `"auto" | "none" | "required" | { tool: string }`.
 
   Both providers forward the new fields: the OpenAI mapping emits `temperature` / `top_p` /
-  `seed` / `tool_choice`; the Takebox AI mapping emits `temperature` / `top_p` and maps
+  `seed` / `tool_choice`; the Juglow mapping emits `temperature` / `top_p` and maps
   `tool_choice` to its `auto` / `none` / `any` / `tool` shapes (`seed` is unsupported by
-  Takebox AI and intentionally ignored). `tool_choice` is only sent when tools are present.
+  Juglow and intentionally ignored). `tool_choice` is only sent when tools are present.
 
 ### Patch Changes
 
@@ -206,8 +206,8 @@
 
 - ce5c1e8: Initial 0.1.0 release of the pluggable agent-core SDK.
   - **@lite-agent/core** — event-driven kernel, strategy interfaces (provider/codec/tool/compactor/permission/approval/input/sandbox/store), onion middleware pipeline, normalized types, native codec, `policy()` + `permission()` gate.
-  - **@lite-agent/provider** — Takebox AI Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
+  - **@lite-agent/provider** — Juglow Messages API + OpenAI Chat Completions providers in one package (OpenAI also works with OpenAI-compatible / local endpoints). The example picks the provider by detecting the protocol from `LITE_AGENT_MODEL_ID`.
   - **lite-agent** — batteries layer: `createLiteAgent`/`query`, bash/file/todo + `ask_user` tools, tracks loader, system prompt.
-  - **@lite-agent/sandbox-Takebox AI** — OS-level sandbox adapter with graceful degradation.
+  - **@lite-agent/sandbox-haijun** — OS-level sandbox adapter with graceful degradation.
 
 - v0.1.0

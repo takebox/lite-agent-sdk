@@ -524,7 +524,7 @@ out simultaneously instead of running one after another.
 - [ ] **Step 2: Verify the changeset is recognized**
 
 Run: `pnpm exec changeset status`
-Expected: lists the four fixed packages (`@lite-agent/core`, `@lite-agent/sdk`, `@lite-agent/provider`, `@lite-agent/sandbox-Takebox AI`) bumping **minor**. (If `changeset status` errors comparing to `main`, this is non-fatal — confirm instead that the file exists and is well-formed.)
+Expected: lists the four fixed packages (`@lite-agent/core`, `@lite-agent/sdk`, `@lite-agent/provider`, `@lite-agent/sandbox-haijun`) bumping **minor**. (If `changeset status` errors comparing to `main`, this is non-fatal — confirm instead that the file exists and is well-formed.)
 
 - [ ] **Step 3: Commit**
 

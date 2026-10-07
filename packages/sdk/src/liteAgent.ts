@@ -56,7 +56,7 @@ export interface CreateLiteAgentConfig extends ModelConfiguration {
   topP?: number;
   /** Tool-selection mode for the model. Inherited by subagents. */
   toolChoice?: ToolChoice;
-  /** Reproducibility seed (OpenAI only; ignored by Takebox AI). Inherited by subagents. */
+  /** Reproducibility seed (OpenAI only; ignored by Juglow). Inherited by subagents. */
   seed?: number;
   /**
    * Require a structured final answer. When set, a `final_answer` tool (whose

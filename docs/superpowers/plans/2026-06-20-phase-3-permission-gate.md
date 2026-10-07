@@ -525,7 +525,7 @@ Then pass the gate into `createLiteAgent`:
 
 ```ts
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: process.env["MODEL_ID"],
   workdir,
   tracksDir: join(workdir, "tracks"),

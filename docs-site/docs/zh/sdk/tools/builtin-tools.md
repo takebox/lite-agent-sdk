@@ -27,7 +27,7 @@
 
 ```ts
 const agent = createLiteAgent({
-  model: Takebox AI(),
+  model: Juglow(),
   modelName: "haijun-sonnet-4-6",
   workdir: process.cwd(),
   disallowedTools: ["bash", "delete_file"],
