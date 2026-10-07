@@ -14,7 +14,7 @@
 - Core in-package tests import from `../src/...` (source) — no build needed for Tasks 1–2. SDK tests import `@lite-agent/core` (dist) — Tasks 3–5 must run `pnpm --filter @lite-agent/core build` first.
 - `verbatimModuleSyntax`: `import type { ... }` for types, separate from value imports.
 - pnpm filters: core = `@lite-agent/core`, sdk = `@lite-agent/sdk`.
-- Commit identity is the repo's local git config (NelsonYong). End commit messages with the repo's Co-Authored-By trailer if your workflow adds one; otherwise a plain message is fine.
+- Commit identity is the repo's local git config (takebox). End commit messages with the repo's Co-Authored-By trailer if your workflow adds one; otherwise a plain message is fine.
 
 ---
 

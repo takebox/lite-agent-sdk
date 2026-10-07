@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
-[![Docs](https://img.shields.io/badge/docs-nelsonyong.github.io%2Flite--agent--sdk-blueviolet.svg)](https://nelsonyong.github.io/lite-agent-sdk/)
+[![Repo](https://img.shields.io/badge/repo-takebox%2Flite--agent--sdk-blueviolet.svg)](https://github.com/takebox/lite-agent-sdk)
 
 A pluggable, lightweight **agent-core SDK**, structured as a pnpm monorepo. The kernel is provider-agnostic and built from swappable **strategy** interfaces + an onion **middleware** pipeline + a typed **event** stream. Its public API is shaped after [`@takebox-ai/haijun-agent-sdk`]() (`query` / `tool` / `allowedTools`), but the kernel is self-built so it can also drive local small models via pluggable tool-call codecs.
 

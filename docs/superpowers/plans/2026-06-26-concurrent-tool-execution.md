@@ -28,7 +28,7 @@ export const toolResultBlock = (id: string, content: string, isError = false): T
 
 **Build-before-test choreography:** core tests import `../src/...` directly (no build needed). The sdk test in Task 3 imports `@lite-agent/core` from its built `dist/`, so Task 3 **rebuilds core first**.
 
-**Git identity:** commits in this repo are authored as `NelsonYong <1013588891@qq.com>` (already set as repo-local git config — verify with `git config user.name` before the first commit; it should print `NelsonYong`).
+**Git identity:** commits in this repo are authored as `Takebox <takebox96@gmail.com>` (already set as repo-local git config — verify with `git config user.name` before the first commit; it should print `takebox`).
 
 ## File Structure
 
