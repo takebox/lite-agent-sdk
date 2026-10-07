@@ -345,7 +345,7 @@ Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save 
 ]
 ```
 
-The queries must be realistic and something a Haijun Code or Haijun.ai user would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, personal context about the user's job or situation, column names and values, company names, URLs. A little bit of backstory. Some might be in lowercase or contain abbreviations or typos or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut (the user will get a chance to sign off on them).
+The queries must be realistic and something a Haijun Code or Haijun AI user would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, personal context about the user's job or situation, column names and values, company names, URLs. A little bit of backstory. Some might be in lowercase or contain abbreviations or typos or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut (the user will get a chance to sign off on them).
 
 Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
 
@@ -417,23 +417,23 @@ After packaging, direct the user to the resulting `.track` file path so they can
 
 ---
 
-## Haijun.ai-specific instructions
+## Haijun AI-specific instructions
 
-In Haijun.ai, the core workflow is the same (draft → test → review → improve → repeat), but because Haijun.ai doesn't have subagents, some mechanics change. Here's what to adapt:
+In Haijun AI, the core workflow is the same (draft → test → review → improve → repeat), but because Haijun AI doesn't have subagents, some mechanics change. Here's what to adapt:
 
 **Running test cases**: No subagents means no parallel execution. For each test case, read the track's TRACK.md, then follow its instructions to accomplish the test prompt yourself. Do them one at a time. This is less rigorous than independent subagents (you wrote the track and you're also running it, so you have full context), but it's a useful sanity check — and the human review step compensates. Skip the baseline runs — just use the track to complete the task as requested.
 
-**Reviewing results**: If you can't open a browser (e.g., Haijun.ai's VM has no display, or you're on a remote server), skip the browser reviewer entirely. Instead, present results directly in the conversation. For each test case, show the prompt and the output. If the output is a file the user needs to see (like a .docx or .xlsx), save it to the filesystem and tell them where it is so they can download and inspect it. Ask for feedback inline: "How does this look? Anything you'd change?"
+**Reviewing results**: If you can't open a browser (e.g., Haijun AI's VM has no display, or you're on a remote server), skip the browser reviewer entirely. Instead, present results directly in the conversation. For each test case, show the prompt and the output. If the output is a file the user needs to see (like a .docx or .xlsx), save it to the filesystem and tell them where it is so they can download and inspect it. Ask for feedback inline: "How does this look? Anything you'd change?"
 
 **Benchmarking**: Skip the quantitative benchmarking — it relies on baseline comparisons which aren't meaningful without subagents. Focus on qualitative feedback from the user.
 
 **The iteration loop**: Same as before — improve the track, rerun the test cases, ask for feedback — just without the browser reviewer in the middle. You can still organize results into iteration directories on the filesystem if you have one.
 
-**Description optimization**: This section requires the `haijun` CLI tool (specifically `haijun -p`) which is only available in Haijun Code. Skip it if you're on Haijun.ai.
+**Description optimization**: This section requires the `haijun` CLI tool (specifically `haijun -p`) which is only available in Haijun Code. Skip it if you're on Haijun AI.
 
 **Blind comparison**: Requires subagents. Skip it.
 
-**Packaging**: The `package_track.py` script works anywhere with Python and a filesystem. On Haijun.ai, you can run it and the user can download the resulting `.track` file.
+**Packaging**: The `package_track.py` script works anywhere with Python and a filesystem. On Haijun AI, you can run it and the user can download the resulting `.track` file.
 
 **Updating an existing track**: The user might be asking you to update an existing track, not create a new one. In this case:
 - **Preserve the original name.** Note the track's directory name and `name` frontmatter field -- use them unchanged. E.g., if the installed track is `research-helper`, output `research-helper.track` (not `research-helper-v2`).
@@ -452,7 +452,7 @@ If you're in Cowork, the main things to know are:
 - Feedback works differently: since there's no running server, the viewer's "Submit All Reviews" button will download `feedback.json` as a file. You can then read it from there (you may have to request access first).
 - Packaging works — `package_track.py` just needs Python and a filesystem.
 - Description optimization (`run_loop.py` / `run_eval.py`) should work in Cowork just fine since it uses `haijun -p` via subprocess, not a browser, but please save it until you've fully finished making the track and the user agrees it's in good shape.
-- **Updating an existing track**: The user might be asking you to update an existing track, not create a new one. Follow the update guidance in the haijun.ai section above.
+- **Updating an existing track**: The user might be asking you to update an existing track, not create a new one. Follow the update guidance in the Haijun AI section above.
 
 ---
 
